@@ -66,6 +66,11 @@
             background-size: 20px 20px, 20px 20px, 100% 100%, 100% 100%;
             background-attachment: fixed;
             background-position: center top;
+            /* Ngăn chọn văn bản để hạn chế copy */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .glass-nav {
@@ -127,7 +132,8 @@
                         <button class="lang-btn px-3 py-1 text-xs font-bold rounded-full transition-all text-slate-500 hover:text-slate-900 active" data-lang="vi" style="transition:0.3s;">VI</button>
                         <button class="lang-btn px-3 py-1 text-xs font-bold rounded-full transition-all text-slate-500 hover:text-slate-900" data-lang="en" style="transition:0.3s;">EN</button>
                     </div>
-                    <a href="https://t.me/ias_xxx" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-white flex items-center justify-center transition-all border border-slate-200 shadow-sm text-indigo-500 hover:text-indigo-600">
+                    <!-- HIDDEN LINK -->
+                    <a href="javascript:void(0)" onclick="window.open('https://t.me/ias_xxx', '_blank')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-white flex items-center justify-center transition-all border border-slate-200 shadow-sm text-indigo-500 hover:text-indigo-600">
                         <i class="fa-brands fa-telegram"></i>
                     </a>
                 </div>
@@ -154,16 +160,19 @@
                 Kho tàng chứng chỉ ESign & IPA Mods miễn phí tốt nhất Việt Nam. <br class="hidden md:block" /> Cập nhật liên tục, tốc độ cao, hỗ trợ 24/7.
             </p>
             <div class="flex flex-wrap justify-center gap-4">
-                <a href="http://zalo.me/0869775239" target="_blank" class="group relative px-6 py-3 bg-slate-900 text-white rounded-full font-bold text-sm overflow-hidden transition-all hover:scale-105 shadow-lg shadow-slate-900/20">
+                <!-- HIDDEN LINK ZALO -->
+                <a href="javascript:void(0)" onclick="window.open('http://zalo.me/0869775239', '_blank')" class="group relative px-6 py-3 bg-slate-900 text-white rounded-full font-bold text-sm overflow-hidden transition-all hover:scale-105 shadow-lg shadow-slate-900/20">
                     <div class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="relative flex items-center gap-2 group-hover:text-white transition-colors" data-i18n="support">
                         <i class="fas fa-headset"></i> Hỗ Trợ 24/7
                     </span>
                 </a>
-                <a href="https://muachungchi.com" target="_blank" class="px-6 py-3 rounded-full bg-white border border-slate-200 hover:border-indigo-300 shadow-sm hover:shadow-md transition-all text-sm font-bold text-slate-700 flex items-center gap-2 group" data-i18n="website">
+                <!-- HIDDEN LINK WEBSITE -->
+                <a href="javascript:void(0)" onclick="window.open('https://muachungchi.com', '_blank')" class="px-6 py-3 rounded-full bg-white border border-slate-200 hover:border-indigo-300 shadow-sm hover:shadow-md transition-all text-sm font-bold text-slate-700 flex items-center gap-2 group" data-i18n="website">
                     <i class="fas fa-shopping-cart text-indigo-500 group-hover:scale-110 transition-transform"></i> Mua Cert Giá Rẻ
                 </a>
-                <a href="https://github.com/VieCertP12/dns12/releases/download/kk1/dnsanti.mobileconfig" target="_blank" class="px-6 py-3 rounded-full bg-white border border-slate-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-sm font-bold text-slate-700 flex items-center gap-2 group" data-i18n="dns">
+                <!-- HIDDEN LINK DNS -->
+                <a href="javascript:void(0)" onclick="window.open('https://github.com/VieCertP12/dns12/releases/download/kk1/dnsanti.mobileconfig', '_blank')" class="px-6 py-3 rounded-full bg-white border border-slate-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-sm font-bold text-slate-700 flex items-center gap-2 group" data-i18n="dns">
                     <i class="fas fa-shield-alt text-green-500 group-hover:scale-110 transition-transform"></i> DNS Anti-Revoke
                 </a>
             </div>
@@ -273,7 +282,8 @@
                             Cài lỗi hoặc bị thu hồi? Khuyên dùng <span class="text-indigo-700">Chứng chỉ cá nhân</span> <br>
                             <span class="text-indigo-700">Lấy Ngay Unban</span> chỉ <span class="text-indigo-700 bg-indigo-50 px-1 rounded">150.000vnđ/năm</span>:
                         </p>
-                        <a href="https://muachungchi.com" target="_blank" class="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 font-extrabold text-sm px-8 py-2.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 border border-indigo-50 min-w-[160px]">
+                        <!-- HIDDEN LINK VIP -->
+                        <a href="javascript:void(0)" onclick="window.open('https://muachungchi.com', '_blank')" class="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 font-extrabold text-sm px-8 py-2.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 border border-indigo-50 min-w-[160px]">
                             <i class="fas fa-crown text-yellow-400 text-lg"></i>
                             <span>Mua Ngay</span>
                         </a>
@@ -341,6 +351,21 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // ==========================================
+        // === ANTI F12 & RIGHT CLICK (NEW) ===
+        // ==========================================
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function (e) {
+            // F12
+            if (e.keyCode == 123) return false;
+            // Ctrl+Shift+I
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false;
+            // Ctrl+Shift+J
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) return false;
+            // Ctrl+U
+            if (e.ctrlKey && e.keyCode == 85) return false;
+        }
 
         // ==========================================
         // === KHU VỰC QUẢN LÝ DỮ LIỆU (EDIT HERE) ===
