@@ -193,7 +193,21 @@
 
             container.innerHTML = `
                 <div class="max-w-3xl mx-auto fade-in">
-                    <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6 shadow-sm flex items-start gap-3"><i class="fa-solid fa-circle-info text-blue-500 mt-0.5"></i><div class="text-sm text-gray-600"><span class="block text-gray-800 font-semibold mb-1">Muachungchi.com - Nơi bán chứng chỉ iPhone iPad giá rẻ chỉ 150k/năm</span><a href="#" class="text-blue-600 hover:underline">(Đăng ký tài khoản)</a></div></div>
+                    
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-5 mb-8 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-500/10 rounded-full blur-xl group-hover:bg-blue-500/20 transition-all"></div>
+                        <div class="flex items-center gap-4 z-10 w-full sm:w-auto">
+                            <div class="bg-white p-3 rounded-xl shadow-sm text-blue-600 text-2xl shrink-0"><i class="fa-brands fa-apple"></i></div>
+                            <div class="text-left">
+                                <h3 class="font-bold text-gray-900 text-base">Muachungchi.com</h3>
+                                <p class="text-sm text-gray-600">Nơi bán chứng chỉ iPhone iPad giá rẻ chỉ <span class="text-red-500 font-bold">150k/năm</span></p>
+                            </div>
+                        </div>
+                        <a href="https://muachungchi.com" target="_blank" class="z-10 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 whitespace-nowrap w-full sm:w-auto text-center flex items-center justify-center gap-2">
+                            Mua Ngay <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-10 text-center">
                         <h1 class="text-2xl font-bold text-[#0e2045] mb-2">${data.title}</h1>
                         <p class="text-gray-500 text-sm uppercase font-semibold mb-8 tracking-wide">HÃY LÀM THEO CÁC BƯỚI ĐỂ MỞ KHOÁ LINK</p>
