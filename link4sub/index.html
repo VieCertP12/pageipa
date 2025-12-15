@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://link4sub.com/home/css/style.css?v=22025">
     
     <style>
-        body { font-family: 'Inter', sans-serif !important; }
+        body { font-family: 'Inter', sans-serif !important; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
         .landing-page .landing-absolute { max-width: 900px !important; width: 100% !important; padding: 0 !important; }
         .hero .stu_cnt { background: transparent !important; box-shadow: none !important; }
         .stu_cnt::before { display: none !important; }
@@ -70,6 +70,20 @@
             <a href="?admin=true" class="opacity-0 hover:opacity-100 transition">Admin Panel</a>
         </div>
     </div>
+
+    <!-- Security Script (Anti-RightClick, Anti-F12) -->
+    <script>
+        // Disable Right Click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) { return false; }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; }
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+        }
+    </script>
 
     <!-- SCRIPT LOGIC -->
     <script type="module">
@@ -250,9 +264,16 @@
                 if(btn) {
                     btn.className = "block w-full bg-[#4ade80] hover:bg-[#22c55e] text-white font-bold py-4 rounded-lg cursor-pointer flex items-center justify-between px-6 shadow-md transition-all duration-300 animate-pulse";
                     btn.innerHTML = `<i class="fa-solid fa-unlock"></i><span class="uppercase tracking-wide">Get Link</span><i class="fa-solid fa-arrow-right"></i>`;
-                    btn.href = currentLinkData.destUrl;
-                    btn.target = "_blank";
-                    btn.onclick = null;
+                    
+                    // --- MODIFIED: Hide Link on Hover ---
+                    // Sử dụng javascript:void(0) để thanh trạng thái không hiện URL
+                    btn.href = "javascript:void(0)";
+                    btn.removeAttribute("target"); // Xoá target blank của thẻ a
+                    
+                    // Xử lý mở link bằng onclick
+                    btn.onclick = () => {
+                        window.open(currentLinkData.destUrl, '_blank');
+                    };
                 }
             }
         }
