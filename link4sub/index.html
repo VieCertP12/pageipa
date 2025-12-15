@@ -401,7 +401,7 @@
         window.filterLinks = (text) => {
             const rows = document.querySelectorAll("#historyBody tr");
             rows.forEach(row => {
-                const title = row.querySelector("td:first-child").innerText.toLowerCase();
+                const title = row.querySelector("td:first-child .font-bold").innerText.toLowerCase();
                 row.style.display = title.includes(text.toLowerCase()) ? "" : "none";
             });
         }
@@ -416,7 +416,39 @@
                 const data = d.data();
                 const link = `${window.location.origin}${window.location.pathname}?id=${d.id}`;
                 const checked = data.isActive !== false ? 'checked' : '';
-                html += `<tr class="border-b hover:bg-gray-50"><td class="p-2 align-middle"><div class="font-bold text-gray-800 truncate w-32" title="${data.title}">${data.title}</div><div class="text-[10px] text-gray-400 mt-0.5"><i class="fa-solid fa-eye mr-1"></i>${data.views || 0} views</div></td><td class="p-2 text-center align-middle"><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer" ${checked} onchange="window.toggleStatus('${d.id}', this.checked)"><div class="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-green-500"></div></label></td><td class="p-2 text-right align-middle flex justify-end gap-1"><button onclick="window.loadToEdit('${d.id}')" class="text-orange-500 p-1.5 hover:bg-orange-100 rounded" title="Sửa"><i class="fa-solid fa-pen"></i></button><button onclick="navigator.clipboard.writeText('${link}'); window.showToast('Đã copy link', 'success')" class="text-blue-500 p-1.5 hover:bg-blue-100 rounded" title="Copy"><i class="fa-regular fa-copy"></i></button><button onclick="window.delLink('${d.id}')" class="text-red-500 p-1.5 hover:bg-red-100 rounded" title="Xoá"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+                
+                // Format Date
+                let dateStr = "";
+                if(data.createdAt && data.createdAt.toDate) {
+                    const dt = data.createdAt.toDate();
+                    // Format: 15/12/2024 14:30
+                    dateStr = dt.toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                } else {
+                    dateStr = "Mới đây";
+                }
+
+                html += `<tr class="border-b hover:bg-gray-50">
+                    <td class="p-2 align-middle">
+                        <div class="font-bold text-gray-800 truncate w-32" title="${data.title}">${data.title}</div>
+                        <div class="flex flex-col gap-0.5 mt-0.5">
+                             <div class="text-[10px] text-gray-500 font-medium"><i class="fa-regular fa-clock mr-1"></i>${dateStr}</div>
+                             <div class="text-[10px] text-gray-400"><i class="fa-solid fa-eye mr-1"></i>${data.views || 0} views</div>
+                        </div>
+                    </td>
+                    <td class="p-2 text-center align-middle">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" ${checked} onchange="window.toggleStatus('${d.id}', this.checked)">
+                            <div class="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-green-500"></div>
+                        </label>
+                    </td>
+                    <td class="p-2 text-right align-middle">
+                        <div class="flex justify-end gap-1">
+                            <button onclick="window.loadToEdit('${d.id}')" class="text-orange-500 p-1.5 hover:bg-orange-100 rounded" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="navigator.clipboard.writeText('${link}'); window.showToast('Đã copy link', 'success')" class="text-blue-500 p-1.5 hover:bg-blue-100 rounded" title="Copy"><i class="fa-regular fa-copy"></i></button>
+                            <button onclick="window.delLink('${d.id}')" class="text-red-500 p-1.5 hover:bg-red-100 rounded" title="Xoá"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>`;
             });
             tbody.innerHTML = html || '<tr><td colspan="3" class="text-center p-4 text-gray-400 italic">Chưa có liên kết nào.</td></tr>';
         }
