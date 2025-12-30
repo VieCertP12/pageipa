@@ -3,115 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liên kết STU - Link4Sub Pro</title>
+    <title>Link4Sub Pro - Simple & Powerful</title>
     <link href="https://link4sub.com/backend/dist/libs/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://link4sub.com/css/style.css?v=22025" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Giữ các style bổ sung để giao diện mượt hơn */
-        body { -webkit-user-select: none; user-select: none; }
+        body { font-family: 'Inter', sans-serif !important; background: #f8fafc; }
         .hidden { display: none !important; }
-        .stu_cnt { padding: 20px; }
-        .sub-btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; padding: 15px; background: #f9f9f9; border-radius: 12px; }
-        .task-item { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 10px; position: relative; }
-        .task-item .remove { position: absolute; top: 5px; right: 10px; color: red; cursor: pointer; font-weight: bold; }
-        .tab-btn.active { background: #fff !important; color: #000 !important; font-weight: bold; }
+        .tab-active { background: #fff !important; color: #2563eb !important; font-weight: 900 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .sub-menu { background: #f1f5f9; padding: 15px; border-radius: 12px; margin: 10px 0; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; border: 2px dashed #cbd5e1; }
+        .task-input-box { background: #fff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 15px; margin-bottom: 10px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .btn-remove { position: absolute; top: 10px; right: 15px; color: #ef4444; font-weight: bold; cursor: pointer; }
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
-        .toast { padding: 12px 20px; border-radius: 8px; color: #fff; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .toast { padding: 12px 20px; border-radius: 10px; color: #fff; font-weight: bold; font-size: 13px; margin-bottom: 8px; animation: slideIn 0.3s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
     </style>
 </head>
 <body class="mainW">
     <div id="toast-container"></div>
-    <input class="cbNav hidden" id="pNav" type="checkbox" />
-    <input class="cbStu hidden" id="pCreate" type="checkbox" />
 
     <header class="header">
         <div class="hd-left">
-            <label for="pNav">
-                <svg class="line sidebar-toggle" viewBox="0 0 24 24"><line x1="3" x2="21" y1="12" y2="12"></line><line x1="3" x2="21" y1="5" y2="5"></line><line x1="3" x2="21" y1="19" y2="19"></line></svg>
-            </label>
-            <div class="create-link" onclick="window.openModal('create')">
+            <div class="create-link" onclick="window.switchTab('create')">
                 <svg class="line" viewBox="0 0 24 24"><path d="M6 12H18"></path><path d="M12 18V6"></path></svg>Tạo mới
             </div>
         </div>
         <div class="hd-right">
-            <span id="admin-email" class="text-xs mr-4 font-bold text-slate-500"></span>
-            <button onclick="window.logout()" class="text-red-500 font-bold text-xs">ĐĂNG XUẤT</button>
+            <button onclick="window.logout()" class="text-xs font-bold text-red-500 uppercase">Đăng xuất</button>
         </div>
     </header>
 
     <div class="container" style="padding-top: 100px;">
-        <div class="flex justify-center mb-6">
-            <div class="bg-gray-200 p-1 rounded-xl flex">
-                <button onclick="window.switchMainTab('create')" id="btn-tab-create" class="px-10 py-2 rounded-lg text-xs font-bold uppercase transition-all tab-btn active">STU</button>
-                <button onclick="window.switchMainTab('manage')" id="btn-tab-manage" class="px-10 py-2 rounded-lg text-xs font-bold uppercase transition-all tab-btn text-gray-500">Quản lý Link</button>
+        <div class="flex justify-center mb-10">
+            <div class="bg-gray-200 p-1 rounded-2xl flex gap-1">
+                <button onclick="window.switchTab('create')" id="btn-create" class="px-12 py-3 rounded-xl text-xs font-black uppercase tab-active transition-all">THIẾT KẾ LINK</button>
+                <button onclick="window.switchTab('manage')" id="btn-manage" class="px-12 py-3 rounded-xl text-xs font-black uppercase text-gray-400 transition-all">QUẢN LÝ</button>
             </div>
         </div>
 
-        <div id="section-manage" class="box hidden">
-            <div class="box-top">
-                <div class="top-left"><div class="title">Liên kết của bạn</div></div>
-            </div>
-            <div class="box-container">
-                <div class="dataTable">
-                    <table class="table w-full">
-                        <thead>
-                            <tr>
-                                <th>Tiêu đề</th>
-                                <th>Lượt xem</th>
-                                <th>Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-body"></tbody>
-                    </table>
+        <div id="section-create" class="box max-w-4xl mx-auto">
+            <div class="box-container p-8">
+                <h2 class="text-center font-black text-xl mb-8 uppercase tracking-tighter" id="form-title">Tạo liên kết mới</h2>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input id="bTitle" type="text" placeholder="Tiêu đề chính (Ví dụ: Esign Pro 2025)" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold text-sm focus:ring-2 focus:ring-blue-500">
+                        <input id="bSubTitle" type="text" placeholder="Tiêu đề phụ (tuỳ chọn)" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold text-sm">
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 justify-center py-4 border-y">
+                        <button onclick="window.toggleSub('youtube')" class="bg-red-600 text-white px-5 py-2.5 rounded-xl font-black text-[10px]">YOUTUBE +</button>
+                        <button onclick="window.toggleSub('telegram')" class="bg-[#0088cc] text-white px-5 py-2.5 rounded-xl font-black text-[10px]">TELEGRAM +</button>
+                        <button onclick="window.addTask('facebook', 'Follow Facebook')" class="bg-[#1877f2] text-white px-5 py-2.5 rounded-xl font-black text-[10px]">FACEBOOK +</button>
+                        <button onclick="window.addTask('tiktok', 'Follow TikTok')" class="bg-black text-white px-5 py-2.5 rounded-xl font-black text-[10px]">TIKTOK +</button>
+                    </div>
+
+                    <div id="menu-youtube" class="sub-menu hidden">
+                        <button onclick="window.addTask('youtube', 'Đăng ký kênh')" class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-[9px] font-bold">ĐĂNG KÝ +</button>
+                        <button onclick="window.addTask('youtube', 'Đăng ký kênh #2')" class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-[9px] font-bold">ĐĂNG KÝ #2 +</button>
+                        <button onclick="window.addTask('youtube', 'Thích Video')" class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-[9px] font-bold">THÍCH +</button>
+                        <button onclick="window.addTask('youtube', 'Thích Video #2')" class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-[9px] font-bold">THÍCH #2 +</button>
+                        <button onclick="window.addTask('youtube', 'Bình luận Video')" class="bg-red-400 text-white px-3 py-1.5 rounded-lg text-[9px] font-bold w-full">BÌNH LUẬN +</button>
+                    </div>
+
+                    <div id="menu-telegram" class="sub-menu hidden">
+                        <button onclick="window.addTask('telegram', 'Tham gia Group')" class="bg-sky-500 text-white px-4 py-2 rounded-lg text-[9px] font-bold">JOIN GROUP +</button>
+                        <button onclick="window.addTask('telegram', 'Tham gia Group #2')" class="bg-sky-500 text-white px-4 py-2 rounded-lg text-[9px] font-bold">JOIN GROUP #2 +</button>
+                    </div>
+
+                    <div id="taskList" class="space-y-2 py-4"></div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t pt-6">
+                        <input id="bDestName" type="text" placeholder="Tên nút (Ví dụ: Cài đặt ngay)" class="p-4 bg-slate-50 rounded-xl outline-none font-bold text-sm">
+                        <input id="bDest" type="text" placeholder="Dán link thật tại đây (itms-services...)" class="p-4 bg-blue-50 border-l-4 border-blue-600 rounded-xl outline-none font-bold text-sm">
+                    </div>
+
+                    <div class="flex gap-4 pt-6">
+                        <button onclick="window.saveL()" id="btnSave" class="flex-1 bg-blue-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-xl shadow-blue-100">Lưu liên kết bảo mật</button>
+                        <button onclick="window.resetForm()" class="px-10 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase text-xs">Đặt lại</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="modal-container" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden fade-in relative">
-                <button onclick="window.closeModal()" class="absolute top-4 right-6 text-2xl text-gray-400">&times;</button>
-                <div class="p-8">
-                    <h2 class="text-center font-black text-xl mb-8 uppercase tracking-tighter" id="modal-title">Tạo mới</h2>
-                    
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <input id="bTitle" type="text" placeholder="Nhập tiêu đề.. (tuỳ chọn)" class="w-full p-4 bg-gray-50 rounded-xl outline-none border border-transparent focus:border-red-500 font-bold">
-                            <input id="bSubTitle" type="text" placeholder="Nhập tiêu đề phụ.. (tuỳ chọn)" class="w-full p-4 bg-gray-50 rounded-xl outline-none border border-transparent focus:border-red-500 font-bold">
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 justify-center py-2">
-                            <button onclick="window.showSubMenu('youtube')" class="bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-[11px]">YouTube <i class="bi bi-plus-circle"></i></button>
-                            <button onclick="window.showSubMenu('telegram')" class="bg-[#0088cc] text-white px-4 py-2 rounded-lg font-bold text-[11px]">Telegram <i class="bi bi-plus-circle"></i></button>
-                            <button onclick="window.addSimpleTask('facebook')" class="bg-[#1877f2] text-white px-4 py-2 rounded-lg font-bold text-[11px]">Facebook <i class="bi bi-plus-circle"></i></button>
-                            <button onclick="window.addSimpleTask('tiktok')" class="bg-black text-white px-4 py-2 rounded-lg font-bold text-[11px]">TikTok <i class="bi bi-plus-circle"></i></button>
-                        </div>
-
-                        <div id="menu-youtube" class="sub-btn-group hidden">
-                            <button onclick="window.pushTask('youtube', 'Đăng ký')" class="bg-red-500 text-white px-3 py-1.5 rounded-md text-[10px] font-bold">Đăng ký +</button>
-                            <button onclick="window.pushTask('youtube', 'Đăng ký #2')" class="bg-red-500 text-white px-3 py-1.5 rounded-md text-[10px] font-bold">Đăng ký #2 +</button>
-                            <button onclick="window.pushTask('youtube', 'Thích')" class="bg-red-500 text-white px-3 py-1.5 rounded-md text-[10px] font-bold">Thích +</button>
-                            <button onclick="window.pushTask('youtube', 'Bình luận')" class="bg-red-500 text-white px-3 py-1.5 rounded-md text-[10px] font-bold w-full">Bình luận +</button>
-                        </div>
-
-                        <div id="menu-telegram" class="sub-btn-group hidden">
-                            <button onclick="window.pushTask('telegram', 'Tham gia Group')" class="bg-sky-500 text-white px-4 py-2 rounded-md text-[10px] font-bold">Tham gia Group +</button>
-                            <button onclick="window.pushTask('telegram', 'Tham gia Group #2')" class="bg-sky-500 text-white px-4 py-2 rounded-md text-[10px] font-bold">Tham gia Group #2 +</button>
-                        </div>
-
-                        <div id="bTaskList" class="max-h-60 overflow-y-auto pr-2"></div>
-
-                        <div class="grid grid-cols-2 gap-4 border-t pt-6">
-                            <input id="bDestName" type="text" placeholder="Nhập tên nút.. (tùy chọn)" class="p-4 bg-gray-50 rounded-xl outline-none font-bold">
-                            <input id="bDest" type="text" placeholder="Liên kết URL cần chuyển đến.." class="p-4 bg-gray-50 rounded-xl border-l-4 border-blue-500 outline-none font-bold">
-                        </div>
-
-                        <div class="flex gap-3 pt-4">
-                            <button onclick="window.saveToFirebase()" id="btnSave" class="flex-1 bg-blue-600 text-white py-4 rounded-xl font-bold uppercase text-xs shadow-lg">Tạo liên kết</button>
-                            <button onclick="window.resetForm()" class="px-8 bg-gray-100 text-gray-600 rounded-xl font-bold uppercase text-xs">Đặt lại</button>
-                        </div>
-                    </div>
+        <div id="section-manage" class="box max-w-5xl mx-auto hidden">
+            <div class="box-top"><div class="top-left"><div class="title uppercase font-black text-xs">Kho lưu trữ link</div></div></div>
+            <div class="box-container">
+                <div class="dataTable overflow-x-auto">
+                    <table class="table w-full">
+                        <thead><tr><th>Tiêu đề</th><th>Lượt xem</th><th class="text-right">Hành động</th></tr></thead>
+                        <tbody id="history-body"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -136,166 +118,191 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-
         let currentTasks = [];
         let editId = null;
 
-        // --- AUTH & INIT ---
-        onAuthStateChanged(auth, u => {
-            if(!u) window.location.href = "/link4sub/login.html"; // Chuyển trang nếu chưa login
-            else {
-                document.getElementById('admin-email').innerText = u.email;
-                loadHistory();
-            }
-        });
-
+        // --- AUTH ---
+        onAuthStateChanged(auth, u => { if(!u) window.location.href = "login.html"; else loadHistory(); });
         window.logout = () => signOut(auth);
 
-        // --- UI LOGIC ---
-        window.openModal = (mode, id = null) => {
-            const modal = document.getElementById('modal-container');
-            modal.classList.remove('hidden');
-            if(mode === 'create') {
-                editId = null;
-                document.getElementById('modal-title').innerText = "Tạo mới";
-                document.getElementById('btnSave').innerText = "Tạo liên kết";
-                resetForm();
-            }
+        // --- TAB LOGIC ---
+        window.switchTab = (tab) => {
+            const isCreate = tab === 'create';
+            document.getElementById('section-create').classList.toggle('hidden', !isCreate);
+            document.getElementById('section-manage').classList.toggle('hidden', isCreate);
+            document.getElementById('btn-create').classList.toggle('tab-active', isCreate);
+            document.getElementById('btn-manage').classList.toggle('tab-active', !isCreate);
+            if(!isCreate) loadHistory();
         };
 
-        window.closeModal = () => document.getElementById('modal-container').classList.add('hidden');
-
-        window.switchMainTab = (tab) => {
-            document.getElementById('section-manage').classList.toggle('hidden', tab === 'create');
-            document.getElementById('btn-tab-create').classList.toggle('active', tab === 'create');
-            document.getElementById('btn-tab-manage').classList.toggle('active', tab === 'manage');
-            if(tab === 'manage') loadHistory();
-        };
-
-        window.showSubMenu = (p) => {
+        // --- NHIỆM VỤ LOGIC (image_14cfa1.png / image_14d285.png) ---
+        window.toggleSub = (p) => {
             document.getElementById('menu-youtube').classList.toggle('hidden', p !== 'youtube');
             document.getElementById('menu-telegram').classList.toggle('hidden', p !== 'telegram');
         };
 
-        // --- NHIỆM VỤ (FIXED: KHÔNG MẤT LINK CŨ) ---
-        window.pushTask = (platform, label) => {
-            // Quan trọng: Sử dụng push để nối thêm mảng, không thay thế mảng
-            currentTasks.push({ platform, label, url: '' });
+        window.addTask = (platform, label) => {
+            currentTasks.push({ platform, label, url: '' }); // Push để không mất link cũ
             renderTasks();
-            // Ẩn menu sau khi chọn
-            document.getElementById('menu-youtube').classList.add('hidden');
-            document.getElementById('menu-telegram').classList.add('hidden');
+            window.toggleSub('none'); // Đóng menu sau khi chọn
         };
 
-        window.addSimpleTask = (p) => {
-            currentTasks.push({ platform: p, label: 'Theo dõi / Like', url: '' });
-            renderTasks();
-        };
-
-        window.removeT = (index) => {
-            currentTasks.splice(index, 1);
-            renderTasks();
-        };
+        window.removeT = (i) => { currentTasks.splice(i, 1); renderTasks(); };
 
         function renderTasks() {
-            const container = document.getElementById('bTaskList');
-            container.innerHTML = currentTasks.map((t, i) => `
-                <div class="task-item flex flex-col gap-2">
-                    <span class="remove" onclick="window.removeT(${i})">&times;</span>
-                    <div class="flex items-center gap-2">
-                        <i class="bi bi-${t.platform === 'youtube' ? 'youtube text-red-600' : 'telegram text-sky-500'}"></i>
-                        <span class="text-[10px] font-black uppercase text-gray-400">${t.label}</span>
+            const list = document.getElementById('taskList');
+            list.innerHTML = currentTasks.map((t, i) => `
+                <div class="task-input-box fade-in">
+                    <span class="btn-remove" onclick="window.removeT(${i})">×</span>
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="bi bi-${t.platform === 'youtube' ? 'youtube text-red-600' : 'telegram text-blue-500'}"></i>
+                        <span class="text-[9px] font-black uppercase text-slate-400 tracking-widest">${t.label}</span>
                     </div>
-                    <input type="text" value="${t.url}" oninput="currentTasks[${i}].url=this.value" placeholder="Dán link nhiệm vụ tại đây..." class="p-3 bg-slate-50 rounded-lg text-xs outline-none border border-slate-100 focus:border-red-500 font-bold">
-                </div>
-            `).join('');
+                    <input type="text" value="${t.url}" oninput="currentTasks[${i}].url=this.value" placeholder="Dán link nhiệm vụ (https://...)" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold outline-none focus:border-blue-500 border border-transparent transition-all">
+                </div>`).join('');
         }
 
-        // --- FIREBASE SAVE ---
-        window.saveToFirebase = async () => {
+        // --- LƯU DỮ LIỆU ---
+        window.saveL = async () => {
             const title = document.getElementById('bTitle').value || 'Không tiêu đề';
             const dest = document.getElementById('bDest').value;
-            const destName = document.getElementById('bDestName').value || 'NHẬN LINK';
+            const destName = document.getElementById('bDestName').value || 'NHẬN LINK NGAY';
             
-            if(!dest) return alert("Vui lòng dán link đích!");
-            if(currentTasks.length === 0) return alert("Chọn ít nhất 1 nhiệm vụ!");
-            if(currentTasks.some(t => t.url === "")) return alert("Link nhiệm vụ không được để trống!");
+            if(!dest) return alert("Vui lòng nhập link đích!");
+            if(currentTasks.length === 0) return alert("Thêm ít nhất 1 nhiệm vụ!");
+            if(currentTasks.some(t => !t.url)) return alert("Vui lòng dán link cho mọi nhiệm vụ!");
 
-            const btn = document.getElementById('btnSave');
-            btn.disabled = true; btn.innerText = "ĐANG LƯU...";
-
+            const btn = document.getElementById('btnSave'); btn.disabled = true; btn.innerText = "ĐANG LƯU...";
             try {
                 let finalId = editId;
                 const data = { title, tasks: currentTasks, createdAt: serverTimestamp(), views: 0, isActive: true };
-                
                 if(!editId) {
                     const docRef = await addDoc(collection(db, "links"), data);
                     finalId = docRef.id;
                 } else {
                     await updateDoc(doc(db, "links", editId), { title, tasks: currentTasks });
                 }
-
                 await setDoc(doc(db, "an_link", finalId), { destUrl: dest, destName: destName });
-                
-                alert("Thành công!");
-                closeModal();
-                loadHistory();
+                alert("Lưu thành công!"); window.resetForm(); window.switchTab('manage');
             } catch (e) { alert("Lỗi: " + e.message); }
-            finally { btn.disabled = false; btn.innerText = "Tạo liên kết"; }
+            finally { btn.disabled = false; btn.innerText = "Lưu liên kết bảo mật"; }
         };
 
-        window.resetForm = () => {
-            currentTasks = [];
-            document.getElementById('bTitle').value = "";
-            document.getElementById('bDest').value = "";
-            document.getElementById('bDestName').value = "";
-            renderTasks();
-        };
+        window.resetForm = () => { editId = null; currentTasks = []; document.getElementById('bTitle').value = ""; document.getElementById('bDest').value = ""; document.getElementById('form-title').innerText = "Tạo liên kết mới"; renderTasks(); };
 
-        // --- HISTORY & EDIT ---
+        // --- QUẢN LÝ ---
         async function loadHistory() {
-            const body = document.getElementById('history-body');
+            const body = document.getElementById('history-body'); body.innerHTML = '';
             const snap = await getDocs(query(collection(db, "links"), orderBy("createdAt", "desc")));
-            body.innerHTML = '';
             snap.forEach(d => {
                 const data = d.data();
+                const shareUrl = `${window.location.origin}${window.location.pathname}?id=${d.id}`;
                 body.innerHTML += `
-                    <tr class="border-b">
-                        <td class="p-4 font-bold text-sm uppercase">${data.title}</td>
-                        <td class="p-4 text-xs text-blue-500 font-bold">${data.views} VIEWS</td>
-                        <td class="p-4 flex gap-4">
-                            <i class="bi bi-pencil-square text-orange-500 cursor-pointer" onclick="window.loadEdit('${d.id}')"></i>
-                            <i class="bi bi-trash text-red-500 cursor-pointer" onclick="window.deleteL('${d.id}')"></i>
+                    <tr class="border-b hover:bg-slate-50 transition-all">
+                        <td class="p-5 font-black text-sm uppercase text-slate-800">${data.title}</td>
+                        <td class="p-5 text-xs font-bold text-blue-600">${data.views} VIEWS</td>
+                        <td class="p-5 flex justify-end gap-5">
+                            <i class="bi bi-pencil-square text-orange-500 cursor-pointer text-lg" onclick="window.loadEdit('${d.id}')"></i>
+                            <i class="bi bi-power ${data.isActive ? 'text-green-500' : 'text-slate-300'} cursor-pointer text-lg" onclick="window.toggleL('${d.id}', ${data.isActive})"></i>
+                            <i class="bi bi-clipboard text-blue-500 cursor-pointer text-lg" onclick="navigator.clipboard.writeText('${shareUrl}'); alert('Đã copy link!')"></i>
+                            <i class="bi bi-trash text-red-500 cursor-pointer text-lg" onclick="window.deleteL('${d.id}')"></i>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
             });
         }
 
         window.loadEdit = async (id) => {
-            editId = id;
             const snap = await getDoc(doc(db, "links", id));
             const secret = await getDoc(doc(db, "an_link", id));
             if(snap.exists()) {
-                const data = snap.data();
-                document.getElementById('bTitle').value = data.title;
+                editId = id; window.switchTab('create');
+                const d = snap.data();
+                document.getElementById('bTitle').value = d.title;
                 document.getElementById('bDest').value = secret.data().destUrl;
-                document.getElementById('bDestName').value = secret.data().destName;
-                currentTasks = data.tasks || [];
+                document.getElementById('bDestName').value = secret.data().destName || '';
+                currentTasks = d.tasks || [];
                 renderTasks();
-                document.getElementById('modal-title').innerText = "Chỉnh sửa";
-                document.getElementById('btnSave').innerText = "Lưu thay đổi";
-                document.getElementById('modal-container').classList.remove('hidden');
+                document.getElementById('form-title').innerText = "ĐANG CHỈNH SỬA";
+                document.getElementById('btnSave').innerText = "Cập nhật thay đổi";
             }
         };
 
-        window.deleteL = async (id) => {
-            if(confirm("Xóa vĩnh viễn?")) {
-                await deleteDoc(doc(db, "links", id));
-                await deleteDoc(doc(db, "an_link", id));
-                loadHistory();
-            }
-        };
+        window.toggleL = async (id, cur) => { await updateDoc(doc(db, "links", id), { isActive: !cur }); loadHistory(); };
+        window.deleteL = async (id) => { if(confirm("Xoá vĩnh viễn?")) { await deleteDoc(doc(db, "links", id)); await deleteDoc(doc(db, "an_link", id)); loadHistory(); } };
+
+        // --- USER PAGE (image_145ee7.png + Quảng cáo) ---
+        async function loadUserPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const snap = await getDoc(doc(db, "links", id));
+            if (!snap.exists() || snap.data().isActive === false) { container.innerHTML = "Liên kết đã khóa."; return; }
+            const data = snap.data();
+            updateDoc(doc(db, "links", id), { views: increment(1) });
+            
+            container.innerHTML = `
+            <div class="max-w-xl mx-auto fade-in">
+                <a href="https://muachungchi.com" target="_blank" class="block bg-gradient-to-r from-blue-900 to-indigo-800 rounded-[2rem] p-7 mb-8 shadow-2xl relative overflow-hidden group">
+                    <div class="flex items-center justify-between relative z-10">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-white/10 w-14 h-14 rounded-2xl flex items-center justify-center text-white text-3xl"><i class="bi bi-apple"></i></div>
+                            <div>
+                                <h3 class="text-white font-black text-xl uppercase tracking-tighter">Muachungchi.com</h3>
+                                <p class="text-slate-300 text-xs font-bold">Chứng chỉ iOS giá rẻ chỉ <span class="text-rose-400">150k/năm</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-rose-600 text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase">Mua Ngay</div>
+                    </div>
+                </a>
+
+                <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl border border-slate-50 text-center">
+                    <h1 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">${data.title}</h1>
+                    <div class="h-1.5 w-16 bg-red-600 mx-auto mb-10 rounded-full"></div>
+                    <div id="taskListContent" class="space-y-4"></div>
+                    <button id="unlock-btn" class="w-full py-6 mt-10 rounded-3xl font-black text-white bg-slate-100 cursor-not-allowed uppercase text-[11px] border-b-4 border-slate-200">Đang bị khóa</button>
+                </div>
+            </div>`;
+            renderUserTasksUI(data.tasks, id);
+        }
+
+        function renderUserTasksUI(tasks, id) {
+            const list = document.getElementById('taskListContent');
+            const completed = new Set();
+            const render = () => {
+                list.innerHTML = tasks.map((t, i) => {
+                    const isDone = completed.has(i), isLocked = i > 0 && !completed.has(i - 1);
+                    return `
+                    <div onclick="${!isDone && !isLocked ? `window.doTask(${i},'${t.url}')` : ''}" 
+                         class="p-6 rounded-[2rem] flex justify-between items-center transition-all ${isDone ? 'bg-emerald-50 border-emerald-100' : isLocked ? 'bg-slate-50 opacity-40 grayscale' : 'bg-slate-50 hover:bg-white hover:shadow-xl cursor-pointer'} border-2 border-transparent">
+                        <div class="flex items-center gap-5">
+                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-xl ${isDone ? 'bg-emerald-500' : isLocked ? 'bg-slate-300' : 'bg-red-600'}">
+                                <i class="bi bi-${t.platform==='youtube'?'youtube':'telegram'} text-2xl"></i>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-[9px] font-black uppercase text-slate-400 tracking-widest">${t.platform.toUpperCase()}</p>
+                                <h4 class="font-black text-slate-800 text-sm">${t.label}</h4>
+                            </div>
+                        </div>
+                        <i class="bi bi-${isDone ? 'check-circle-fill text-emerald-500 text-2xl' : 'chevron-right text-slate-300 text-xs'}"></i>
+                    </div>`;
+                }).join('');
+
+                if (completed.size >= tasks.length) {
+                    const btn = document.getElementById('unlock-btn');
+                    btn.className = "w-full py-6 mt-10 rounded-3xl font-black text-white bg-gradient-to-r from-red-600 to-rose-600 shadow-xl cursor-pointer animate-pulse uppercase text-[11px]";
+                    btn.innerText = "NHẬN LINK NGAY";
+                    btn.onclick = async () => {
+                        const secret = await getDoc(doc(db, "an_link", id));
+                        const tokenId = Math.random().toString(36).substring(2, 15);
+                        await setDoc(doc(db, "link_gioi_han", tokenId), { destUrl: secret.data().destUrl, expireAt: Date.now() + 30000, used: false });
+                        window.location.href = window.location.pathname + `?id=${id}&token=${tokenId}`;
+                    };
+                }
+            };
+            window.doTask = (i, url) => { window.open(url, '_blank'); setTimeout(() => { completed.add(i); render(); }, 7000); };
+            render();
+        }
+
+        if (linkId) loadUserPage();
     </script>
 </body>
 </html>
