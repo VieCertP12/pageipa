@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="vi">
 <head>
-    <title>Link4Sub Pro - Premium System</title>
+    <title>Link4Sub Pro - Premium v4.0</title>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -9,25 +9,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif !important; background-color: #f8fafc; color: #1e293b; -webkit-user-select: none; user-select: none; }
+        .tab-active { color: #ef4444; border-bottom: 4px solid #ef4444; }
         .btn-premium { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3); }
-        .fade-in { animation: fadeIn 0.5s ease-out; }
+        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.2); }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .my-loader { border-top-color: #ef4444; animation: spinner 0.8s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #toast-container { position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; }
-        .toast { min-width: 280px; padding: 16px 20px; border-radius: 16px; color: white; font-weight: 700; font-size: 14px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); animation: slideIn 0.3s forwards; }
+        .toast { min-width: 280px; padding: 18px 24px; border-radius: 20px; color: white; font-weight: 800; font-size: 13px; shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); animation: slideIn 0.3s forwards; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
-        .task-card { transition: all 0.3s ease; border: 2px solid transparent; }
-        .task-card:hover:not(.locked) { border-color: rgba(239, 68, 68, 0.1); background: #ffffff; transform: scale(1.02); }
     </style>
 </head>
 <body>
     <div id="toast-container"></div>
 
-    <nav class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 h-20 flex items-center justify-between px-8 border-b border-slate-100">
+    <nav class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 h-20 flex items-center justify-between px-8 border-b border-slate-100 shadow-sm">
         <div class="flex items-center gap-3">
-            <div class="bg-gradient-to-br from-red-500 to-rose-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-red-200">
+            <div class="bg-gradient-to-br from-red-500 to-rose-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg">
                 <i class="fa-solid fa-link text-lg"></i>
             </div>
             <span class="font-black text-slate-800 text-xl tracking-tighter">Link4Sub <span class="text-red-500">PRO</span></span>
@@ -38,8 +37,8 @@
     <main class="min-h-screen pt-28 pb-12 px-4 flex flex-col items-center">
         <div id="mainContainer" class="w-full max-w-6xl">
             <div class="flex flex-col items-center justify-center py-32">
-                <div class="my-loader rounded-full border-4 border-slate-200 h-14 w-14 mb-4"></div>
-                <p class="text-slate-400 font-bold tracking-widest uppercase text-[10px]">Đang khởi tạo bảo mật...</p>
+                <div class="my-loader rounded-full border-4 border-slate-100 h-14 w-14 mb-4"></div>
+                <p class="text-slate-300 font-black tracking-widest uppercase text-[9px]">Securing Connection...</p>
             </div>
         </div>
     </main>
@@ -63,7 +62,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-
         const urlParams = new URLSearchParams(window.location.search);
         const linkId = urlParams.get('id');
         const container = document.getElementById('mainContainer');
@@ -74,8 +72,8 @@
 
         window.showToast = (msg, type='info') => {
             const t = document.createElement('div');
-            const bg = type === 'success' ? 'bg-emerald-500' : type === 'error' ? 'bg-rose-500' : 'bg-blue-600';
-            t.className = `toast ${bg}`;
+            const bg = type === 'success' ? 'bg-emerald-500' : type === 'error' ? 'bg-rose-500' : 'bg-slate-800';
+            t.className = `toast ${bg} fade-in`;
             t.innerHTML = `<div class="flex items-center gap-3"><i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-info'}"></i>${msg}</div>`;
             document.getElementById('toast-container').appendChild(t);
             setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 3000);
@@ -84,10 +82,10 @@
         const platformConfig = {
             youtube_sub: { color: 'bg-[#FF0000]', icon: 'fa-youtube', label: 'Đăng ký kênh' },
             youtube_like: { color: 'bg-[#FF0000]', icon: 'fa-thumbs-up', label: 'Like Video' },
-            youtube_cmt: { color: 'bg-[#FF0000]', icon: 'fa-comment', label: 'Bình luận Video' },
-            telegram: { color: 'bg-[#229ED9]', icon: 'fa-telegram', label: 'Tham gia Telegram' },
-            facebook: { color: 'bg-[#1877F2]', icon: 'fa-facebook', label: 'Theo dõi Facebook' },
-            tiktok: { color: 'bg-[#000000]', icon: 'fa-tiktok', label: 'Follow TikTok' }
+            youtube_cmt: { color: 'bg-[#FF0000]', icon: 'fa-comment-dots', label: 'Bình luận Video' },
+            telegram: { color: 'bg-[#229ED9]', icon: 'fa-telegram', label: 'Tham gia Box' },
+            facebook: { color: 'bg-[#1877F2]', icon: 'fa-facebook', label: 'Theo dõi Fanpage' },
+            tiktok: { color: 'bg-black', icon: 'fa-tiktok', label: 'Follow TikTok' }
         };
 
         async function init() {
@@ -99,197 +97,193 @@
                     window.location.href = tokenSnap.data().destUrl;
                     return;
                 }
-                alert("Link hết hạn!");
             }
             if (linkId) loadUserPage();
             else onAuthStateChanged(auth, u => {
                 const nav = document.getElementById('nav-actions');
                 if(u) {
-                    nav.innerHTML = `<button onclick="signOut(auth)" class="text-slate-400 hover:text-rose-500 font-bold text-sm transition-colors">Thoát <i class="fa-solid fa-right-from-bracket ml-1"></i></button>`;
-                    renderAdmin();
-                } else {
-                    nav.innerHTML = `<span class="text-slate-300 text-xs font-bold uppercase tracking-widest">Admin Access</span>`;
-                    renderLogin();
-                }
+                    nav.innerHTML = `<button onclick="signOut(auth)" class="text-slate-400 font-bold text-xs hover:text-red-500 transition-colors uppercase">Thoát Quản Trị <i class="fa-solid fa-power-off ml-1"></i></button>`;
+                    renderAdminDashboard();
+                } else renderLogin();
             });
         }
         window.signOut = signOut;
-        window.auth = auth;
         init();
 
-        // --- GIAO DIỆN USER ---
+        // --- USER PAGE ---
         async function loadUserPage() {
             const snap = await getDoc(doc(db, "links", linkId));
             if (!snap.exists() || snap.data().isActive === false) {
-                container.innerHTML = `<div class="max-w-md mx-auto bg-white p-12 rounded-3xl shadow-xl text-center fade-in"><h2 class="text-xl font-bold">Link không tồn tại.</h2></div>`;
+                container.innerHTML = `<div class="max-w-md mx-auto bg-white p-12 rounded-[2.5rem] shadow-xl text-center fade-in"><i class="fa-solid fa-ban text-slate-100 text-6xl mb-6"></i><h2 class="font-black text-slate-800">LIÊN KẾT ĐÃ KHÓA</h2></div>`;
                 return;
             }
             currentLinkData = snap.data();
             updateDoc(doc(db, "links", linkId), { views: increment(1) });
-            renderUserTasksUI();
-        }
-
-        function renderUserTasksUI() {
-            const tasks = currentLinkData.tasks || [];
-            let tasksHtml = tasks.map((t, i) => {
-                const isDone = completedSet.has(i), isLocked = i > 0 && !completedSet.has(i - 1);
-                const conf = platformConfig[t.platform] || { color: 'bg-slate-600', icon: 'fa-link', label: 'Nhiệm vụ' };
-                return `
-                <div onclick="${!isDone && !isLocked ? `window.doTask(${i},'${t.url}')` : ''}" 
-                     class="task-card p-5 rounded-2xl flex justify-between items-center mb-3 ${isDone ? 'bg-emerald-50' : isLocked ? 'bg-slate-50 opacity-50 grayscale' : 'bg-slate-50 cursor-pointer'}">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg ${isDone ? 'bg-emerald-500' : isLocked ? 'bg-slate-300' : conf.color}">
-                            <i class="fa-brands ${conf.icon} text-xl"></i>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-[9px] font-black uppercase tracking-widest text-slate-400">${t.platform.split('_')[0]}</p>
-                            <h4 class="font-bold text-slate-800 text-sm">${t.label || conf.label}</h4>
-                        </div>
-                    </div>
-                    <div class="text-slate-300">
-                        <i class="fa-solid ${isDone ? 'fa-circle-check text-emerald-500 text-xl' : isLocked ? 'fa-lock' : 'fa-chevron-right text-sm'}"></i>
-                    </div>
-                </div>`;
-            }).join('');
-
+            
             container.innerHTML = `
             <div class="max-w-xl mx-auto fade-in">
-                <a href="https://muachungchi.com" target="_blank" class="block bg-slate-900 rounded-[2rem] p-6 mb-8 shadow-2xl relative overflow-hidden group btn-premium">
+                <a href="https://muachungchi.com" target="_blank" class="block bg-slate-900 rounded-[2.5rem] p-7 mb-8 shadow-2xl relative overflow-hidden group btn-premium">
                     <div class="absolute -right-4 -top-4 w-32 h-32 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-all"></div>
                     <div class="flex items-center justify-between relative z-10">
-                        <div class="flex items-center gap-4">
-                            <div class="bg-white/10 w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl"><i class="fa-brands fa-apple"></i></div>
+                        <div class="flex items-center gap-4 text-left">
+                            <div class="bg-white/10 w-14 h-14 rounded-2xl flex items-center justify-center text-white text-3xl shadow-inner"><i class="fa-brands fa-apple"></i></div>
                             <div>
-                                <h3 class="text-white font-black text-lg uppercase tracking-tight">Muachungchi.com</h3>
-                                <p class="text-slate-400 text-xs italic">Chứng chỉ iOS giá rẻ <span class="text-rose-500 font-black underline">150k/năm</span></p>
+                                <h3 class="text-white font-black text-xl uppercase tracking-tighter">Muachungchi.com</h3>
+                                <p class="text-slate-400 text-xs italic font-bold">Chứng chỉ iOS giá rẻ <span class="text-rose-500 underline decoration-2">150k/năm</span></p>
                             </div>
                         </div>
-                        <div class="bg-rose-600 text-white px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest">Mua Ngay</div>
+                        <div class="bg-rose-600 text-white px-6 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest">Mua Ngay</div>
                     </div>
                 </a>
 
-                <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-slate-50 text-center">
-                    <h1 class="text-3xl font-black text-slate-800 mb-2 tracking-tight uppercase">${currentLinkData.title}</h1>
-                    <div class="h-1 w-12 bg-red-600 mx-auto mb-4 rounded-full"></div>
-                    <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] mb-10 italic">Hoàn thành các bước để nhận link</p>
+                <div class="bg-white p-12 rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-50 text-center">
+                    <h1 class="text-4xl font-black text-slate-800 mb-2 tracking-tighter uppercase leading-none">${currentLinkData.title}</h1>
+                    <div class="h-1.5 w-16 bg-red-600 mx-auto mb-6 rounded-full"></div>
+                    <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em] mb-12 italic">Cần hoàn thành các bước bên dưới</p>
                     
-                    <div id="taskListContent">${tasksHtml}</div>
+                    <div id="taskListContent"></div>
 
-                    <button id="unlock-btn" class="w-full py-5 mt-10 rounded-2xl font-black text-white bg-slate-200 cursor-not-allowed transition-all duration-500 uppercase tracking-widest text-xs">
-                        <i class="fa-solid fa-lock mr-2 opacity-50"></i> Đang bị khóa
+                    <button id="unlock-btn" class="w-full py-6 mt-10 rounded-3xl font-black text-white bg-slate-100 cursor-not-allowed uppercase tracking-[0.2em] text-[11px] border-b-4 border-slate-200">
+                        <i class="fa-solid fa-lock mr-2 opacity-30"></i> Link đang bị khóa
                     </button>
-
-                    <div class="mt-8 flex justify-center items-center gap-2 text-[9px] font-bold text-slate-300 uppercase tracking-[0.2em]">
-                        <span>Powered by</span> <span class="text-red-500">Link4Sub Pro</span>
-                    </div>
+                    <p class="mt-8 text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Bảo mật bởi <span class="text-red-500">Link4Sub Pro</span></p>
                 </div>
             </div>`;
-            checkUnlockState();
+            renderUserTasks(currentLinkData.tasks);
         }
 
-        window.doTask = (i, url) => { 
-            window.open(url, '_blank'); 
-            showToast("Đang kiểm tra...", "info");
-            setTimeout(() => { completedSet.add(i); renderUserTasksUI(); }, 7000); 
-        };
-
-        function checkUnlockState() {
-            if (completedSet.size >= currentLinkData.tasks.length && currentLinkData.tasks.length > 0) {
+        function renderUserTasks(tasks) {
+            const list = document.getElementById('taskListContent');
+            list.innerHTML = tasks.map((t, i) => {
+                const isDone = completedSet.has(i), isLocked = i > 0 && !completedSet.has(i - 1);
+                const conf = platformConfig[t.platform] || { color: 'bg-slate-700', icon: 'fa-link', label: 'Nhiệm vụ' };
+                return `
+                <div onclick="${!isDone && !isLocked ? `window.doTask(${i},'${t.url}')` : ''}" 
+                     class="p-6 rounded-[2rem] flex justify-between items-center mb-4 transition-all duration-300 ${isDone ? 'bg-emerald-50' : isLocked ? 'bg-slate-50 opacity-40 grayscale cursor-not-allowed' : 'bg-slate-50 hover:bg-white hover:shadow-xl hover:scale-[1.02] cursor-pointer'} border-2 ${isDone ? 'border-emerald-100' : 'border-transparent'}">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-xl ${isDone ? 'bg-emerald-500 shadow-emerald-200' : isLocked ? 'bg-slate-300' : conf.color}">
+                            <i class="fa-solid ${conf.icon} text-2xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <p class="text-[9px] font-black uppercase tracking-widest ${isDone ? 'text-emerald-500' : 'text-slate-400'}">${t.platform.replace('_', ' ')}</p>
+                            <h4 class="font-black text-slate-800 text-sm tracking-tight">${t.label || conf.label}</h4>
+                        </div>
+                    </div>
+                    <div class="${isDone ? 'text-emerald-500' : 'text-slate-300'}">
+                        <i class="fa-solid ${isDone ? 'fa-circle-check text-2xl' : isLocked ? 'fa-lock' : 'fa-chevron-right text-sm'}"></i>
+                    </div>
+                </div>`;
+            }).join('');
+            
+            if (completedSet.size >= tasks.length && tasks.length > 0) {
                 const btn = document.getElementById('unlock-btn');
-                btn.className = "w-full py-5 mt-10 rounded-2xl font-black text-white bg-gradient-to-r from-red-600 to-rose-600 shadow-xl shadow-rose-200 cursor-pointer animate-pulse uppercase tracking-widest text-xs btn-premium hover:brightness-110";
+                btn.className = "w-full py-6 mt-10 rounded-3xl font-black text-white bg-gradient-to-r from-red-600 to-rose-600 shadow-xl shadow-rose-200 cursor-pointer animate-pulse uppercase tracking-[0.2em] text-[11px] btn-premium border-b-4 border-rose-800";
                 btn.innerHTML = `<i class="fa-solid fa-unlock-keyhole mr-2"></i> Nhận Link Ngay`;
                 btn.onclick = async () => {
                     const secret = await getDoc(doc(db, "an_link", linkId));
                     const tokenId = Math.random().toString(36).substring(2, 15);
-                    await setDoc(doc(db, "link_gioi_han", tokenId), {
-                        destUrl: secret.data().destUrl,
-                        expireAt: Date.now() + 30000,
-                        used: false
-                    });
+                    await setDoc(doc(db, "link_gioi_han", tokenId), { destUrl: secret.data().destUrl, expireAt: Date.now() + 30000, used: false });
                     window.location.href = window.location.pathname + `?id=${linkId}&token=${tokenId}`;
                 };
             }
         }
+        window.doTask = (i, url) => { 
+            if(!url || url === "") return showToast("Lỗi: Nhiệm vụ này chưa được dán link!", "error");
+            window.open(url, '_blank'); 
+            showToast("Đang xác minh 7 giây...", "info");
+            setTimeout(() => { completedSet.add(i); loadUserPage(); }, 7000); 
+        };
 
-        // --- GIAO DIỆN ADMIN ---
+        // --- ADMIN DASHBOARD ---
         function renderLogin() {
-            container.innerHTML = `
-            <div class="max-w-sm mx-auto bg-white p-12 rounded-[2.5rem] shadow-2xl border border-slate-50 fade-in">
-                <div class="text-center mb-8">
-                    <h2 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Admin Portal</h2>
-                    <p class="text-slate-400 text-xs font-bold mt-1">Hệ thống quản lý bảo mật</p>
-                </div>
-                <div class="space-y-4">
-                    <input id="email" type="email" placeholder="Email" class="w-full p-4 bg-slate-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-red-500/20 font-bold">
-                    <input id="pass" type="password" placeholder="Pass" class="w-full p-4 bg-slate-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-red-500/20 font-bold">
-                    <button onclick="window.login()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs btn-premium">Đăng nhập</button>
-                </div>
+            container.innerHTML = `<div class="max-w-sm mx-auto bg-white p-12 rounded-[3rem] shadow-2xl border border-slate-50 fade-in text-center mt-10">
+                <h2 class="text-2xl font-black text-slate-800 mb-8 uppercase tracking-tighter">Admin Portal</h2>
+                <input id="email" type="email" placeholder="Email Quản trị" class="w-full p-4 bg-slate-50 rounded-2xl mb-3 outline-none focus:ring-2 focus:ring-red-500/20 font-bold">
+                <input id="pass" type="password" placeholder="Mật khẩu" class="w-full p-4 bg-slate-50 rounded-2xl mb-6 outline-none focus:ring-2 focus:ring-red-500/20 font-bold">
+                <button onclick="window.login()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs btn-premium">Vào hệ thống</button>
             </div>`;
-            window.login = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => showToast("Lỗi đăng nhập!", "error"));
+            window.login = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => showToast("Sai tài khoản!", "error"));
         }
 
-        async function renderAdmin() {
+        async function renderAdminDashboard() {
             container.innerHTML = `
-            <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-slate-50 fade-in">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                    <div class="lg:col-span-4 border-r border-slate-50 pr-8">
-                        <h3 class="font-black text-slate-800 text-lg mb-6 uppercase tracking-tight" id="form-title">Tạo Link Mới</h3>
-                        <div class="space-y-4">
-                            <input id="bTitle" type="text" placeholder="Tiêu đề link" class="w-full p-4 bg-slate-50 rounded-2xl outline-none border-2 border-transparent focus:border-red-500 transition-all font-bold text-sm">
-                            <input id="bDest" type="text" placeholder="Link đích bí mật (itms-services...)" class="w-full p-4 bg-green-50 rounded-2xl outline-none border-2 border-transparent focus:border-green-500 transition-all font-bold text-sm">
-                            
-                            <div class="pt-4">
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">Nhiệm vụ YouTube</p>
-                                <div class="grid grid-cols-3 gap-2">
-                                    <button onclick="window.addT('youtube_sub')" class="bg-red-50 text-red-600 p-2.5 rounded-xl font-bold text-[9px] hover:bg-red-600 hover:text-white transition-all underline decoration-2">SUB</button>
-                                    <button onclick="window.addT('youtube_like')" class="bg-red-50 text-red-600 p-2.5 rounded-xl font-bold text-[9px] hover:bg-red-600 hover:text-white transition-all">LIKE</button>
-                                    <button onclick="window.addT('youtube_cmt')" class="bg-red-50 text-red-600 p-2.5 rounded-xl font-bold text-[9px] hover:bg-red-600 hover:text-white transition-all">CMT</button>
-                                </div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-4 mb-3">Mạng xã hội khác</p>
-                                <div class="grid grid-cols-3 gap-2">
-                                    <button onclick="window.addT('telegram')" class="bg-blue-50 text-blue-500 p-2.5 rounded-xl font-bold text-[9px] hover:bg-blue-500 hover:text-white transition-all">TELE</button>
-                                    <button onclick="window.addT('facebook')" class="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl font-bold text-[9px] hover:bg-indigo-600 hover:text-white transition-all">FB</button>
-                                    <button onclick="window.addT('tiktok')" class="bg-slate-100 text-slate-800 p-2.5 rounded-xl font-bold text-[9px] hover:bg-slate-800 hover:text-white transition-all">TIKTOK</button>
-                                </div>
+            <div class="fade-in w-full">
+                <div class="flex justify-center mb-10 gap-10">
+                    <button onclick="window.switchTab('create')" id="tab-create" class="pb-3 font-black text-sm uppercase tracking-[0.2em] tab-active transition-all">Tạo Link Mới</button>
+                    <button onclick="window.switchTab('manage')" id="tab-manage" class="pb-3 font-black text-sm uppercase tracking-[0.2em] text-slate-300 hover:text-slate-500 transition-all">Quản lý Link</button>
+                </div>
+
+                <div id="section-create" class="max-w-4xl mx-auto bg-white p-12 rounded-[3.5rem] shadow-2xl border border-slate-50">
+                    <div class="mb-10 text-center">
+                        <h3 class="font-black text-2xl text-slate-800 tracking-tight uppercase" id="form-title">THIẾT KẾ LINK BẢO MẬT</h3>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <input id="bTitle" type="text" placeholder="Tiêu đề hiển thị (Ví dụ: Esign Pro 2025...)" class="w-full p-6 bg-slate-50 border-2 border-transparent focus:border-red-500 focus:bg-white rounded-[2rem] outline-none transition-all font-black text-xl">
+                        <input id="bDest" type="text" placeholder="Link đích bí mật (itms-services...)" class="w-full p-6 bg-emerald-50 border-2 border-transparent focus:border-emerald-500 focus:bg-white rounded-[2rem] outline-none transition-all font-bold text-sm text-emerald-600">
+
+                        <div class="pt-6 border-t border-slate-50">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 text-center">Click để thêm nhiệm vụ</p>
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-8">
+                                <button onclick="window.addT('youtube_sub')" class="bg-red-50 text-red-600 p-4 rounded-2xl font-black text-[9px] hover:bg-red-600 hover:text-white transition-all shadow-sm flex flex-col items-center gap-1"><i class="fa-solid fa-youtube text-lg"></i> SUB</button>
+                                <button onclick="window.addT('youtube_like')" class="bg-red-50 text-red-600 p-4 rounded-2xl font-black text-[9px] hover:bg-red-600 hover:text-white transition-all shadow-sm flex flex-col items-center gap-1"><i class="fa-solid fa-thumbs-up text-lg"></i> LIKE</button>
+                                <button onclick="window.addT('youtube_cmt')" class="bg-red-50 text-red-600 p-4 rounded-2xl font-black text-[9px] hover:bg-red-600 hover:text-white transition-all shadow-sm flex flex-col items-center gap-1"><i class="fa-solid fa-comment-dots text-lg"></i> CMT</button>
+                                <button onclick="window.addT('telegram')" class="bg-blue-50 text-blue-500 p-4 rounded-2xl font-black text-[9px] hover:bg-blue-500 hover:text-white transition-all shadow-sm flex flex-col items-center gap-1"><i class="fa-solid fa-telegram text-lg"></i> BOX</button>
+                                <button onclick="window.addT('facebook')" class="bg-indigo-50 text-indigo-600 p-4 rounded-2xl font-black text-[9px] hover:bg-indigo-600 hover:text-white transition-all shadow-sm flex flex-col items-center gap-1"><i class="fa-solid fa-facebook text-lg"></i> FB</button>
+                                <button onclick="window.addT('tiktok')" class="bg-slate-100 text-slate-800 p-4 rounded-2xl font-black text-[9px] hover:bg-slate-800 hover:text-white transition-all shadow-sm flex flex-col items-center gap-1"><i class="fa-solid fa-tiktok text-lg"></i> TIKTOK</button>
                             </div>
+                            <div id="bTaskList" class="space-y-3"></div>
+                        </div>
 
-                            <div id="bTaskList" class="space-y-2 py-4 max-h-48 overflow-y-auto"></div>
-
-                            <button id="btnSave" onclick="window.saveL()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs btn-premium shadow-xl shadow-red-100">Lưu Link</button>
-                            <button id="btnCancel" onclick="window.cancelEdit()" class="hidden w-full bg-slate-200 text-slate-600 py-3 rounded-2xl font-bold text-xs">Hủy sửa</button>
+                        <div class="flex gap-4 pt-6">
+                            <button id="btnSave" onclick="window.saveL()" class="flex-1 bg-slate-900 text-white py-6 rounded-[2.5rem] font-black uppercase tracking-widest text-xs btn-premium shadow-2xl">Lưu Link Bảo Mật</button>
+                            <button id="btnCancel" onclick="window.cancelEdit()" class="hidden bg-slate-200 text-slate-600 px-10 rounded-[2.5rem] font-black uppercase text-[10px] tracking-widest transition-all">Hủy</button>
                         </div>
                     </div>
-                    <div class="lg:col-span-8">
-                        <h3 class="font-black text-slate-800 text-lg mb-6 uppercase tracking-tight">Kho Link Bảo Mật</h3>
-                        <div id="history" class="space-y-4 max-h-[600px] overflow-y-auto pr-2"></div>
+                </div>
+
+                <div id="section-manage" class="hidden max-w-5xl mx-auto fade-in">
+                    <div class="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-50">
+                        <div class="flex justify-between items-center mb-8 border-b border-slate-50 pb-6">
+                            <h3 class="font-black text-slate-800 text-lg uppercase tracking-tight">KHO LƯU TRỮ LINK</h3>
+                            <button onclick="window.loadHistory()" class="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:underline"><i class="fa-solid fa-rotate mr-1"></i> Làm mới</button>
+                        </div>
+                        <div id="history" class="space-y-4"></div>
                     </div>
                 </div>
             </div>`;
             loadHistory();
         }
 
-        window.addT = (p) => { 
-            const conf = platformConfig[p];
-            currentTasks.push({platform: p, label: conf.label, url: ''}); 
-            renderAdminTasks(); 
+        window.switchTab = (tab) => {
+            document.getElementById('section-create').classList.toggle('hidden', tab !== 'create');
+            document.getElementById('section-manage').classList.toggle('hidden', tab !== 'manage');
+            document.getElementById('tab-create').className = tab === 'create' ? "pb-3 font-black text-sm uppercase tracking-[0.2em] tab-active" : "pb-3 font-black text-sm uppercase tracking-[0.2em] text-slate-300";
+            document.getElementById('tab-manage').className = tab === 'manage' ? "pb-3 font-black text-sm uppercase tracking-[0.2em] tab-active" : "pb-3 font-black text-sm uppercase tracking-[0.2em] text-slate-300";
         };
+
+        window.addT = (p) => { currentTasks.push({platform: p, label: platformConfig[p].label, url: ''}); renderAdminTasks(); };
         window.removeT = (i) => { currentTasks.splice(i, 1); renderAdminTasks(); };
         function renderAdminTasks() {
             document.getElementById('bTaskList').innerHTML = currentTasks.map((t, i) => `
-                <div class="p-3 bg-slate-50 rounded-xl relative border border-slate-100">
-                    <button onclick="window.removeT(${i})" class="absolute -top-1 -right-1 w-5 h-5 bg-white shadow-md rounded-full text-red-500 text-[10px] font-black">×</button>
-                    <div class="flex items-center gap-2 mb-2">
-                        <i class="fa-brands ${platformConfig[t.platform]?.icon} ${platformConfig[t.platform]?.color.replace('bg-', 'text-')} text-xs"></i>
-                        <input value="${t.label}" onchange="currentTasks[${i}].label=this.value" class="bg-transparent font-black text-[9px] outline-none border-b border-slate-200 w-full" placeholder="Tên nút">
+                <div class="p-4 bg-slate-50 rounded-2xl relative border-2 border-white shadow-sm flex flex-col sm:flex-row gap-4 items-center animate-fade-in">
+                    <button onclick="window.removeT(${i})" class="absolute -top-2 -right-2 w-8 h-8 bg-white shadow-md rounded-full text-red-500 font-black flex items-center justify-center border border-slate-100">×</button>
+                    <div class="flex items-center gap-3 min-w-[130px]">
+                        <i class="fa-solid ${platformConfig[t.platform]?.icon} ${platformConfig[t.platform]?.color.replace('bg-', 'text-')} text-lg"></i>
+                        <span class="font-black text-[10px] uppercase tracking-widest text-slate-500">${t.platform.replace('youtube_', '')}</span>
                     </div>
-                    <input value="${t.url}" onchange="currentTasks[${i}].url=this.value" placeholder="Dán link (https://...)" class="w-full bg-white px-3 py-1.5 rounded-lg text-[9px] outline-none focus:ring-1 focus:ring-red-500 font-bold border border-slate-100">
+                    <input value="${t.label}" onchange="currentTasks[${i}].label=this.value" class="flex-1 bg-white px-5 py-3 rounded-2xl text-xs font-bold outline-none border border-slate-100 focus:border-red-500" placeholder="Tên hiển thị">
+                    <input value="${t.url}" onchange="currentTasks[${i}].url=this.value" class="flex-[2] bg-white px-5 py-3 rounded-2xl text-xs font-bold outline-none border border-slate-100 focus:border-red-500" placeholder="Dán link (Bắt buộc)">
                 </div>`).join('');
         }
 
         window.saveL = async () => {
             const title = document.getElementById('bTitle').value, dest = document.getElementById('bDest').value;
-            if(!title || !dest) return showToast("Vui lòng điền đủ!", "error");
-            const btn = document.getElementById('btnSave'); btn.disabled = true;
+            if(!title || !dest) return showToast("Vui lòng điền tiêu đề và link đích!", "error");
+            if(currentTasks.length === 0) return showToast("Vui lòng thêm ít nhất 1 nhiệm vụ!", "error");
+            if(currentTasks.some(t => t.url === "")) return showToast("Lỗi: Link nhiệm vụ không được để trống!", "error");
+
+            const btn = document.getElementById('btnSave'); btn.disabled = true; btn.innerText = "ĐANG LƯU...";
             try {
                 let finalId = editId;
                 if (!editId) {
@@ -299,10 +293,10 @@
                     await updateDoc(doc(db, "links", editId), { title, tasks: currentTasks });
                 }
                 await setDoc(doc(db, "an_link", finalId), { destUrl: dest });
-                showToast("Đã lưu bảo mật!", "success");
+                showToast("Đã lưu dữ liệu bảo mật thành công!", "success");
                 window.cancelEdit();
-            } catch(e) { showToast("Lỗi!", "error"); }
-            finally { btn.disabled = false; }
+            } catch(e) { showToast("Lỗi hệ thống database!", "error"); }
+            finally { btn.disabled = false; btn.innerText = "Lưu Link Bảo Mật"; }
         };
 
         window.loadEdit = async (id) => {
@@ -310,51 +304,55 @@
             const secret = await getDoc(doc(db, "an_link", id));
             if(snap.exists()){
                 editId = id;
+                window.switchTab('create');
                 document.getElementById('bTitle').value = snap.data().title;
                 document.getElementById('bDest').value = secret.data().destUrl;
                 currentTasks = snap.data().tasks || [];
                 renderAdminTasks();
-                document.getElementById('form-title').innerText = "Đang Sửa Link";
+                document.getElementById('form-title').innerText = "CẬP NHẬT LINK";
                 document.getElementById('btnCancel').classList.remove('hidden');
-                document.getElementById('btnSave').innerText = "Cập Nhật";
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.getElementById('btnSave').innerText = "Lưu Thay Đổi";
+                showToast("Đã tải dữ liệu sửa");
             }
         };
 
         window.cancelEdit = () => {
             editId = null; currentTasks = [];
             document.getElementById('bTitle').value = ""; document.getElementById('bDest').value = "";
-            document.getElementById('form-title').innerText = "Tạo Link Mới";
+            document.getElementById('form-title').innerText = "THIẾT KẾ LINK BẢO MẬT";
             document.getElementById('btnCancel').classList.add('hidden');
-            document.getElementById('btnSave').innerText = "Lưu Link";
+            document.getElementById('btnSave').innerText = "Lưu Link Bảo Mật";
             renderAdminTasks(); loadHistory();
         };
 
         async function loadHistory() {
-            const q = query(collection(db, "links"), orderBy("createdAt", "desc"));
-            const snap = await getDocs(q);
+            const snap = await getDocs(query(collection(db, "links"), orderBy("createdAt", "desc")));
             const list = document.getElementById('history'); list.innerHTML = '';
             for (const d of snap.docs) {
                 const data = d.data();
                 const secret = await getDoc(doc(db, "an_link", d.id));
                 const dest = secret.exists() ? secret.data().destUrl : "N/A";
                 const shareUrl = `${window.location.origin}${window.location.pathname}?id=${d.id}`;
-                list.innerHTML += `<div class="p-6 bg-slate-50 rounded-[2rem] flex justify-between items-center text-xs border border-slate-100 group hover:bg-white hover:shadow-xl transition-all">
+                list.innerHTML += `
+                <div class="p-6 bg-slate-50 rounded-[2.5rem] flex flex-col sm:flex-row justify-between items-center border border-slate-100 hover:bg-white hover:shadow-2xl transition-all">
                     <div class="truncate mr-4 flex-1">
-                        <b class="text-sm text-slate-800 uppercase font-black">${data.title}</b> <span class="bg-red-50 text-red-500 px-2 rounded-full font-black ml-2">${data.views} views</span><br>
-                        <p class="text-[9px] text-emerald-600 font-bold mt-1 truncate">Gốc: ${dest}</p>
+                        <div class="flex items-center gap-2 mb-1">
+                            <b class="text-sm text-slate-800 uppercase font-black tracking-tight">${data.title}</b> 
+                            <span class="bg-red-50 text-red-500 px-3 rounded-full font-black text-[8px] uppercase">${data.views} lượt xem</span>
+                        </div>
+                        <p class="text-[9px] text-emerald-600 font-bold truncate">Gốc: ${dest}</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="window.loadEdit('${d.id}')" class="p-3 bg-white text-orange-500 rounded-xl shadow-sm hover:bg-orange-500 hover:text-white transition-all"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="window.toggleL('${d.id}', ${data.isActive})" class="p-3 bg-white ${data.isActive ? 'text-green-500' : 'text-slate-300'} rounded-xl shadow-sm hover:bg-slate-800 hover:text-white transition-all"><i class="fa-solid fa-power-off"></i></button>
-                        <button onclick="navigator.clipboard.writeText('${shareUrl}'); showToast('Đã copy!')" class="p-3 bg-white text-blue-500 rounded-xl shadow-sm hover:bg-blue-500 hover:text-white transition-all"><i class="fa-solid fa-copy"></i></button>
-                        <button onclick="window.delL('${d.id}')" class="p-3 bg-white text-red-500 rounded-xl shadow-sm hover:bg-red-500 hover:text-white transition-all"><i class="fa-solid fa-trash"></i></button>
+                    <div class="flex gap-2 mt-4 sm:mt-0">
+                        <button onclick="window.loadEdit('${d.id}')" class="w-11 h-11 bg-white text-orange-500 rounded-2xl shadow-sm hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="window.toggleL('${d.id}', ${data.isActive})" class="w-11 h-11 bg-white ${data.isActive ? 'text-green-500' : 'text-slate-300'} rounded-2xl shadow-sm hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center"><i class="fa-solid fa-power-off"></i></button>
+                        <button onclick="navigator.clipboard.writeText('${shareUrl}'); showToast('Đã copy link chia sẻ!')" class="w-11 h-11 bg-white text-blue-500 rounded-2xl shadow-sm hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center"><i class="fa-solid fa-copy"></i></button>
+                        <button onclick="window.delL('${d.id}')" class="w-11 h-11 bg-white text-red-500 rounded-2xl shadow-sm hover:bg-red-500 hover:text-white transition-all flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>`;
             }
         }
         window.toggleL = async (id, cur) => { await updateDoc(doc(db, "links", id), { isActive: !cur }); loadHistory(); };
-        window.delL = async (id) => { if(confirm("Xóa?")) { await deleteDoc(doc(db, "links", id)); await deleteDoc(doc(db, "an_link", id)); loadHistory(); } };
+        window.delL = async (id) => { if(confirm("Xóa vĩnh viễn?")) { await deleteDoc(doc(db, "links", id)); await deleteDoc(doc(db, "an_link", id)); loadHistory(); } };
     </script>
 </body>
 </html>
