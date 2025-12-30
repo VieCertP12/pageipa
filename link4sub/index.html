@@ -93,48 +93,39 @@
 
         // --- GIAO DIỆN USER ---
         async function loadUserPage() {
-            const snap = await getDoc(doc(db, "links", linkId));
-            if (!snap.exists() || snap.data().isActive === false) {
-                container.innerHTML = `<div class="bg-white p-10 rounded-xl shadow text-center">Liên kết này đã bị tạm ngừng.</div>`;
-                return;
-            }
-            const data = snap.data();
-            updateDoc(doc(db, "links", linkId), { views: increment(1) });
-            
-            container.innerHTML = `<div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg">
+    const snap = await getDoc(doc(db, "links", linkId));
+    if (!snap.exists() || snap.data().isActive === false) {
+        container.innerHTML = `<div class="bg-white p-10 rounded-xl shadow text-center">Liên kết này đã bị tạm ngừng.</div>`;
+        return;
+    }
+    const data = snap.data();
+    updateDoc(doc(db, "links", linkId), { views: increment(1) });
+    
+    container.innerHTML = `
+        <div class="max-w-xl mx-auto fade-in">
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-5 mb-8 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-500/10 rounded-full blur-xl group-hover:bg-blue-500/20 transition-all"></div>
+                <div class="flex items-center gap-4 z-10 w-full sm:w-auto">
+                    <div class="bg-white p-3 rounded-xl shadow-sm text-blue-600 text-2xl shrink-0"><i class="fa-brands fa-apple"></i></div>
+                    <div class="text-left">
+                        <h3 class="font-bold text-gray-900 text-base">Muachungchi.com</h3>
+                        <p class="text-sm text-gray-600">Nơi bán chứng chỉ iPhone iPad giá rẻ chỉ <span class="text-red-500 font-bold">150k/năm</span></p>
+                    </div>
+                </div>
+                <a href="https://muachungchi.com" target="_blank" class="z-10 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 whitespace-nowrap w-full sm:w-auto text-center flex items-center justify-center gap-2">
+                    Mua Ngay <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
                 <h1 class="text-xl font-bold mb-6 text-center text-gray-800">${data.title}</h1>
                 <div id="taskList"></div>
-                <button id="unlock-btn" class="w-full py-4 mt-4 rounded-lg font-bold text-white bg-gray-400 opacity-50">CHƯA XONG NHIỆM VỤ</button>
-            </div>`;
-            renderUserTasks(data.tasks);
-        }
-
-        function renderUserTasks(tasks) {
-            const list = document.getElementById('taskList');
-            list.innerHTML = tasks.map((t, i) => {
-                const isDone = completedSet.has(i), isLocked = i > 0 && !completedSet.has(i - 1);
-                return `<div onclick="${!isDone && !isLocked ? `window.doTask(${i},'${t.url}')` : ''}" class="p-4 rounded-lg mb-3 flex justify-between text-white ${isDone ? 'bg-green-500' : isLocked ? 'bg-gray-300 opacity-50' : 'bg-red-600 cursor-pointer'}">
-                    <span>${t.label}</span> <i class="fa-solid ${isDone ? 'fa-check' : isLocked ? 'fa-lock' : 'fa-arrow-right'}"></i>
-                </div>`;
-            }).join('');
-            
-            if (completedSet.size >= tasks.length) {
-                const btn = document.getElementById('unlock-btn');
-                btn.className = "w-full py-4 mt-4 rounded-lg font-bold text-white bg-green-500 cursor-pointer animate-pulse";
-                btn.innerText = "LẤY LINK";
-                btn.onclick = async () => {
-                    const secret = await getDoc(doc(db, "an_link", linkId));
-                    const tokenId = Math.random().toString(36).substring(2, 15);
-                    await setDoc(doc(db, "link_gioi_han", tokenId), {
-                        destUrl: secret.data().destUrl,
-                        expireAt: Date.now() + 30000,
-                        used: false
-                    });
-                    window.location.href = window.location.pathname + `?id=${linkId}&token=${tokenId}`;
-                };
-            }
-        }
-        window.doTask = (i, url) => { window.open(url, '_blank'); setTimeout(() => { completedSet.add(i); loadUserPage(); }, 7000); };
+                <button id="unlock-btn" class="w-full py-4 mt-4 rounded-lg font-bold text-white bg-gray-400 opacity-50 uppercase tracking-wide">Chưa xong nhiệm vụ</button>
+            </div>
+        </div>
+    `;
+    renderUserTasks(data.tasks);
+}
 
         // --- GIAO DIỆN ADMIN ---
         function renderLogin() {
