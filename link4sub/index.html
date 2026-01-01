@@ -9,7 +9,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -19,23 +19,23 @@
         
         /* Custom UI Components */
         .apple-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
         }
         .apple-input {
-            background: #E5E5EA; border: none; border-radius: 12px;
-            padding: 12px 16px; font-size: 15px; width: 100%; transition: all 0.2s ease; color: #000;
+            background: #F2F2F7; border: none; border-radius: 14px;
+            padding: 14px 16px; font-size: 15px; width: 100%; transition: all 0.2s ease; color: #000;
         }
-        .apple-input:focus { background: #D1D1D6; outline: none; box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3); }
+        .apple-input:focus { background: #fff; outline: none; box-shadow: 0 0 0 2px #007AFF; }
         .apple-btn {
-            background-color: #007AFF; color: white; border-radius: 12px; font-weight: 600;
-            padding: 12px 20px; transition: transform 0.1s, opacity 0.2s; border: none;
+            background-color: #007AFF; color: white; border-radius: 14px; font-weight: 600;
+            padding: 14px 20px; transition: transform 0.1s, opacity 0.2s; border: none;
         }
-        .apple-btn:active { transform: scale(0.98); opacity: 0.8; }
+        .apple-btn:active { transform: scale(0.98); opacity: 0.9; }
         .apple-btn-secondary { background-color: rgba(118, 118, 128, 0.12); color: #007AFF; }
 
         /* Switches & Sliders */
@@ -54,38 +54,59 @@
         /* Icons & Grids */
         .stu_b_ftr { 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 70px; height: 70px; border-radius: 18px; background: #F2F2F7; 
-            color: #8E8E93; transition: all 0.2s; font-size: 10px; gap: 4px; border: 1px solid transparent;
+            width: 70px; height: 70px; border-radius: 18px; background: #fff; 
+            color: #8E8E93; transition: all 0.2s; font-size: 10px; gap: 4px; border: 1px solid #E5E5EA;
         }
         .stu_b_ftr i { font-size: 24px; margin-bottom: 2px; }
-        .stu_b_ftr.active { background: #fff; color: var(--clr); border-color: var(--clr); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .stu_b_ftr:hover { background: #E5E5EA; }
+        .stu_b_ftr.active { background: #fff; color: var(--clr); border-color: var(--clr); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
+        .stu_b_ftr:hover { background: #FAFAFA; }
 
         .btn_iftr { 
             display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; 
             border-radius: 20px; background: #fff; color: #666; font-size: 12px; font-weight: 500;
-            border: 1px solid #E5E5EA; margin: 4px; transition: all 0.2s;
+            border: 1px solid #E5E5EA; margin: 4px; transition: all 0.2s; cursor: pointer;
         }
         .btn_iftr:hover { background: #F2F2F7; }
-        .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); }
+        .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
         .btn_iftr.active i { color: white; }
 
-        .grp { display: none; }
-        .grp.active { display: block; animation: slideDown 0.3s; }
+        .grp { display: none; animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .grp.active { display: block; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.3s ease-out; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-        /* User Task States */
-        .task-disabled { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
-        .task-waiting { pointer-events: none; border-color: #3b82f6; background-color: #eff6ff; }
+        /* Modern User Task States */
+        .task-card-modern {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .task-card-modern:active { transform: scale(0.98); }
         
+        .task-disabled { 
+            opacity: 0.6; 
+            pointer-events: none; 
+            filter: grayscale(100%); 
+            background: #f9f9f9;
+        }
+        .task-waiting { 
+            pointer-events: none; 
+            background-color: #fff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px #3b82f6 inset;
+        }
+        .task-done {
+            background-color: #f0fdf4;
+            border-color: #22c55e;
+        }
+
         /* Spinner */
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid #007AFF; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="h-screen flex items-center justify-center overflow-hidden">
+<body class="h-screen flex items-center justify-center overflow-hidden bg-[#e0e5ec]">
 
     <div id="app" class="w-full h-full md:h-[90vh] max-w-5xl md:rounded-3xl overflow-hidden flex flex-col relative apple-card shadow-2xl">
         
@@ -98,65 +119,68 @@
         </div>
 
         <!-- VIEW 1: LOGIN -->
-        <div id="view-login" class="hidden flex-1 flex-col items-center justify-center p-6">
+        <div id="view-login" class="hidden flex-1 flex-col items-center justify-center p-6 bg-gray-50">
             <div class="text-center w-full max-w-xs fade-in">
-                <div class="w-20 h-20 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
-                    <i class="fa-brands fa-apple text-4xl text-gray-800"></i>
+                <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg transform hover:scale-105 transition duration-300">
+                    <i class="fa-brands fa-apple text-5xl text-gray-800"></i>
                 </div>
-                <h1 class="text-2xl font-bold text-gray-900 mb-2">Admin Panel</h1>
-                <p class="text-sm text-gray-500 mb-8">Quản lý hệ thống Link4Sub</p>
+                <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Admin Panel</h1>
+                <p class="text-sm text-gray-500 mb-8 font-medium">Hệ thống quản lý Link4Sub Pro</p>
                 
-                <input type="email" id="adminEmail" placeholder="Email" class="apple-input mb-3">
-                <input type="password" id="adminPass" placeholder="Mật khẩu" class="apple-input mb-6">
-                
-                <button onclick="authLogin()" class="apple-btn w-full shadow-lg shadow-blue-200/50">Đăng nhập</button>
+                <div class="space-y-4">
+                    <input type="email" id="adminEmail" placeholder="Email quản trị" class="apple-input bg-white shadow-sm">
+                    <input type="password" id="adminPass" placeholder="Mật khẩu" class="apple-input bg-white shadow-sm">
+                    <button onclick="authLogin()" class="apple-btn w-full shadow-lg shadow-blue-500/30 text-lg">Đăng nhập</button>
+                </div>
             </div>
         </div>
 
         <!-- VIEW 2: ADMIN DASHBOARD -->
-        <div id="view-admin" class="hidden flex-col h-full relative fade-in">
+        <div id="view-admin" class="hidden flex-col h-full relative fade-in bg-white">
             <!-- Header -->
-            <div class="h-16 border-b border-gray-200 flex justify-between items-center px-6 bg-white/50 backdrop-blur-md z-10 shrink-0">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-black text-white rounded-lg flex items-center justify-center"><i class="fa-solid fa-link text-sm"></i></div>
-                    <span class="font-bold text-gray-800 tracking-tight">Link Manager</span>
+            <div class="h-18 border-b border-gray-100 flex justify-between items-center px-6 py-4 bg-white/80 backdrop-blur-md z-10 shrink-0 sticky top-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center shadow-md"><i class="fa-solid fa-link text-lg"></i></div>
+                    <div>
+                        <span class="font-bold text-gray-800 tracking-tight block leading-tight">Link Manager</span>
+                        <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Dashboard</span>
+                    </div>
                 </div>
                 <div class="nav-segment">
                     <button onclick="switchTab('stu')" id="btn-tab-stu" class="btn active">Tạo Mới</button>
                     <button onclick="switchTab('manage')" id="btn-tab-manage" class="btn">Danh Sách</button>
                 </div>
-                <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-right-from-bracket"></i></button>
+                <button onclick="logout()" class="w-10 h-10 rounded-full bg-gray-100 text-gray-500 hover:text-red-500 hover:bg-red-50 transition flex items-center justify-center"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
 
-            <div class="flex-1 overflow-y-auto bg-gray-50/50 p-4 md:p-8">
+            <div class="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-8">
                 <!-- TAB 1: CREATE -->
                 <div id="tab_create_stu" class="max-w-3xl mx-auto">
                     <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
                         <input type="hidden" id="edit_doc_id" value="">
 
-                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-                            <h2 class="text-lg font-bold text-gray-800 mb-4 flex justify-between items-center">
+                        <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-8">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6 flex justify-between items-center border-b border-gray-100 pb-4">
                                 <span id="formTitle">Thông tin chung</span>
-                                <span id="editModeBadge" class="hidden text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Đang sửa</span>
+                                <span id="editModeBadge" class="hidden text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-bold">Đang sửa</span>
                             </h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div><label class="text-xs font-semibold text-gray-400 uppercase ml-1 mb-1 block">Tiêu đề</label><input class="apple-input" id="i_ttl" type="text" placeholder="Nhập tiêu đề nhiệm vụ..."></div>
-                                <div><label class="text-xs font-semibold text-gray-400 uppercase ml-1 mb-1 block">Mô tả phụ</label><input class="apple-input" id="i_sttl" type="text" placeholder="Hướng dẫn người dùng..."></div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div><label class="text-xs font-bold text-gray-400 uppercase ml-1 mb-2 block">Tiêu đề</label><input class="apple-input" id="i_ttl" type="text" placeholder="Nhập tiêu đề nhiệm vụ..."></div>
+                                <div><label class="text-xs font-bold text-gray-400 uppercase ml-1 mb-2 block">Mô tả phụ</label><input class="apple-input" id="i_sttl" type="text" placeholder="Hướng dẫn người dùng..."></div>
                             </div>
-                            <div><label class="text-xs font-semibold text-gray-400 uppercase ml-1 mb-1 block">Ghi chú (Admin)</label><input class="apple-input" id="i_note" type="text" placeholder="Ví dụ: Link cho Group Zalo A..."></div>
+                            <div><label class="text-xs font-bold text-gray-400 uppercase ml-1 mb-2 block">Ghi chú (Admin)</label><input class="apple-input" id="i_note" type="text" placeholder="Ví dụ: Link cho Group Zalo A..."></div>
                         </div>
 
-                        <div class="flex gap-3 overflow-x-auto pb-2 mb-4 scrollbar-hide justify-center md:justify-start">
+                        <div class="flex gap-4 overflow-x-auto pb-4 mb-2 scrollbar-hide justify-center md:justify-start px-1">
                             <button type="button" class="stu_b_ftr active" onclick="selectPlatform('yt', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i><span>YouTube</span></button>
                             <button type="button" class="stu_b_ftr" onclick="selectPlatform('tg', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i><span>Telegram</span></button>
                             <button type="button" class="stu_b_ftr" onclick="selectPlatform('tk', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i><span>TikTok</span></button>
                             <button type="button" class="stu_b_ftr" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i><span>Facebook</span></button>
                         </div>
 
-                        <div class="bg-white/60 p-4 rounded-xl border border-dashed border-gray-300 mb-6 flex flex-wrap gap-2 min-h-[60px] items-center">
+                        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm mb-8 flex flex-wrap gap-3 min-h-[80px] items-center transition-all duration-300">
                             <div class="stu_ftr active w-full" id="ftr_yt">
-                                <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Đăng ký #1</button>
-                                <!-- Removed yt2 as requested -->
+                                <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Đăng ký Kênh</button>
                                 <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like Video</button>
                                 <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
                             </div>
@@ -173,70 +197,71 @@
                             </div>
                         </div>
 
-                        <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_yt1">
-                                <input type="text" id="lbl_yt1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Đăng ký kênh YouTube">
-                                <input class="apple-input" id="i_yt1" type="url" placeholder="https://youtube.com/...">
+                        <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_yt1">
+                                <input type="text" id="lbl_yt1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-red-500 transition" value="Đăng ký kênh YouTube">
+                                <input class="apple-input bg-gray-50" id="i_yt1" type="url" placeholder="https://youtube.com/...">
                             </div>
-                            <!-- Removed grp_yt2 -->
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_ytl1">
-                                <input type="text" id="lbl_ytl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Like Video">
-                                <input class="apple-input" id="i_ytl1" type="url" placeholder="Link video...">
+                            <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_ytl1">
+                                <input type="text" id="lbl_ytl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-red-500 transition" value="Like Video">
+                                <input class="apple-input bg-gray-50" id="i_ytl1" type="url" placeholder="Link video...">
                             </div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_ytc1">
-                                <input type="text" id="lbl_ytc1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Bình luận Video">
-                                <input class="apple-input" id="i_ytc1" type="url" placeholder="Link video...">
+                            <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_ytc1">
+                                <input type="text" id="lbl_ytc1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-red-500 transition" value="Bình luận Video">
+                                <input class="apple-input bg-gray-50" id="i_ytc1" type="url" placeholder="Link video...">
                             </div>
                             <!-- Other platforms -->
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tg1"><input type="text" id="lbl_tg1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Tham gia Telegram"><input class="apple-input" id="i_tg1" type="url" placeholder="Link Group..."></div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tg2"><input type="text" id="lbl_tg2" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Tham gia Channel"><input class="apple-input" id="i_tg2" type="url" placeholder="Link Channel..."></div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tk1"><input type="text" id="lbl_tk1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Follow Tiktok"><input class="apple-input" id="i_tk1" type="url" placeholder="Link Profile..."></div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tkl1"><input type="text" id="lbl_tkl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Like Tiktok"><input class="apple-input" id="i_tkl1" type="url" placeholder="Link Video..."></div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_fb1"><input type="text" id="lbl_fb1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Follow Facebook"><input class="apple-input" id="i_fb1" type="url" placeholder="Link Profile..."></div>
+                            <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_tg1"><input type="text" id="lbl_tg1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-blue-500 transition" value="Tham gia Telegram"><input class="apple-input bg-gray-50" id="i_tg1" type="url" placeholder="Link Group..."></div>
+                            <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_tg2"><input type="text" id="lbl_tg2" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-blue-500 transition" value="Tham gia Channel"><input class="apple-input bg-gray-50" id="i_tg2" type="url" placeholder="Link Channel..."></div>
+                            <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_tk1"><input type="text" id="lbl_tk1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-black transition" value="Follow Tiktok"><input class="apple-input bg-gray-50" id="i_tk1" type="url" placeholder="Link Profile..."></div>
+                            <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_tkl1"><input type="text" id="lbl_tkl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-pink-500 transition" value="Like Tiktok"><input class="apple-input bg-gray-50" id="i_tkl1" type="url" placeholder="Link Video..."></div>
+                            <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_fb1"><input type="text" id="lbl_fb1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-blue-700 transition" value="Follow Facebook"><input class="apple-input bg-gray-50" id="i_fb1" type="url" placeholder="Link Profile..."></div>
                         </div>
 
-                        <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white mb-6 shadow-lg">
-                            <h3 class="text-sm font-bold uppercase tracking-wider mb-4 text-gray-400 flex items-center gap-2"><i class="fa-solid fa-flag-checkered text-green-400"></i> Đích đến (Bắt buộc)</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div><label class="text-xs font-medium text-gray-400 block mb-1">Tên nút</label><input class="apple-input bg-white/10 text-white placeholder-gray-500 focus:bg-white/20" id="i_dest_name" type="text" placeholder="Mở khóa Link"></div>
-                                <div><label class="text-xs font-medium text-gray-400 block mb-1">Link gốc</label><input class="apple-input bg-white/10 text-white placeholder-gray-500 focus:bg-white/20" id="i_dest_url" type="url" placeholder="https://drive.google.com/..."></div>
+                        <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-8 text-white mb-8 shadow-xl">
+                            <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-gray-400 flex items-center gap-2"><i class="fa-solid fa-flag-checkered text-green-400"></i> Đích đến (Bắt buộc)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div><label class="text-xs font-bold text-gray-400 block mb-2">Tên nút</label><input class="apple-input bg-white/10 text-white placeholder-gray-500 focus:bg-white/20 border-0" id="i_dest_name" type="text" placeholder="Mở khóa Link"></div>
+                                <div><label class="text-xs font-bold text-gray-400 block mb-2">Link gốc</label><input class="apple-input bg-white/10 text-white placeholder-gray-500 focus:bg-white/20 border-0" id="i_dest_url" type="url" placeholder="https://drive.google.com/..."></div>
                             </div>
                         </div>
 
-                        <div class="flex flex-col gap-3">
-                            <button type="submit" id="btnAction" class="apple-btn w-full text-lg shadow-lg shadow-blue-500/30">Tạo Liên Kết</button>
-                            <button type="button" onclick="resetForm()" class="text-gray-400 text-sm hover:text-gray-600 py-2">Làm mới form</button>
+                        <div class="flex flex-col gap-4">
+                            <button type="submit" id="btnAction" class="apple-btn w-full text-lg shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50">Tạo Liên Kết</button>
+                            <button type="button" onclick="resetForm()" class="text-gray-400 text-sm hover:text-gray-600 py-2 font-medium">Làm mới form</button>
                         </div>
 
-                        <div id="resultArea" class="hidden mt-6 bg-green-50 border border-green-200 rounded-xl p-4 flex flex-col items-center text-center fade-in">
-                            <div class="text-green-600 font-bold mb-1"><i class="fa-solid fa-check-circle"></i> Đã tạo Link!</div>
-                            <div class="flex w-full gap-2">
-                                <input id="resultLink" type="text" readonly class="flex-1 bg-white border border-gray-200 rounded-lg px-3 text-sm text-gray-600 outline-none">
-                                <button type="button" onclick="copyResult()" class="bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 px-3 py-2 rounded-lg text-sm font-bold">Copy</button>
+                        <div id="resultArea" class="hidden mt-8 bg-green-50 border border-green-200 rounded-2xl p-6 flex flex-col items-center text-center fade-in">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-3"><i class="fa-solid fa-check text-2xl"></i></div>
+                            <div class="text-green-800 font-bold mb-1 text-lg">Đã tạo Link thành công!</div>
+                            <p class="text-xs text-green-600 mb-4">Link của bạn đã sẵn sàng để chia sẻ.</p>
+                            <div class="flex w-full gap-3">
+                                <input id="resultLink" type="text" readonly class="flex-1 bg-white border border-green-200 rounded-xl px-4 text-sm text-gray-600 outline-none">
+                                <button type="button" onclick="copyResult()" class="bg-white border border-green-200 hover:bg-green-100 text-green-700 px-5 py-3 rounded-xl text-sm font-bold shadow-sm">Copy</button>
                             </div>
-                            <div class="mt-2 text-xs"><a href="#" id="previewLink" target="_blank" class="text-blue-500 hover:underline">Xem thử</a></div>
+                            <div class="mt-3 text-sm"><a href="#" id="previewLink" target="_blank" class="text-blue-600 font-bold hover:underline">Xem thử giao diện User <i class="fa-solid fa-arrow-right ml-1"></i></a></div>
                         </div>
                     </form>
                 </div>
 
                 <!-- TAB 2: MANAGE -->
-                <div id="tab_manage_links" class="hidden max-w-4xl mx-auto">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-800">Quản lý Link</h2>
-                        <button onclick="fetchLinks()" class="apple-btn-secondary text-sm"><i class="fa-solid fa-rotate mr-1"></i> Refresh</button>
+                <div id="tab_manage_links" class="hidden max-w-5xl mx-auto">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800">Quản lý Link</h2>
+                        <button onclick="fetchLinks()" class="apple-btn-secondary text-sm font-bold px-4 py-2 rounded-xl"><i class="fa-solid fa-rotate mr-2"></i> Làm mới</button>
                     </div>
-                    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden">
                         <table class="w-full text-left">
                             <thead class="bg-gray-50 border-b border-gray-100">
                                 <tr>
-                                    <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase">Link Info</th>
-                                    <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase">Ghi chú</th>
-                                    <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase text-center">Bật/Tắt</th>
-                                    <th class="py-4 px-6 text-xs font-bold text-gray-400 uppercase text-right">Tuỳ chỉnh</th>
+                                    <th class="py-5 px-6 text-xs font-extrabold text-gray-400 uppercase tracking-wider">Thông tin Link</th>
+                                    <th class="py-5 px-6 text-xs font-extrabold text-gray-400 uppercase tracking-wider">Ghi chú</th>
+                                    <th class="py-5 px-6 text-xs font-extrabold text-gray-400 uppercase tracking-wider text-center">Trạng thái</th>
+                                    <th class="py-5 px-6 text-xs font-extrabold text-gray-400 uppercase tracking-wider text-right">Hành động</th>
                                 </tr>
                             </thead>
-                            <tbody id="links-table-body" class="text-sm text-gray-600 divide-y divide-gray-100">
-                                <tr><td colspan="4" class="py-8 text-center text-gray-400">Đang tải...</td></tr>
+                            <tbody id="links-table-body" class="text-sm text-gray-600 divide-y divide-gray-50">
+                                <tr><td colspan="4" class="py-12 text-center text-gray-400 font-medium">Đang tải dữ liệu...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -244,44 +269,59 @@
             </div>
         </div>
 
-        <!-- VIEW 3: USER INTERFACE -->
-        <div id="view-user" class="hidden h-full flex flex-col bg-white overflow-y-auto">
-            <div class="max-w-md mx-auto min-h-full flex flex-col pb-10 w-full relative">
-                <div class="absolute top-0 left-0 w-full h-48 bg-gradient-to-br from-blue-500 to-purple-600 rounded-b-[40px] z-0"></div>
-                
-                <div class="pt-12 pb-4 px-6 text-center relative z-10">
-                    <div class="bg-white w-20 h-20 rounded-2xl mx-auto shadow-lg flex items-center justify-center mb-4 text-3xl text-blue-500">
-                        <i class="fa-solid fa-unlock-keyhole"></i>
+        <!-- VIEW 3: USER INTERFACE (Modern) -->
+        <div id="view-user" class="hidden h-full flex flex-col bg-[#F3F4F6] overflow-y-auto">
+            <div class="max-w-md mx-auto min-h-full flex flex-col w-full relative bg-white shadow-2xl md:my-4 md:rounded-[30px] overflow-hidden">
+                <!-- Header -->
+                <div class="relative h-64 bg-white">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center">
+                        <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60"></div>
                     </div>
-                    <h1 id="u_title" class="text-2xl font-bold text-white mb-2 drop-shadow-md">Đang tải...</h1>
-                    <p id="u_subtitle" class="text-sm text-blue-100">Vui lòng chờ một chút</p>
+                    <div class="relative z-10 flex flex-col items-center justify-center h-full text-white px-6 pt-8">
+                        <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-3 shadow-inner border border-white/30">
+                            <i class="fa-solid fa-gift text-3xl text-white"></i>
+                        </div>
+                        <h1 id="u_title" class="text-2xl font-bold text-center drop-shadow-sm leading-tight mb-1">Đang tải...</h1>
+                        <p id="u_subtitle" class="text-sm text-white/80 text-center font-light">Hoàn thành nhiệm vụ để mở khóa</p>
+                    </div>
                 </div>
 
-                <!-- NEW AD BANNER -->
-                <div class="mx-6 relative z-10 mb-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-orange-100 p-4 rounded-xl shadow-sm text-center">
-                    <p class="text-sm text-gray-700">
-                        <i class="fa-solid fa-triangle-exclamation text-orange-500 mr-1"></i>
-                        Lỗi cài đặt? Hết hạn chứng chỉ? <br>
-                        👉 Ghé ngay <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold hover:underline">Muachungchi.com</a>
-                        <span class="block text-xs text-gray-500 mt-1">Giải pháp ổn định chỉ từ 150k/năm!</span>
-                    </p>
+                <!-- Banner -->
+                <div class="px-6 -mt-6 relative z-20">
+                    <div class="bg-white rounded-2xl p-4 shadow-lg border border-red-50 flex items-start gap-3">
+                        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 text-red-500 animate-pulse">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="text-sm">
+                            <p class="font-bold text-gray-800 mb-1">Gặp lỗi chứng chỉ?</p>
+                            <p class="text-gray-500 text-xs leading-relaxed">
+                                Đừng lo! Ghé ngay <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold hover:underline">Muachungchi.com</a> để mua Chứng Chỉ VIP. Giá chỉ từ <span class="text-red-500 font-bold">150k/năm</span>. Bảo hành trọn đời!
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                <div id="u_tasks" class="px-6 space-y-3 flex-1 relative z-10">
+                <!-- Tasks -->
+                <div id="u_tasks" class="px-6 space-y-4 flex-1 mt-6">
                     <!-- Tasks injected here -->
                 </div>
 
-                <div class="px-6 mt-8 sticky bottom-6 z-20">
-                    <div id="progressArea" class="mb-3 hidden bg-white/80 backdrop-blur rounded-xl p-3 border border-gray-100 shadow-sm">
-                        <div class="flex justify-between text-xs text-gray-500 mb-2 font-bold uppercase"><span>Tiến độ</span><span id="progressText">0%</span></div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5"><div id="progressBar" class="bg-gradient-to-r from-blue-500 to-green-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div></div>
+                <!-- Unlock Footer -->
+                <div class="p-6 bg-white border-t border-gray-50 mt-auto">
+                    <div id="progressArea" class="mb-4 hidden">
+                        <div class="flex justify-between text-xs text-gray-400 mb-1 font-bold uppercase tracking-wider">
+                            <span>Tiến độ</span>
+                            <span id="progressText">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                            <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
                     </div>
-                    <button id="unlockBtn" onclick="goToDest()" disabled class="w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-center gap-2 cursor-not-allowed transition-all">
+                    <button id="unlockBtn" onclick="goToDest()" disabled class="w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 cursor-not-allowed transition-all duration-300">
                         <i class="fa-solid fa-lock"></i><span>Hoàn thành nhiệm vụ</span>
                     </button>
+                    <p class="text-center text-[10px] text-gray-300 mt-4 uppercase font-bold tracking-widest">Powered by Link4Sub</p>
                 </div>
-                
-                <div class="mt-4 text-center pb-4"><a href="#" onclick="window.location.href = window.location.pathname" class="text-[10px] text-gray-300 uppercase font-bold tracking-widest hover:text-gray-400">Create your own link</a></div>
             </div>
         </div>
 
@@ -585,20 +625,20 @@
 
                     const div = document.createElement('div');
                     div.id = `task-card-${idx}`;
-                    div.className = `bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer transition transform active:scale-95 ${isDisabled ? 'task-disabled' : 'hover:bg-gray-50'}`;
+                    div.className = `task-card-modern bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between cursor-pointer mb-3 ${isDisabled ? 'task-disabled' : 'hover:shadow-md'}`;
                     
                     div.innerHTML = `
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center ${meta.color} text-xl shadow-inner relative">
+                        <div class="flex items-center gap-5">
+                            <div class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center ${meta.color} text-2xl shadow-sm border border-gray-100 icon-container relative">
                                 <i class="fa-brands ${meta.icon} ${meta.icon.includes('fa-solid')?'fa-solid':''}"></i>
-                                ${isDisabled ? '<div class="absolute inset-0 bg-white/50 rounded-full flex items-center justify-center"><i class="fa-solid fa-lock text-gray-400 text-xs"></i></div>' : ''}
+                                ${isDisabled ? '<div class="absolute inset-0 bg-white/60 backdrop-blur-[1px] rounded-2xl flex items-center justify-center"><i class="fa-solid fa-lock text-gray-400 text-sm"></i></div>' : ''}
                             </div>
                             <div>
-                                <h4 class="font-bold text-gray-800 text-sm">${label}</h4>
-                                <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wide status-text">${isDisabled ? 'Bị khóa' : 'Nhấn để thực hiện'}</p>
+                                <h4 class="font-bold text-gray-800 text-sm leading-tight mb-1">${label}</h4>
+                                <p class="text-[11px] text-gray-400 font-medium uppercase tracking-wide status-text">${isDisabled ? 'Bị khóa' : 'Nhấn để thực hiện'}</p>
                             </div>
                         </div>
-                        <div id="status-${idx}" class="text-gray-300 pr-2">
+                        <div id="status-${idx}" class="text-gray-300 pr-2 transition-colors">
                             ${isDisabled ? '<i class="fa-solid fa-lock"></i>' : '<i class="fa-solid fa-chevron-right"></i>'}
                         </div>
                     `;
@@ -615,57 +655,49 @@
             const card = document.getElementById(`task-card-${idx}`);
             if(tasksList[idx].done || card.classList.contains('task-disabled') || card.classList.contains('task-waiting')) return;
 
-            // 1. Open Link
             window.open(url, '_blank');
 
-            // 2. Set Waiting State (Spinner)
             card.classList.add('task-waiting');
             const icon = document.getElementById(`status-${idx}`);
             const text = card.querySelector('.status-text');
             
             icon.innerHTML = '<div class="loader" style="width:20px;height:20px;"></div>';
             text.innerText = "Đang kiểm tra...";
-            text.className = "text-[10px] text-blue-500 font-bold uppercase tracking-wide status-text animate-pulse";
+            text.className = "text-[11px] text-blue-600 font-bold uppercase tracking-wide status-text animate-pulse";
 
-            // 3. Timer 5s
             setTimeout(() => {
-                // Mark Done
                 tasksList[idx].done = true;
                 done++;
                 
-                // Visual Update
                 card.classList.remove('task-waiting');
-                card.classList.add('border-green-200', 'bg-green-50');
-                // Remove pointer events so user can't click again
+                card.classList.add('task-done');
                 card.style.pointerEvents = 'none';
                 
-                icon.innerHTML = '<i class="fa-solid fa-check-circle text-green-500 text-2xl"></i>';
-                text.innerText = "Hoàn thành";
-                text.className = "text-[10px] text-green-600 font-bold uppercase tracking-wide status-text";
+                icon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500 text-2xl drop-shadow-sm"></i>';
+                text.innerText = "Đã hoàn thành";
+                text.className = "text-[11px] text-green-600 font-bold uppercase tracking-wide status-text";
 
-                // Unlock Next Task
                 if (idx + 1 < tasksList.length) {
                     const nextCard = document.getElementById(`task-card-${idx+1}`);
                     const nextIcon = document.getElementById(`status-${idx+1}`);
                     const nextText = nextCard.querySelector('.status-text');
-                    const nextIconWrap = nextCard.querySelector('.w-12');
+                    const nextIconWrap = nextCard.querySelector('.icon-container');
 
                     nextCard.classList.remove('task-disabled');
-                    nextCard.classList.add('hover:bg-gray-50');
-                    nextIcon.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+                    nextCard.classList.add('hover:shadow-md');
+                    nextIcon.innerHTML = '<i class="fa-solid fa-chevron-right text-blue-500"></i>';
                     nextText.innerText = "Nhấn để thực hiện";
-                    // Remove lock overlay icon
                     if(nextIconWrap.lastElementChild.tagName === 'DIV') nextIconWrap.lastElementChild.remove();
                 }
 
                 checkUnlock();
-            }, 5000); // 5 seconds spin
+            }, 5000); 
         }
 
         function resetLockBtn(name) {
             const btn = document.getElementById('unlockBtn');
             btn.disabled = true;
-            btn.className = "w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-2xl shadow-sm border border-gray-200 flex items-center justify-center gap-2 cursor-not-allowed transition-all";
+            btn.className = "w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 cursor-not-allowed transition-all duration-300";
             btn.innerHTML = `<i class="fa-solid fa-lock"></i><span>${name || 'Đang khóa'}</span>`;
             document.getElementById('progressArea').classList.add('hidden');
         }
@@ -679,8 +711,8 @@
             if(done >= req) {
                 const btn = document.getElementById('unlockBtn');
                 btn.disabled = false;
-                btn.className = "w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-200 flex items-center justify-center gap-2 animate-pulse cursor-pointer transform hover:scale-[1.02] transition-transform";
-                btn.innerHTML = `<i class="fa-solid fa-unlock"></i><span>Mở Khóa Ngay</span>`;
+                btn.className = "w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 animate-pulse cursor-pointer transform hover:scale-[1.02] transition-transform";
+                btn.innerHTML = `<i class="fa-solid fa-unlock-keyhole"></i><span>Mở Khóa Ngay</span>`;
                 if(navigator.vibrate) navigator.vibrate(200);
             }
         }
