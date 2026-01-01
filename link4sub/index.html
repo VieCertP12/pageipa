@@ -10,7 +10,12 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow: hidden; user-select: none; -webkit-user-select: none; } /* Chặn bôi đen */
+        /* CHỐNG BÔI ĐEN TOÀN TRANG ĐỂ BẢO MẬT NỘI DUNG */
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow: hidden; user-select: none; -webkit-user-select: none; }
+        
+        /* CHO PHÉP ADMIN COPY VÀ NHẬP LIỆU */
+        .pc-input, textarea, .allow-select { user-select: text !important; -webkit-user-select: text !important; }
+
         .pc-input { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 14px; width: 100%; transition: all 0.2s; color: #334155; }
         .pc-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .pc-btn { background-color: #3b82f6; color: white; border-radius: 8px; font-weight: 600; padding: 10px 20px; transition: all 0.2s; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
@@ -275,7 +280,6 @@
         });
 
         // 2. Mã hóa đơn giản (Obfuscation): Đảo chuỗi Base64 để người thường ko đọc được ngay
-        // Lưu ý: Đây chỉ là làm khó (Obfuscation), không phải bảo mật cấp quân sự.
         const L4S_SEC = {
             enc: (str) => {
                 if(!str) return '';
