@@ -9,7 +9,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -23,7 +23,8 @@
             padding: 10px 14px; font-size: 14px; width: 100%; transition: all 0.2s; color: #333;
         }
         .apple-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        
+        .apple-textarea { min-height: 120px; resize: vertical; }
+
         .apple-btn {
             background-color: #3b82f6; color: white; border-radius: 8px; font-weight: 600;
             padding: 10px 20px; transition: opacity 0.2s; border: none;
@@ -140,11 +141,26 @@
                                 <span>Thông tin chung</span>
                                 <span id="editModeBadge" class="hidden text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Sửa</span>
                             </h2>
+                            
+                            <!-- Destination Type Selector -->
+                            <div class="flex gap-4 mb-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="destType" value="link" checked onchange="toggleDestType()" class="text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm font-bold text-gray-700">Tạo Link Đích (STU)</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="destType" value="note" onchange="toggleDestType()" class="text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm font-bold text-gray-700">Tạo Ghi Chú (NOTE)</span>
+                                </label>
+                            </div>
+
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div><label class="text-xs font-bold text-gray-500 uppercase block mb-1">Tiêu đề</label><input class="apple-input" id="i_ttl" type="text" placeholder="Nhập tiêu đề..."></div>
                                 <div><label class="text-xs font-bold text-gray-500 uppercase block mb-1">Mô tả</label><input class="apple-input" id="i_sttl" type="text" placeholder="Hướng dẫn..."></div>
                             </div>
-                            <div><label class="text-xs font-bold text-gray-500 uppercase block mb-1">Ghi chú (Admin)</label><input class="apple-input" id="i_note" type="text" placeholder="Ghi chú nội bộ..."></div>
+                            
+                            <!-- Note Internal -->
+                            <div class="mb-2"><label class="text-xs font-bold text-gray-500 uppercase block mb-1">Ghi chú (Admin)</label><input class="apple-input" id="i_note" type="text" placeholder="Chỉ Admin thấy..."></div>
                         </div>
 
                         <!-- Platforms -->
@@ -164,17 +180,15 @@
                                 <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
                                 <button type="button" class="btn_iftr btn_add" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Thêm</button>
                             </div>
-                            <!-- TG -->
+                            <!-- Other Platforms (Same as before) -->
                             <div class="stu_ftr w-full" id="ftr_tg">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Group</button>
                                 <button type="button" class="btn_iftr btn_add" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Thêm</button>
                             </div>
-                            <!-- TK -->
                             <div class="stu_ftr w-full" id="ftr_tk">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button>
                                 <button type="button" class="btn_iftr btn_add" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Thêm</button>
                             </div>
-                            <!-- FB -->
                             <div class="stu_ftr w-full" id="ftr_fb">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button>
                                 <button type="button" class="btn_iftr btn_add" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Thêm</button>
@@ -183,38 +197,40 @@
 
                         <!-- Dynamic Inputs -->
                         <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <!-- YouTube Default -->
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-200" id="grp_yt1">
-                                <input type="text" id="lbl_yt1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none hover:text-blue-600" value="Đăng ký kênh YouTube">
-                                <input class="apple-input bg-gray-50" id="i_yt1" type="url" placeholder="Link kênh...">
-                            </div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-200" id="grp_ytl1">
-                                <input type="text" id="lbl_ytl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none hover:text-blue-600" value="Like Video">
-                                <input class="apple-input bg-gray-50" id="i_ytl1" type="url" placeholder="Link video...">
-                            </div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-200" id="grp_ytc1">
-                                <input type="text" id="lbl_ytc1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none hover:text-blue-600" value="Bình luận Video">
-                                <input class="apple-input bg-gray-50" id="i_ytc1" type="url" placeholder="Link video...">
-                            </div>
-                            <!-- Telegram Default -->
+                            <!-- Default Inputs -->
+                            <div class="grp bg-white p-4 rounded-xl border border-gray-200" id="grp_yt1"><input type="text" id="lbl_yt1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Đăng ký kênh YouTube"><input class="apple-input bg-gray-50" id="i_yt1" type="url" placeholder="Link kênh..."></div>
+                            <div class="grp bg-white p-4 rounded-xl border border-gray-200" id="grp_ytl1"><input type="text" id="lbl_ytl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Like Video"><input class="apple-input bg-gray-50" id="i_ytl1" type="url" placeholder="Link video..."></div>
+                            <div class="grp bg-white p-4 rounded-xl border border-gray-200" id="grp_ytc1"><input type="text" id="lbl_ytc1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Bình luận Video"><input class="apple-input bg-gray-50" id="i_ytc1" type="url" placeholder="Link video..."></div>
+                            <!-- Others -->
                             <div class="grp bg-white p-4 rounded-xl border border-gray-200" id="grp_tg1"><input type="text" id="lbl_tg1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Tham gia Telegram"><input class="apple-input bg-gray-50" id="i_tg1" type="url" placeholder="Link Group..."></div>
-                            <!-- Tiktok Default -->
                             <div class="grp bg-white p-4 rounded-xl border border-gray-200" id="grp_tk1"><input type="text" id="lbl_tk1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Tiktok"><input class="apple-input bg-gray-50" id="i_tk1" type="url" placeholder="Link Profile..."></div>
-                            <!-- Facebook Default -->
                             <div class="grp bg-white p-4 rounded-xl border border-gray-200" id="grp_fb1"><input type="text" id="lbl_fb1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Facebook"><input class="apple-input bg-gray-50" id="i_fb1" type="url" placeholder="Link Profile..."></div>
                         </div>
 
-                        <!-- Destination -->
-                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 mb-6">
-                            <h3 class="text-sm font-bold uppercase text-blue-800 mb-3 flex items-center gap-2"><i class="fa-solid fa-flag-checkered"></i> Đích đến</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div><label class="text-xs font-bold text-blue-600 block mb-1">Tên nút</label><input class="apple-input bg-white border-blue-200 focus:border-blue-400" id="i_dest_name" type="text" placeholder="Mở khóa Link"></div>
-                                <div><label class="text-xs font-bold text-blue-600 block mb-1">Link gốc</label><input class="apple-input bg-white border-blue-200 focus:border-blue-400" id="i_dest_url" type="url" placeholder="https://..."></div>
+                        <!-- Destination Config (Toggleable) -->
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 mb-6 transition-all">
+                            <h3 class="text-sm font-bold uppercase text-blue-800 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-flag-checkered"></i> 
+                                <span id="destTitle">Đích đến (Link)</span>
+                            </h3>
+                            
+                            <div><label class="text-xs font-bold text-blue-600 block mb-1">Tên nút Mở khóa</label><input class="apple-input bg-white border-blue-200 focus:border-blue-400 mb-4" id="i_dest_name" type="text" placeholder="Ví dụ: Lấy Link / Lấy Key"></div>
+
+                            <!-- Link Type Input -->
+                            <div id="dest_container_link">
+                                <label class="text-xs font-bold text-blue-600 block mb-1">Link gốc (URL)</label>
+                                <input class="apple-input bg-white border-blue-200 focus:border-blue-400" id="i_dest_url" type="url" placeholder="https://drive.google.com/...">
+                            </div>
+
+                            <!-- Note Type Input -->
+                            <div id="dest_container_note" class="hidden">
+                                <label class="text-xs font-bold text-blue-600 block mb-1">Nội dung Ghi chú / Key / Code</label>
+                                <textarea class="apple-input apple-textarea bg-white border-blue-200 focus:border-blue-400" id="i_dest_note" placeholder="Nhập nội dung bạn muốn user thấy sau khi làm xong nhiệm vụ..."></textarea>
                             </div>
                         </div>
 
                         <div class="flex gap-3">
-                            <button type="submit" id="btnAction" class="apple-btn flex-1">Tạo Link</button>
+                            <button type="submit" id="btnAction" class="apple-btn flex-1">Tạo Ngay</button>
                             <button type="button" onclick="resetForm()" class="apple-btn-secondary px-4 rounded-lg font-medium">Reset</button>
                         </div>
 
@@ -241,7 +257,7 @@
                             <thead class="bg-gray-50 border-b">
                                 <tr>
                                     <th class="py-3 px-4 text-xs font-bold text-gray-500 uppercase">Thông tin</th>
-                                    <th class="py-3 px-4 text-xs font-bold text-gray-500 uppercase">Ghi chú</th>
+                                    <th class="py-3 px-4 text-xs font-bold text-gray-500 uppercase">Loại</th>
                                     <th class="py-3 px-4 text-xs font-bold text-gray-500 uppercase text-center">Bật/Tắt</th>
                                     <th class="py-3 px-4 text-xs font-bold text-gray-500 uppercase text-right">Hành động</th>
                                 </tr>
@@ -278,9 +294,7 @@
                 </div>
 
                 <!-- Tasks List -->
-                <div id="u_tasks" class="px-4 space-y-3 flex-1 pb-6">
-                    <!-- Tasks will act as simple list items -->
-                </div>
+                <div id="u_tasks" class="px-4 space-y-3 flex-1 pb-6"></div>
 
                 <!-- Footer Unlock -->
                 <div class="p-4 bg-white border-t border-gray-100 mt-auto">
@@ -293,9 +307,19 @@
                         </div>
                     </div>
                     
-                    <button id="unlockBtn" onclick="goToDest()" disabled class="w-full bg-gray-100 text-gray-400 font-bold py-3.5 rounded-lg flex items-center justify-center gap-2 cursor-not-allowed transition-all">
+                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-gray-100 text-gray-400 font-bold py-3.5 rounded-lg flex items-center justify-center gap-2 cursor-not-allowed transition-all">
                         <i class="fa-solid fa-lock"></i> <span>Hoàn thành nhiệm vụ</span>
                     </button>
+                    
+                    <!-- NOTE RESULT DISPLAY (Hidden by default) -->
+                    <div id="noteResult" class="hidden mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                        <label class="text-xs font-bold text-gray-500 uppercase block mb-1">Nội dung của bạn:</label>
+                        <div class="relative">
+                            <textarea id="noteContentDisplay" readonly class="w-full bg-white border border-gray-200 rounded p-2 text-sm h-24 font-mono"></textarea>
+                            <button onclick="copyNote()" class="absolute top-2 right-2 text-gray-400 hover:text-blue-600"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+
                     <div class="mt-4 text-center">
                         <a href="#" onclick="window.location.href = window.location.pathname" class="text-xs text-gray-300 font-medium hover:text-gray-500">Create Link</a>
                     </div>
@@ -312,7 +336,6 @@
         import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // CONFIG
         let firebaseConfig;
         if (typeof __firebase_config !== 'undefined') {
             firebaseConfig = JSON.parse(__firebase_config);
@@ -370,10 +393,19 @@
             const title = document.getElementById('i_ttl').value || 'Tiêu đề mặc định';
             const subtitle = document.getElementById('i_sttl').value || 'Hoàn thành các bước...';
             const note = document.getElementById('i_note').value || '';
-            const destName = document.getElementById('i_dest_name').value || 'Mở khóa Link';
-            const destUrl = document.getElementById('i_dest_url').value;
+            const destName = document.getElementById('i_dest_name').value || 'Mở khóa';
+            
+            // Check Type
+            const type = document.querySelector('input[name="destType"]:checked').value;
+            let destUrl = "", noteContent = "";
 
-            if (!destUrl) return showToast("Thiếu link đích!", "error");
+            if(type === 'link') {
+                destUrl = document.getElementById('i_dest_url').value;
+                if (!destUrl) return showToast("Thiếu link đích!", "error");
+            } else {
+                noteContent = document.getElementById('i_dest_note').value;
+                if (!noteContent) return showToast("Thiếu nội dung ghi chú!", "error");
+            }
 
             const tasks = {};
             document.querySelectorAll('.grp.active').forEach(grp => {
@@ -395,15 +427,15 @@
 
             document.getElementById('global-loader').classList.remove('hidden');
             try {
-                const payload = { title, subtitle, note, destName, destUrl, tasks, active: true, createdAt: new Date().toISOString() };
+                const payload = { title, subtitle, note, destName, type, destUrl, noteContent, tasks, active: true, createdAt: new Date().toISOString() };
                 let resultId = docId;
                 if (docId) {
                     await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', docId), payload);
-                    showToast("Đã cập nhật link!", "success");
+                    showToast("Đã cập nhật!", "success");
                 } else {
                     const docRef = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'links'), payload);
                     resultId = docRef.id;
-                    showToast("Tạo link thành công!", "success");
+                    showToast("Tạo thành công!", "success");
                 }
                 const finalLink = window.location.origin + window.location.pathname + "?id=" + resultId;
                 const resArea = document.getElementById('resultArea');
@@ -434,12 +466,12 @@
                 tbody.innerHTML = links.length === 0 ? '<tr><td colspan="4" class="py-8 text-center text-gray-400">Chưa có dữ liệu.</td></tr>' : '';
                 links.forEach(link => {
                     const isActive = link.active !== false;
-                    const noteText = link.note ? `<span class="bg-yellow-100 text-yellow-800 text-[10px] px-2 py-1 rounded border border-yellow-200">${link.note}</span>` : '<span class="text-gray-300 italic text-xs">--</span>';
+                    const typeLabel = link.type === 'note' ? '<span class="text-orange-500 font-bold">NOTE</span>' : '<span class="text-blue-500 font-bold">LINK</span>';
                     const tr = document.createElement('tr');
                     tr.className = "border-b border-gray-50 hover:bg-gray-50 transition";
                     tr.innerHTML = `
                         <td class="py-4 px-6"><div class="font-semibold text-gray-800 truncate max-w-[180px]">${link.title}</div><div class="text-xs text-gray-400">${new Date(link.createdAt).toLocaleDateString('vi-VN')}</div></td>
-                        <td class="py-4 px-6 text-sm">${noteText}</td>
+                        <td class="py-4 px-6 text-sm text-center">${typeLabel}</td>
                         <td class="py-4 px-6 text-center"><label class="ios-switch"><input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)"><span class="slider"></span></label></td>
                         <td class="py-4 px-6 text-right space-x-2">
                             <button onclick="editLink('${link.id}')" class="text-blue-600 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -451,7 +483,7 @@
             } catch (e) { tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-red-400">Lỗi tải.</td></tr>'; }
         };
 
-        window.toggleStatus = async (id, status) => { try { await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { active: status }); showToast(status ? "Đã bật Link" : "Đã tắt Link", "info"); } catch (e) {} };
+        window.toggleStatus = async (id, status) => { try { await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { active: status }); showToast(status ? "Đã bật" : "Đã tắt", "info"); } catch (e) {} };
 
         window.editLink = async (id) => {
             document.getElementById('global-loader').classList.remove('hidden');
@@ -468,24 +500,27 @@
                     document.getElementById('i_sttl').value = data.subtitle;
                     document.getElementById('i_note').value = data.note || '';
                     document.getElementById('i_dest_name').value = data.destName;
-                    document.getElementById('i_dest_url').value = data.destUrl;
+                    
+                    // Set Type
+                    const type = data.type || 'link';
+                    document.querySelector(`input[name="destType"][value="${type}"]`).checked = true;
+                    toggleDestType(); // Refresh UI
+                    
+                    if(type === 'link') document.getElementById('i_dest_url').value = data.destUrl;
+                    else document.getElementById('i_dest_note').value = data.noteContent;
+
                     resetUIForEdit();
                     if(data.tasks) {
                         for (const [key, taskData] of Object.entries(data.tasks)) {
                             let grp = document.getElementById(`grp_${key}`);
-                            if(!grp) { 
-                                const platform = key.split('_')[0]; 
-                                addTask(platform, key, taskData.label, taskData.url); 
-                                continue; 
-                            }
+                            if(!grp) { const platform = key.split('_')[0]; addTask(platform, key, taskData.label, taskData.url); continue; }
                             const inp = document.getElementById(`i_${key}`);
                             const lbl = document.getElementById(`lbl_${key}`);
                             if (grp && inp) {
                                 grp.classList.add('active');
                                 inp.value = typeof taskData === 'string' ? taskData : taskData.url;
                                 if(lbl && typeof taskData === 'object') lbl.value = taskData.label;
-                                const btn = document.querySelector(`button[onclick*="'${key}'"]`);
-                                if(btn) btn.classList.add('active');
+                                document.querySelector(`button[onclick*="'${key}'"]`)?.classList.add('active');
                             }
                         }
                     }
@@ -527,15 +562,7 @@
 
     <!-- UI Logic -->
     <script>
-        window.TASK_MAP = {
-            'yt1': { label: 'Đăng ký YouTube', icon: 'fa-youtube', color: 'text-red-600' },
-            'ytl1': { label: 'Like Video', icon: 'fa-thumbs-up', color: 'text-red-600' },
-            'ytc1': { label: 'Comment Video', icon: 'fa-comment', color: 'text-red-600' },
-            'tg1': { label: 'Join Group', icon: 'fa-telegram', color: 'text-blue-500' },
-            'tk1': { label: 'Follow Tiktok', icon: 'fa-tiktok', color: 'text-black' },
-            'fb1': { label: 'Follow Facebook', icon: 'fa-facebook', color: 'text-blue-700' }
-        };
-
+        // ... (Task Logic & Helpers same as before) ...
         function handleSubmitCreate() { if(typeof window.createLink === 'function') window.createLink(); }
         function switchTab(t) {
             document.getElementById('btn-tab-stu').className = t==='stu'?'btn active':'btn';
@@ -555,6 +582,25 @@
             if(btn.classList.contains('active')) { btn.classList.remove('active'); grp.classList.remove('active'); }
             else { btn.classList.add('active'); grp.classList.add('active'); const inp = grp.querySelector('.apple-input'); if(inp) setTimeout(() => inp.focus(), 100); }
         }
+        
+        // NEW: Toggle Destination Type
+        function toggleDestType() {
+            const type = document.querySelector('input[name="destType"]:checked').value;
+            const linkCon = document.getElementById('dest_container_link');
+            const noteCon = document.getElementById('dest_container_note');
+            const title = document.getElementById('destTitle');
+            
+            if(type === 'link') {
+                linkCon.classList.remove('hidden');
+                noteCon.classList.add('hidden');
+                title.innerText = "Đích đến (Link)";
+            } else {
+                linkCon.classList.add('hidden');
+                noteCon.classList.remove('hidden');
+                title.innerText = "Đích đến (Ghi chú)";
+            }
+        }
+
         function addTask(platform, existingId = null, existingLabel = null, existingUrl = "") {
             const id = existingId || `${platform}_custom_${Date.now()}`;
             const inputContainer = document.getElementById('dynamic_inputs');
@@ -587,21 +633,24 @@
         function resetForm() {
             if(!confirm("Làm mới form?")) return;
             document.getElementById('fgSTU').reset(); document.getElementById('edit_doc_id').value = ""; document.getElementById('btnAction').innerText = "Tạo Liên Kết";
-            document.getElementById('formTitle').innerText = "Thông tin chung"; document.getElementById('editModeBadge').classList.add('hidden'); resetUIForEdit();
+            document.getElementById('formTitle').innerText = "Thông tin chung"; document.getElementById('editModeBadge').classList.add('hidden'); 
+            // Default to Link
+            document.querySelector('input[name="destType"][value="link"]').checked = true; toggleDestType();
+            resetUIForEdit();
         }
         function copyResult() { document.getElementById('resultLink').select(); document.execCommand('copy'); showToast("Đã copy!", "success"); }
-        function copyToClip(txt) { const t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); showToast("Đã copy!", "success"); }
+        function copyNote() { document.getElementById('noteContentDisplay').select(); document.execCommand('copy'); showToast("Đã copy nội dung!", "success"); }
         function showToast(msg, type) { if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, gravity: "top", position: "right", backgroundColor: type === "success" ? "#10b981" : "#ef4444" }).showToast(); else alert(msg); }
         function switchView(v) { ['view-login','view-admin','view-user'].forEach(id => document.getElementById(id).classList.add('hidden')); const t = document.getElementById(`view-${v}`); t.classList.remove('hidden'); if(v==='admin') t.classList.add('flex'); }
 
         // --- SEQUENTIAL TASK LOGIC ---
-        let done=0, req=0, finalUrl='';
+        let done=0, req=0, finalData=null;
         let tasksList = []; 
 
         function renderUserView(data) {
             document.getElementById('u_title').innerText = data.title;
             document.getElementById('u_subtitle').innerText = data.subtitle;
-            finalUrl = data.destUrl;
+            finalData = data; // Store full data to handle type later
             const list = document.getElementById('u_tasks');
             list.innerHTML = '';
             done = 0; req = 0; tasksList = [];
@@ -614,7 +663,7 @@
                     const label = taskData.label || "Nhiệm vụ";
                     const url = taskData.url;
                     let icon = taskData.icon || 'fa-link', color = taskData.color || 'text-gray-600';
-                    if(!taskData.icon) { // Legacy
+                    if(!taskData.icon) {
                         if(key.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; }
                         else if(key.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; }
                         else if(key.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; }
@@ -642,7 +691,6 @@
                             ${isDisabled ? '<i class="fa-solid fa-lock"></i>' : '<i class="fa-solid fa-chevron-right"></i>'}
                         </div>
                     `;
-                    
                     div.onclick = () => doTask(idx, url);
                     list.appendChild(div);
                     tasksList.push({ id: idx, url: url, done: false });
@@ -696,6 +744,7 @@
             btn.className = "w-full bg-gray-100 text-gray-400 font-bold py-3.5 rounded-lg flex items-center justify-center gap-2 cursor-not-allowed";
             btn.innerHTML = `<i class="fa-solid fa-lock"></i><span>${name || 'Đang khóa'}</span>`;
             document.getElementById('progressArea').classList.add('hidden');
+            document.getElementById('noteResult').classList.add('hidden'); // Hide note
         }
 
         function checkUnlock() {
@@ -713,7 +762,29 @@
             }
         }
 
-        function goToDest() { if(finalUrl) window.location.href = finalUrl; }
+        function doUnlock() {
+            if(!finalData) return;
+            const btn = document.getElementById('unlockBtn');
+            // Stop animation to indicate done
+            btn.classList.remove('animate-pulse');
+            
+            if(finalData.type === 'note') {
+                // Show Note
+                const noteArea = document.getElementById('noteResult');
+                const noteContent = document.getElementById('noteContentDisplay');
+                noteContent.value = finalData.noteContent;
+                noteArea.classList.remove('hidden');
+                noteArea.scrollIntoView({ behavior: 'smooth' });
+                btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Đã Mở Ghi Chú</span>`;
+                btn.disabled = true; // Disable after showing
+                btn.classList.replace('bg-green-500', 'bg-gray-500');
+            } else {
+                // Go to Link
+                if(finalData.destUrl) window.location.href = finalData.destUrl;
+            }
+        }
+        
+        function goToDest() { doUnlock(); } // Alias for backward compatibility
     </script>
 </body>
 </html>
