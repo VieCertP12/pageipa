@@ -10,51 +10,67 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <style>
-        /* CHỐNG BÔI ĐEN TOÀN TRANG ĐỂ BẢO MẬT NỘI DUNG */
+        /* CHỐNG BÔI ĐEN TOÀN TRANG */
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow: hidden; user-select: none; -webkit-user-select: none; }
         
         /* CHO PHÉP ADMIN COPY VÀ NHẬP LIỆU */
         .pc-input, textarea, .allow-select { user-select: text !important; -webkit-user-select: text !important; }
 
         .pc-input { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 14px; width: 100%; transition: all 0.2s; color: #334155; }
-        .pc-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .pc-input:focus { border-color: var(--theme-color, #3b82f6); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
         .pc-btn { background-color: #3b82f6; color: white; border-radius: 8px; font-weight: 600; padding: 10px 20px; transition: all 0.2s; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-        .pc-btn:hover { background-color: #2563eb; transform: translateY(-1px); }
+        .pc-btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .pc-btn-secondary { background: #fff; border: 1px solid #e2e8f0; color: #64748b; }
         .pc-btn-secondary:hover { background: #f8fafc; color: #334155; border-color: #cbd5e1; }
+
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; color: #64748b; font-weight: 500; font-size: 14px; transition: all 0.2s; cursor: pointer; margin-bottom: 4px; }
         .nav-item:hover { background: #f1f5f9; color: #1e293b; }
         .nav-item.active { background: #eff6ff; color: #3b82f6; font-weight: 600; }
         .nav-item i { width: 20px; text-align: center; }
+
         .ios-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .ios-switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
         input:checked + .slider { background-color: #10b981; }
         input:checked + .slider:before { transform: translateX(18px); }
+
+        /* Platform Icons */
         .stu_b_ftr { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 12px; background: #fff; color: #94a3b8; border: 1px solid #e2e8f0; font-size: 11px; gap: 6px; cursor: pointer; transition: all 0.2s; }
         .stu_b_ftr:hover { border-color: #cbd5e1; transform: translateY(-2px); }
         .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); background: #fff; box-shadow: 0 4px 12px -2px rgba(0,0,0,0.1); }
         .stu_b_ftr i { font-size: 28px; }
+
         .btn_iftr { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; background: #fff; color: #475569; font-size: 13px; font-weight: 500; border: 1px solid #e2e8f0; margin: 4px; cursor: pointer; transition: all 0.2s; }
         .btn_iftr:hover { background: #f8fafc; border-color: #cbd5e1; }
         .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); }
         .btn_iftr.active i { color: white; }
         .btn_add { border: 1px dashed #3b82f6; color: #3b82f6; background: #f0f9ff; }
+
         .grp { display: none; } .grp.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         .loader { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .user-view-container { background-color: #F1F5F9; position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow-y: auto; }
         .user-card-wrapper { max-width: 480px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; background: white; box-shadow: 0 0 50px rgba(0,0,0,0.08); }
         @media(min-width: 768px) { .user-card-wrapper { min-height: auto; margin-top: 5vh; margin-bottom: 5vh; border-radius: 24px; overflow: hidden; border: 1px solid #e2e8f0; } }
+        
         .task-row { background: white; padding: 16px; border-radius: 16px; display: flex; align-items: center; margin-bottom: 12px; border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .task-row:hover { border-color: #e2e8f0; transform: translateY(-2px); box-shadow: 0 8px 12px rgba(0,0,0,0.04); }
         .task-row.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(1); background: #f8fafc; border-style: dashed; }
+        
         .task-icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; margin-right: 16px; }
         .mini-loader { width: 20px; height: 20px; border: 2px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+        
         .stat-badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; }
         .stat-v { background: #eff6ff; color: #3b82f6; } .stat-c { background: #f0fdf4; color: #16a34a; } .stat-u { background: #fefce8; color: #ca8a04; } .stat-x { background: #f1f5f9; color: #64748b; }
+
+        /* Theme Colors */
+        .theme-btn { transition: all 0.2s; border: 2px solid transparent; }
+        .theme-btn.active { transform: scale(1.1); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--t-color); }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -99,6 +115,8 @@
                     <div id="tab_create_stu" class="max-w-5xl mx-auto">
                         <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
                             <input type="hidden" id="edit_doc_id" value="">
+                            
+                            <!-- Card 1: Basic -->
                             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
                                 <h3 class="text-sm font-bold text-slate-800 uppercase mb-4 flex justify-between items-center">
                                     <span><i class="fa-regular fa-file-lines mr-2"></i> Thông tin cơ bản</span><span id="editModeBadge" class="hidden text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Chế độ sửa</span>
@@ -113,6 +131,40 @@
                                 </div>
                             </div>
 
+                            <!-- Card 2: Advanced (NEW) -->
+                            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">PRO FEATURE</div>
+                                <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-sliders mr-2"></i> Nâng cao & Giao diện</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-600 mb-1"><i class="fa-solid fa-key text-slate-400 mr-1"></i> Mật khẩu (Tùy chọn)</label>
+                                        <input type="text" id="i_password" class="pc-input" placeholder="Để trống nếu không cần...">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-600 mb-1"><i class="fa-solid fa-users-slash text-slate-400 mr-1"></i> Giới hạn lượt mở</label>
+                                        <input type="number" id="i_limit" class="pc-input" placeholder="0 = Vô hạn">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-600 mb-1"><i class="fa-solid fa-clock text-slate-400 mr-1"></i> Ngày hết hạn</label>
+                                        <input type="datetime-local" id="i_expiry" class="pc-input">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-600 mb-2">Màu chủ đạo User</label>
+                                    <div class="flex gap-3" id="theme_selector">
+                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-blue-600 active" style="--t-color:#2563eb" onclick="selectTheme('blue', this)"></button>
+                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-red-600" style="--t-color:#dc2626" onclick="selectTheme('red', this)"></button>
+                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-purple-600" style="--t-color:#9333ea" onclick="selectTheme('purple', this)"></button>
+                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-emerald-600" style="--t-color:#059669" onclick="selectTheme('green', this)"></button>
+                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-slate-800" style="--t-color:#1e293b" onclick="selectTheme('slate', this)"></button>
+                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-pink-600" style="--t-color:#db2777" onclick="selectTheme('pink', this)"></button>
+                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-orange-600" style="--t-color:#ea580c" onclick="selectTheme('orange', this)"></button>
+                                    </div>
+                                    <input type="hidden" id="i_theme" value="blue">
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Dest -->
                             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
                                 <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-bullseye mr-2"></i> Cấu hình Đích đến <span class="text-xs text-red-500 font-normal ml-2">(Tự động mã hóa)</span></h3>
                                 <div class="flex gap-6 mb-4">
@@ -126,6 +178,7 @@
                                 </div>
                             </div>
 
+                            <!-- Card 4: Tasks -->
                             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
                                 <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-list-check mr-2"></i> Thiết lập Nhiệm vụ</h3>
                                 <div class="flex gap-4 mb-6">
@@ -199,10 +252,30 @@
             </div>
         </div>
 
-        <!-- USER -->
+        <!-- USER VIEW -->
         <div id="view-user" class="hidden user-view-container">
+            <!-- Password Gate -->
+            <div id="u_pass_gate" class="hidden fixed inset-0 z-[60] bg-slate-100 flex items-center justify-center p-4">
+                <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center border border-slate-200">
+                    <div class="w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-xl"><i class="fa-solid fa-lock"></i></div>
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">Liên kết được bảo vệ</h2>
+                    <p class="text-sm text-slate-500 mb-6">Vui lòng nhập mật khẩu để tiếp tục</p>
+                    <input type="password" id="u_pass_input" class="pc-input mb-3 text-center" placeholder="Nhập mật khẩu...">
+                    <button onclick="checkUserPass()" class="pc-btn w-full justify-center">Mở khóa</button>
+                </div>
+            </div>
+
+            <!-- Error Gate (Limit/Expiry) -->
+            <div id="u_error_gate" class="hidden fixed inset-0 z-[60] bg-slate-100 flex items-center justify-center p-4">
+                <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center border border-slate-200">
+                    <div class="w-14 h-14 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fa-solid fa-ban"></i></div>
+                    <h2 class="text-lg font-bold text-slate-800 mb-2" id="u_error_title">Liên kết không khả dụng</h2>
+                    <p class="text-sm text-slate-500" id="u_error_msg">Link đã hết hạn hoặc bị xóa.</p>
+                </div>
+            </div>
+
             <div class="user-card-wrapper">
-                <div class="relative bg-white pt-10 pb-6 px-6 text-center border-b border-slate-100">
+                <div id="u_header" class="relative bg-white pt-10 pb-6 px-6 text-center border-b border-slate-100">
                     <h1 id="u_title" class="text-xl font-bold text-slate-900 mb-1">Đang tải...</h1><p id="u_subtitle" class="text-sm text-slate-500">Hoàn thành nhiệm vụ để tiếp tục</p>
                     <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm text-yellow-800 text-left flex gap-3"><i class="fa-solid fa-circle-info mt-1 text-yellow-600"></i><span></span></div>
                 </div>
@@ -270,7 +343,6 @@
 
     <script>
         // --- SECURITY UTILS ---
-        // 1. Anti-Debug: Chặn F12, chuột phải, Ctrl+U...
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if(e.keyCode == 123) e.preventDefault(); // F12
@@ -279,26 +351,23 @@
             if(e.ctrlKey && e.keyCode == 85) e.preventDefault(); // Ctrl+U
         });
 
-        // 2. Mã hóa đơn giản (Obfuscation): Đảo chuỗi Base64 để người thường ko đọc được ngay
         const L4S_SEC = {
-            enc: (str) => {
-                if(!str) return '';
-                try { return btoa(encodeURIComponent(str)).split('').reverse().join(''); } 
-                catch(e) { return str; }
-            },
-            dec: (str) => {
-                if(!str) return '';
-                try { return decodeURIComponent(atob(str.split('').reverse().join(''))); } 
-                catch(e) { return str; }
-            }
+            enc: (str) => { if(!str) return ''; try { return btoa(encodeURIComponent(str)).split('').reverse().join(''); } catch(e) { return str; } },
+            dec: (str) => { if(!str) return ''; try { return decodeURIComponent(atob(str.split('').reverse().join(''))); } catch(e) { return str; } }
         };
 
-        // TRACKING HELPER
+        const THEMES = {
+            blue: 'text-blue-600 bg-blue-600',
+            red: 'text-red-600 bg-red-600',
+            purple: 'text-purple-600 bg-purple-600',
+            green: 'text-emerald-600 bg-emerald-600',
+            slate: 'text-slate-800 bg-slate-800',
+            pink: 'text-pink-600 bg-pink-600',
+            orange: 'text-orange-600 bg-orange-600'
+        };
+
         const trackStat = async (id, field) => {
-            try {
-                const ref = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id);
-                await window.updateDoc(ref, { [field]: window.increment(1) });
-            } catch(e) { console.log("Track error", e); }
+            try { const ref = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id); await window.updateDoc(ref, { [field]: window.increment(1) }); } catch(e) {}
         }
 
         function switchView(v) {
@@ -314,6 +383,13 @@
             document.getElementById('page-title').innerText = t==='stu' ? 'Tạo Liên Kết Mới' : 'Quản Lý Liên Kết';
             if(t==='manage') fetchLinks();
         }
+        
+        function selectTheme(theme, btn) {
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('i_theme').value = theme;
+        }
+
         function selectPlatform(pf, btn) {
             document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             ['yt','tg','tk','fb'].forEach(id => document.getElementById(`ftr_${id}`).classList.add('hidden'));
@@ -353,6 +429,10 @@
             document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
             document.querySelector('input[name="destType"][value="link"]').click();
             document.getElementById('resultArea').classList.add('hidden');
+            // Reset Advanced
+            document.getElementById('i_theme').value = 'blue';
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.theme-btn[onclick*="blue"]').classList.add('active');
         }
         function copyResult() { document.getElementById('resultLink').select(); document.execCommand('copy'); showToast("Đã copy!", "success"); }
         function copyNote() { document.getElementById('noteContentDisplay').select(); document.execCommand('copy'); showToast("Đã copy nội dung!", "success"); }
@@ -381,33 +461,10 @@
         function getTaskStyle(id, lblText) {
             let icon = 'fa-link', color = 'text-slate-600', bg = 'bg-slate-100';
             const txt = lblText ? lblText.toLowerCase().trim() : '';
-            
-            // YOUTUBE
-            if(id.includes('yt')) { 
-                icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; 
-                if(id.includes('ytl') || txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up';
-                if(id.includes('ytc') || txt.includes('comment') || txt.includes('bình luận') || txt.includes('cmt')) icon = 'fa-comment';
-                if(id.includes('yts') || txt.includes('sub') || txt.includes('đăng ký')) icon = 'fa-youtube'; 
-            }
-            // TELEGRAM
-            else if(id.includes('tg')) { 
-                icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; 
-            }
-            // TIKTOK
-            else if(id.includes('tk')) { 
-                icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; 
-                if(txt.includes('like') || txt.includes('tim') || txt.includes('heart')) { icon = 'fa-heart'; color = 'text-pink-500'; }
-                if(txt.includes('follow')) icon = 'fa-tiktok'; 
-            }
-            // FACEBOOK
-            else if(id.includes('fb')) { 
-                icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; 
-                if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up';
-                if(txt.includes('follow') || txt.includes('theo dõi')) icon = 'fa-facebook';
-                if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-share';
-                if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment';
-            }
-            
+            if(id.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; if(id.includes('ytl') || txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(id.includes('ytc') || txt.includes('comment') || txt.includes('bình luận') || txt.includes('cmt')) icon = 'fa-comment'; if(id.includes('yts') || txt.includes('sub') || txt.includes('đăng ký')) icon = 'fa-youtube'; }
+            else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
+            else if(id.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; if(txt.includes('like') || txt.includes('tim') || txt.includes('heart')) { icon = 'fa-heart'; color = 'text-pink-500'; } if(txt.includes('follow')) icon = 'fa-tiktok'; }
+            else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('follow') || txt.includes('theo dõi')) icon = 'fa-facebook'; if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-share'; if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; }
             return { icon, color, bg };
         }
 
@@ -415,19 +472,13 @@
             if (!window.currentUser()) return showToast("Phiên đăng nhập hết hạn", "error");
             const docId = document.getElementById('edit_doc_id').value;
             const title = document.getElementById('i_ttl').value || 'Tiêu đề mặc định', subtitle = document.getElementById('i_sttl').value || 'Hoàn thành các bước...', note = document.getElementById('i_note').value || '', userNote = document.getElementById('i_user_note').value || '', destName = document.getElementById('i_dest_name').value || 'Mở khóa';
+            const password = document.getElementById('i_password').value || '', limit = parseInt(document.getElementById('i_limit').value) || 0, expiry = document.getElementById('i_expiry').value || '', theme = document.getElementById('i_theme').value || 'blue';
+            
             const type = document.querySelector('input[name="destType"]:checked').value;
             let destUrl = "", noteContent = "";
             
-            // ENCRYPT DESTINATION BEFORE SAVING
-            if(type === 'link') { 
-                const rawUrl = document.getElementById('i_dest_url').value; 
-                if (!rawUrl) return showToast("Thiếu link đích!", "error"); 
-                destUrl = L4S_SEC.enc(rawUrl); // Encrypt Link
-            } else { 
-                const rawNote = document.getElementById('i_dest_note').value;
-                if (!rawNote) return showToast("Thiếu nội dung ghi chú!", "error"); 
-                noteContent = L4S_SEC.enc(rawNote); // Encrypt Note
-            }
+            if(type === 'link') { const rawUrl = document.getElementById('i_dest_url').value; if (!rawUrl) return showToast("Thiếu link đích!", "error"); destUrl = L4S_SEC.enc(rawUrl); } 
+            else { const rawNote = document.getElementById('i_dest_note').value; if (!rawNote) return showToast("Thiếu nội dung ghi chú!", "error"); noteContent = L4S_SEC.enc(rawNote); }
 
             const tasks = {};
             document.querySelectorAll('#dynamic_inputs .grp').forEach(grp => {
@@ -442,11 +493,9 @@
 
             document.getElementById('global-loader').classList.remove('hidden');
             try {
-                // Initialize stats as 0 for new links
-                const payload = { title, subtitle, note, userNote, destName, type, destUrl, noteContent, tasks, active: true, createdAt: new Date().toISOString(), views: 0, clicks: 0, unlocks: 0 };
+                const payload = { title, subtitle, note, userNote, destName, type, destUrl, noteContent, tasks, password, limit, expiry, theme, active: true, createdAt: new Date().toISOString(), views: 0, clicks: 0, unlocks: 0 };
                 let resultId = docId;
                 if (docId) { 
-                    // Update: Remove views/clicks/unlocks/createdAt from payload to preserve existing stats/date
                     const { views, clicks, unlocks, createdAt, ...updatePayload } = payload; 
                     await window.updateDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', docId), updatePayload); 
                     showToast("Đã cập nhật!", "success"); 
@@ -457,7 +506,7 @@
                 document.getElementById('resultLink').value = finalLink; document.getElementById('previewLink').href = finalLink;
                 document.getElementById('resultArea').classList.remove('hidden'); document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
                 if(docId) { document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Tạo Link'; document.getElementById('edit_doc_id').value = ""; document.getElementById('formTitle').innerText = "Thông tin cơ bản"; document.getElementById('editModeBadge').classList.add('hidden'); }
-            } catch (e) { showToast("Lỗi hệ thống", "error"); } finally { document.getElementById('global-loader').classList.add('hidden'); }
+            } catch (e) { console.log(e); showToast("Lỗi hệ thống", "error"); } finally { document.getElementById('global-loader').classList.add('hidden'); }
         };
 
         window.fetchLinks = async () => {
@@ -472,34 +521,11 @@
                 links.forEach(link => {
                     const isActive = link.active !== false;
                     const typeBadge = link.type === 'note' ? '<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold">NOTE</span>' : '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">LINK</span>';
-                    
-                    // Stats Calculation
-                    const views = link.views || 0;
-                    const clicks = link.clicks || 0;
-                    const unlocks = link.unlocks || 0;
-                    const clickRate = views > 0 ? Math.round((clicks / views) * 100) : 0;
-                    const unlockRate = views > 0 ? Math.round((unlocks / views) * 100) : 0;
-                    const bounceRate = views > 0 ? 100 - clickRate : 0; // Simplified: Viewed but didn't click tasks
+                    const views = link.views || 0, clicks = link.clicks || 0, unlocks = link.unlocks || 0;
+                    const clickRate = views > 0 ? Math.round((clicks / views) * 100) : 0, unlockRate = views > 0 ? Math.round((unlocks / views) * 100) : 0, bounceRate = views > 0 ? 100 - clickRate : 0;
 
                     const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 transition border-b border-slate-50";
-                    tr.innerHTML = `
-                        <td class="py-4 px-6">
-                            <div class="font-bold text-slate-800 truncate max-w-[200px]">${link.title}</div>
-                            <div class="text-xs text-slate-400">${new Date(link.createdAt).toLocaleDateString('vi-VN')}</div>
-                        </td>
-                        <td class="py-4 px-6">
-                            <div class="flex flex-col gap-1">
-                                <div class="stat-badge stat-v" title="Lượt xem"><i class="fa-solid fa-eye"></i> ${views}</div>
-                                <div class="stat-badge stat-c" title="Tỉ lệ nhấp task (Click Rate)"><i class="fa-solid fa-computer-mouse"></i> ${clickRate}%</div>
-                                <div class="stat-badge stat-u" title="Tỉ lệ mở khóa thành công"><i class="fa-solid fa-unlock"></i> ${unlockRate}%</div>
-                                <div class="stat-badge stat-x" title="Tỉ lệ hiển thị không nhấp"><i class="fa-solid fa-user-xmark"></i> ${Math.max(0, bounceRate)}%</div>
-                            </div>
-                        </td>
-                        <td class="py-4 px-6 text-sm text-slate-500">${link.note || '-'}</td>
-                        <td class="py-4 px-6 text-center">${typeBadge}</td>
-                        <td class="py-4 px-6 text-center"><label class="ios-switch scale-90"><input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)"><span class="slider"></span></label></td>
-                        <td class="py-4 px-6 text-right"><button onclick="editLink('${link.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded transition mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-slate-500 hover:bg-slate-100 p-2 rounded transition mr-1"><i class="fa-regular fa-copy"></i></button><button onclick="deleteLink('${link.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded transition"><i class="fa-solid fa-trash"></i></button></td>
-                    `;
+                    tr.innerHTML = `<td class="py-4 px-6"><div class="font-bold text-slate-800 truncate max-w-[200px]">${link.title}</div><div class="text-xs text-slate-400">${new Date(link.createdAt).toLocaleDateString('vi-VN')}</div></td><td class="py-4 px-6"><div class="flex flex-col gap-1"><div class="stat-badge stat-v" title="Lượt xem"><i class="fa-solid fa-eye"></i> ${views}</div><div class="stat-badge stat-c" title="Tỉ lệ nhấp task"><i class="fa-solid fa-computer-mouse"></i> ${clickRate}%</div><div class="stat-badge stat-u" title="Tỉ lệ mở khóa"><i class="fa-solid fa-unlock"></i> ${unlockRate}%</div></div></td><td class="py-4 px-6 text-sm text-slate-500">${link.note || '-'}</td><td class="py-4 px-6 text-center">${typeBadge}</td><td class="py-4 px-6 text-center"><label class="ios-switch scale-90"><input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)"><span class="slider"></span></label></td><td class="py-4 px-6 text-right"><button onclick="editLink('${link.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded transition mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-slate-500 hover:bg-slate-100 p-2 rounded transition mr-1"><i class="fa-regular fa-copy"></i></button><button onclick="deleteLink('${link.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded transition"><i class="fa-solid fa-trash"></i></button></td>`;
                     list.appendChild(tr);
                 });
             } catch (e) { list.innerHTML = '<tr><td colspan="6" class="text-red-500 text-center py-4">Lỗi tải dữ liệu</td></tr>'; }
@@ -517,15 +543,19 @@
                     switchTab('stu');
                     document.getElementById('edit_doc_id').value = id; document.getElementById('formTitle').innerText = "Đang chỉnh sửa"; document.getElementById('editModeBadge').classList.remove('hidden'); document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi';
                     document.getElementById('i_ttl').value = data.title; document.getElementById('i_sttl').value = data.subtitle; document.getElementById('i_note').value = data.note || ''; document.getElementById('i_user_note').value = data.userNote || ''; document.getElementById('i_dest_name').value = data.destName;
-                    
+                    // NEW FIELDS
+                    document.getElementById('i_password').value = data.password || '';
+                    document.getElementById('i_limit').value = data.limit || '';
+                    document.getElementById('i_expiry').value = data.expiry || '';
+                    const theme = data.theme || 'blue';
+                    document.getElementById('i_theme').value = theme;
+                    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelector(`.theme-btn[onclick*="'${theme}'"]`)?.classList.add('active');
+
                     const type = data.type || 'link';
                     document.querySelector(`input[name="destType"][value="${type}"]`).click();
-                    
-                    // DECRYPT FOR EDITING (Show admin real value)
-                    const realUrl = L4S_SEC.dec(data.destUrl);
-                    const realNote = L4S_SEC.dec(data.noteContent);
-                    document.getElementById('i_dest_url').value = realUrl || ''; 
-                    document.getElementById('i_dest_note').value = realNote || '';
+                    const realUrl = L4S_SEC.dec(data.destUrl); const realNote = L4S_SEC.dec(data.noteContent);
+                    document.getElementById('i_dest_url').value = realUrl || ''; document.getElementById('i_dest_note').value = realNote || '';
 
                     document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
                     document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
@@ -555,17 +585,74 @@
                 const docSnap = await window.getDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id));
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    // TRACK VIEW
-                    trackStat(id, 'views');
                     
-                    if(data.active === false) { document.getElementById('u_title').innerText = "Link tạm khóa"; document.getElementById('u_subtitle').innerText = "Liên kết bị tắt bởi Admin."; } 
-                    else renderUserView(data);
-                } else { document.getElementById('u_title').innerText = "Không tìm thấy"; document.getElementById('u_subtitle').innerText = "Link không tồn tại."; }
-            } catch (e) { document.getElementById('u_title').innerText = "Lỗi kết nối"; }
+                    // 1. Check Expiry
+                    if(data.expiry && new Date() > new Date(data.expiry)) { showError("Liên kết đã hết hạn", "Rất tiếc, thời hạn truy cập link này đã kết thúc."); return; }
+                    // 2. Check Limit
+                    if(data.limit && data.limit > 0 && (data.unlocks || 0) >= data.limit) { showError("Đã hết lượt truy cập", "Liên kết này đã đạt giới hạn số lượng người mở khóa."); return; }
+                    // 3. Check Active
+                    if(data.active === false) { showError("Liên kết tạm khóa", "Liên kết này hiện đang bị tắt bởi quản trị viên."); return; }
+
+                    finalData = data;
+                    // Apply Theme
+                    applyUserTheme(data.theme || 'blue');
+
+                    // 4. Check Password
+                    if(data.password) {
+                        document.getElementById('u_pass_gate').classList.remove('hidden');
+                        document.getElementById('u_title').innerText = data.title; // Load title behind gate
+                    } else {
+                        trackStat(id, 'views');
+                        renderUserView(data);
+                    }
+                } else { showError("Không tìm thấy", "Liên kết không tồn tại hoặc đã bị xóa."); }
+            } catch (e) { showError("Lỗi kết nối", "Vui lòng kiểm tra đường truyền mạng."); }
         };
 
+        function showError(title, msg) {
+            document.getElementById('u_error_gate').classList.remove('hidden');
+            document.getElementById('u_error_title').innerText = title;
+            document.getElementById('u_error_msg').innerText = msg;
+        }
+
+        window.checkUserPass = () => {
+            const input = document.getElementById('u_pass_input').value;
+            if(input === finalData.password) {
+                document.getElementById('u_pass_gate').classList.add('hidden');
+                trackStat(currentLinkId, 'views'); // Count view only after unlock pass
+                renderUserView(finalData);
+            } else { showToast("Sai mật khẩu!", "error"); }
+        };
+
+        function applyUserTheme(theme) {
+            // Colors: blue, red, purple, green, slate, pink, orange
+            const colors = {
+                blue: { bg: 'bg-blue-600', text: 'text-blue-600', sub: 'bg-blue-50', hover: 'hover:bg-blue-700' },
+                red: { bg: 'bg-red-600', text: 'text-red-600', sub: 'bg-red-50', hover: 'hover:bg-red-700' },
+                purple: { bg: 'bg-purple-600', text: 'text-purple-600', sub: 'bg-purple-50', hover: 'hover:bg-purple-700' },
+                green: { bg: 'bg-emerald-600', text: 'text-emerald-600', sub: 'bg-emerald-50', hover: 'hover:bg-emerald-700' },
+                slate: { bg: 'bg-slate-800', text: 'text-slate-800', sub: 'bg-slate-100', hover: 'hover:bg-slate-900' },
+                pink: { bg: 'bg-pink-600', text: 'text-pink-600', sub: 'bg-pink-50', hover: 'hover:bg-pink-700' },
+                orange: { bg: 'bg-orange-600', text: 'text-orange-600', sub: 'bg-orange-50', hover: 'hover:bg-orange-700' },
+            };
+            const c = colors[theme] || colors.blue;
+            
+            // Dynamic CSS Injection for Unlock Button
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .u-btn-primary { background-color: ${c.bg.replace('bg-', '') === 'slate-800' ? '#1e293b' : ''} !important; } 
+                .u-text-primary { color: var(--theme-color) !important; }
+            `; 
+            // We can actually just use the classes since we included Tailwind CDN
+            const btn = document.getElementById('unlockBtn');
+            // Reset existing color classes if any (simplified: just force new ones via style attr or logic)
+            // A better way with Tailwind CDN: Replace classes in JS
+            btn.className = `w-full ${c.bg} ${c.hover} text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 animate-bounce cursor-pointer transform transition-transform`;
+            if(theme !== 'blue') btn.classList.remove('shadow-blue-500/30'); // Remove default shadow color if diff theme
+        }
+
         function renderUserView(data) {
-            document.getElementById('u_title').innerText = data.title; document.getElementById('u_subtitle').innerText = data.subtitle; finalData = data;
+            document.getElementById('u_title').innerText = data.title; document.getElementById('u_subtitle').innerText = data.subtitle;
             const noteArea = document.getElementById('u_note_area');
             if(data.userNote) { noteArea.innerHTML = `<span class="flex-1">${data.userNote}</span>`; noteArea.classList.remove('hidden'); } else noteArea.classList.add('hidden');
 
@@ -589,13 +676,10 @@
         function doTask(idx, url) {
             const card = document.getElementById(`task-card-${idx}`);
             if(tasksList[idx].done || card.classList.contains('disabled') || card.classList.contains('active')) return;
-            
-            // TRACK CLICK
             if(currentLinkId) trackStat(currentLinkId, 'clicks');
-
             window.open(url, '_blank');
             card.classList.add('active'); const icon = document.getElementById(`status-${idx}`), text = card.querySelector('.status-text');
-            icon.innerHTML = '<div class="mini-loader"></div>'; text.innerText = "Đang kiểm tra..."; text.className = "text-[11px] text-blue-600 font-bold uppercase tracking-wide status-text";
+            icon.innerHTML = '<div class="mini-loader"></div>'; text.innerText = "Đang kiểm tra..."; text.className = "text-[11px] font-bold uppercase tracking-wide status-text text-blue-600";
 
             setTimeout(() => {
                 tasksList[idx].done = true; done++;
@@ -621,7 +705,12 @@
             document.getElementById('progressArea').classList.remove('hidden'); document.getElementById('progressBar').style.width = `${pct}%`; document.getElementById('progressText').innerText = `${pct}%`;
             if(done >= req) {
                 const btn = document.getElementById('unlockBtn');
-                btn.disabled = false; btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 animate-bounce cursor-pointer transform transition-transform";
+                btn.disabled = false; 
+                // Re-apply theme color to button
+                const theme = finalData.theme || 'blue';
+                const colors = { blue: 'bg-blue-600 hover:bg-blue-700', red: 'bg-red-600 hover:bg-red-700', purple: 'bg-purple-600 hover:bg-purple-700', green: 'bg-emerald-600 hover:bg-emerald-700', slate: 'bg-slate-800 hover:bg-slate-900', pink: 'bg-pink-600 hover:bg-pink-700', orange: 'bg-orange-600 hover:bg-orange-700' };
+                const c = colors[theme] || colors.blue;
+                btn.className = `w-full ${c} text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 animate-bounce cursor-pointer transform transition-transform`;
                 btn.innerHTML = `<i class="fa-solid fa-unlock-keyhole"></i><span>Mở Khóa Ngay</span>`;
                 if(navigator.vibrate) navigator.vibrate(200);
             }
@@ -629,21 +718,13 @@
 
         window.doUnlock = () => {
             if(!finalData) return;
-            // TRACK UNLOCK
             if(currentLinkId) trackStat(currentLinkId, 'unlocks');
-
             const btn = document.getElementById('unlockBtn'); btn.classList.remove('animate-bounce');
             if(finalData.type === 'note') {
-                const noteArea = document.getElementById('noteResult'); 
-                // DECRYPT NOTE FOR USER
-                document.getElementById('noteContentDisplay').value = L4S_SEC.dec(finalData.noteContent);
+                const noteArea = document.getElementById('noteResult'); document.getElementById('noteContentDisplay').value = L4S_SEC.dec(finalData.noteContent);
                 noteArea.classList.remove('hidden'); noteArea.scrollIntoView({ behavior: 'smooth' });
                 btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Đã Mở Ghi Chú</span>`; btn.disabled = true; btn.className = "w-full bg-slate-800 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-default";
-            } else if(finalData.destUrl) {
-                // DECRYPT URL & SECURE REDIRECT
-                const realUrl = L4S_SEC.dec(finalData.destUrl);
-                if(realUrl) window.location.replace(realUrl); // .replace() không lưu history, khó back lại
-            }
+            } else if(finalData.destUrl) { const realUrl = L4S_SEC.dec(finalData.destUrl); if(realUrl) window.location.replace(realUrl); }
         }
         window.goToDest = window.doUnlock;
     </script>
