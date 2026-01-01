@@ -51,7 +51,29 @@
         .grp { display: none; animation: slideDown 0.3s; }
         .grp.active { display: block; }
 
-        .grp__label { display: block; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #64748b; margin-bottom: 0.25rem; }
+        /* Editable Label Styling */
+        .grp__label_input { 
+            display: block; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            font-weight: 700; 
+            color: #64748b; 
+            margin-bottom: 0.25rem; 
+            background: transparent;
+            border: none;
+            width: 100%;
+            padding: 0;
+            cursor: text;
+        }
+        .grp__label_input:focus {
+            outline: none;
+            border-bottom: 1px dashed #3b82f6;
+            color: #3b82f6;
+        }
+        .grp__label_input:hover {
+            color: #334155;
+        }
+
         .grp__input-wrapper { position: relative; }
         .grp__icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;}
         .grp__input { width: 100%; padding: 0.625rem 1rem 0.625rem 2.5rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: border-color 0.2s; outline: none; }
@@ -102,8 +124,6 @@
 
         <!-- VIEW 2: ADMIN DASHBOARD -->
         <div id="view-admin" class="hidden flex-col h-full bg-white relative">
-            <!-- Header removed as requested -->
-            
             <!-- Logout Button (Floating top-right) -->
             <button onclick="logout()" class="absolute top-4 right-4 z-20 text-gray-400 hover:text-red-500 transition p-2" title="Thoát Admin">
                 <i class="fa-solid fa-power-off"></i>
@@ -120,22 +140,22 @@
 
                     <!-- TAB 1: CREATE LINK -->
                     <div id="tab_create_stu" class="block bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                        <form id="fgSTU" onsubmit="event.preventDefault(); createLink();">
+                        <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
                             
-                            <!-- Header Title inside Form (Optional, keeping it clean) -->
+                            <!-- Header Title inside Form -->
                             <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Tạo Liên Kết Mới</h2>
 
                             <!-- Global Inputs -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <div>
-                                    <label class="grp__label">Tiêu đề chính</label>
+                                    <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Tiêu đề chính</label>
                                     <div class="grp__input-wrapper">
                                         <input class="grp__input" id="i_ttl" type="text" placeholder="Ví dụ: Nhận Key Hack Game 2024...">
                                         <span class="grp__icon"><i class="fa-solid fa-heading"></i></span>
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="grp__label">Tiêu đề phụ / Mô tả</label>
+                                    <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Tiêu đề phụ / Mô tả</label>
                                     <div class="grp__input-wrapper">
                                         <input class="grp__input" id="i_sttl" type="text" placeholder="Hoàn thành các bước bên dưới để mở khóa...">
                                         <span class="grp__icon"><i class="fa-solid fa-align-left"></i></span>
@@ -187,18 +207,18 @@
                             <!-- Dynamic Inputs (Tasks) -->
                             <div class="stu_ftr_inp" id="dynamic_inputs">
                                 <!-- YT -->
-                                <div class="grp" id="grp_yt1"><label class="grp__label">Đăng ký kênh YouTube #1</label><div class="grp__input-wrapper"><input class="grp__input" id="i_yt1" type="url" placeholder="Link kênh..."><span class="grp__icon"><i class="fa-brands fa-youtube"></i></span></div></div>
-                                <div class="grp" id="grp_yt2"><label class="grp__label">Đăng ký kênh YouTube #2</label><div class="grp__input-wrapper"><input class="grp__input" id="i_yt2" type="url" placeholder="Link kênh..."><span class="grp__icon"><i class="fa-brands fa-youtube"></i></span></div></div>
-                                <div class="grp" id="grp_ytl1"><label class="grp__label">Thích Video #1</label><div class="grp__input-wrapper"><input class="grp__input" id="i_ytl1" type="url" placeholder="Link Video..."><span class="grp__icon"><i class="fa-solid fa-thumbs-up"></i></span></div></div>
-                                <div class="grp" id="grp_ytc1"><label class="grp__label">Bình luận Video #1</label><div class="grp__input-wrapper"><input class="grp__input" id="i_ytc1" type="url" placeholder="Link Video..."><span class="grp__icon"><i class="fa-solid fa-comment"></i></span></div></div>
+                                <div class="grp" id="grp_yt1"><input type="text" id="lbl_yt1" class="grp__label_input" value="Đăng ký kênh YouTube #1"><div class="grp__input-wrapper"><input class="grp__input" id="i_yt1" type="url" placeholder="Link kênh..."><span class="grp__icon"><i class="fa-brands fa-youtube"></i></span></div></div>
+                                <div class="grp" id="grp_yt2"><input type="text" id="lbl_yt2" class="grp__label_input" value="Đăng ký kênh YouTube #2"><div class="grp__input-wrapper"><input class="grp__input" id="i_yt2" type="url" placeholder="Link kênh..."><span class="grp__icon"><i class="fa-brands fa-youtube"></i></span></div></div>
+                                <div class="grp" id="grp_ytl1"><input type="text" id="lbl_ytl1" class="grp__label_input" value="Thích Video #1"><div class="grp__input-wrapper"><input class="grp__input" id="i_ytl1" type="url" placeholder="Link Video..."><span class="grp__icon"><i class="fa-solid fa-thumbs-up"></i></span></div></div>
+                                <div class="grp" id="grp_ytc1"><input type="text" id="lbl_ytc1" class="grp__label_input" value="Bình luận Video #1"><div class="grp__input-wrapper"><input class="grp__input" id="i_ytc1" type="url" placeholder="Link Video..."><span class="grp__icon"><i class="fa-solid fa-comment"></i></span></div></div>
                                 <!-- TG -->
-                                <div class="grp" id="grp_tg1"><label class="grp__label">Tham gia Group Telegram #1</label><div class="grp__input-wrapper"><input class="grp__input" id="i_tg1" type="url" placeholder="Link Group..."><span class="grp__icon"><i class="fa-brands fa-telegram"></i></span></div></div>
-                                <div class="grp" id="grp_tg2"><label class="grp__label">Tham gia Group Telegram #2</label><div class="grp__input-wrapper"><input class="grp__input" id="i_tg2" type="url" placeholder="Link Group..."><span class="grp__icon"><i class="fa-brands fa-telegram"></i></span></div></div>
+                                <div class="grp" id="grp_tg1"><input type="text" id="lbl_tg1" class="grp__label_input" value="Tham gia Group Telegram #1"><div class="grp__input-wrapper"><input class="grp__input" id="i_tg1" type="url" placeholder="Link Group..."><span class="grp__icon"><i class="fa-brands fa-telegram"></i></span></div></div>
+                                <div class="grp" id="grp_tg2"><input type="text" id="lbl_tg2" class="grp__label_input" value="Tham gia Group Telegram #2"><div class="grp__input-wrapper"><input class="grp__input" id="i_tg2" type="url" placeholder="Link Group..."><span class="grp__icon"><i class="fa-brands fa-telegram"></i></span></div></div>
                                 <!-- TK -->
-                                <div class="grp" id="grp_tk1"><label class="grp__label">Follow Tiktok #1</label><div class="grp__input-wrapper"><input class="grp__input" id="i_tk1" type="url" placeholder="Link Profile..."><span class="grp__icon"><i class="fa-brands fa-tiktok"></i></span></div></div>
-                                <div class="grp" id="grp_tkl1"><label class="grp__label">Like Tiktok #1</label><div class="grp__input-wrapper"><input class="grp__input" id="i_tkl1" type="url" placeholder="Link Video..."><span class="grp__icon"><i class="fa-solid fa-heart"></i></span></div></div>
+                                <div class="grp" id="grp_tk1"><input type="text" id="lbl_tk1" class="grp__label_input" value="Follow Tiktok #1"><div class="grp__input-wrapper"><input class="grp__input" id="i_tk1" type="url" placeholder="Link Profile..."><span class="grp__icon"><i class="fa-brands fa-tiktok"></i></span></div></div>
+                                <div class="grp" id="grp_tkl1"><input type="text" id="lbl_tkl1" class="grp__label_input" value="Like Tiktok #1"><div class="grp__input-wrapper"><input class="grp__input" id="i_tkl1" type="url" placeholder="Link Video..."><span class="grp__icon"><i class="fa-solid fa-heart"></i></span></div></div>
                                 <!-- FB -->
-                                <div class="grp" id="grp_fb1"><label class="grp__label">Follow Facebook #1</label><div class="grp__input-wrapper"><input class="grp__input" id="i_fb1" type="url" placeholder="Link Profile..."><span class="grp__icon"><i class="fa-brands fa-facebook"></i></span></div></div>
+                                <div class="grp" id="grp_fb1"><input type="text" id="lbl_fb1" class="grp__label_input" value="Follow Facebook #1"><div class="grp__input-wrapper"><input class="grp__input" id="i_fb1" type="url" placeholder="Link Profile..."><span class="grp__icon"><i class="fa-brands fa-facebook"></i></span></div></div>
                             </div>
 
                             <!-- Destination Config (Static & Always Visible) -->
@@ -206,14 +226,14 @@
                                 <h4 class="text-sm font-bold text-gray-800 uppercase mb-4 flex items-center"><i class="fa-solid fa-flag-checkered mr-2 text-green-600"></i> Cấu hình Đích đến (Bắt buộc)</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="grp__label">Tên nút Mở khóa</label>
+                                        <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Tên nút Mở khóa</label>
                                         <div class="grp__input-wrapper">
                                             <input class="grp__input" id="i_dest_name" type="text" placeholder="VD: Bấm để lấy link">
                                             <span class="grp__icon"><i class="fa-solid fa-font"></i></span>
                                         </div>
                                     </div>
                                     <div>
-                                        <label class="grp__label">Liên kết Đích (URL)</label>
+                                        <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Liên kết Đích (URL)</label>
                                         <div class="grp__input-wrapper">
                                             <input class="grp__input" id="i_dest_url" type="url" placeholder="https://drive.google.com/...">
                                             <span class="grp__icon"><i class="fa-solid fa-link"></i></span>
@@ -223,7 +243,7 @@
                             </div>
 
                             <div class="stu_ftr_btn">
-                                <button type="submit" class="shadow-lg shadow-blue-200">Tạo liên kết ngay</button>
+                                <button type="submit" id="btnCreate" class="shadow-lg shadow-blue-200">Tạo liên kết ngay</button>
                                 <button type="button" onclick="resetForm()">Làm mới</button>
                             </div>
                         </form>
@@ -302,7 +322,7 @@
         if (typeof __firebase_config !== 'undefined') {
             firebaseConfig = JSON.parse(__firebase_config);
         } else {
-            // Cấu hình chính thức của bạn (Đã được cập nhật)
+            // Cấu hình chính thức của bạn
             firebaseConfig = {
                 apiKey: "AIzaSyB8znFxA8oyK1Idl9Lc0CkH_BLwIvbxJfI",
                 authDomain: "link4sub-web.firebaseapp.com",
@@ -364,10 +384,7 @@
                         fetchLinks();
                         showToast('Xin chào Admin!', 'success');
                     } else {
-                        // Anonymous but no ID? Stay login or show error
-                        // For now, let's keep them at login unless they have a link ID
                         if(!document.getElementById('view-user').classList.contains('hidden')) return; // Already viewing user
-                        // switchView('login'); // Optional
                     }
                 } else {
                     switchView('login');
@@ -429,26 +446,32 @@
 
         // --- DATABASE OPERATIONS (CREATE) ---
         window.createLink = async () => {
-            if (!currentUser) return showToast("Chưa kết nối máy chủ", "error");
+            if (!currentUser) return showToast("Vui lòng đăng nhập lại (Mất kết nối)", "error");
 
             const title = document.getElementById('i_ttl').value || 'Tiêu đề mặc định';
             const subtitle = document.getElementById('i_sttl').value || 'Hoàn thành các bước...';
             const destName = document.getElementById('i_dest_name').value || 'Mở khóa Link';
             const destUrl = document.getElementById('i_dest_url').value;
 
-            if (!destUrl) return showToast("Thiếu link đích!", "error");
+            if (!destUrl) return showToast("Thiếu link đích! Vui lòng nhập link cần khóa.", "error");
 
             const tasks = {};
             // Collect active tasks using global mapping (defined below in non-module script)
             for (const [key, meta] of Object.entries(window.TASK_MAP)) {
                 const grp = document.getElementById(`grp_${key}`);
                 const inp = document.getElementById(`i_${key}`);
+                const labelInp = document.getElementById(`lbl_${key}`);
+                
                 if (grp && grp.classList.contains('active') && inp && inp.value) {
-                    tasks[key] = inp.value;
+                    tasks[key] = {
+                        url: inp.value,
+                        // Get custom label if exists, else fallback to default
+                        label: labelInp ? labelInp.value : meta.label 
+                    };
                 }
             }
 
-            if (Object.keys(tasks).length === 0) return showToast("Hãy chọn ít nhất 1 nhiệm vụ", "error");
+            if (Object.keys(tasks).length === 0) return showToast("Hãy chọn và nhập link cho ít nhất 1 nhiệm vụ", "error");
 
             document.getElementById('global-loader').classList.remove('hidden');
             try {
@@ -481,14 +504,12 @@
             tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center"><div class="loader"></div></td></tr>';
 
             try {
-                // RULE 2: No complex queries. Fetch all then sort client side.
                 const querySnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'links'));
                 let links = [];
                 querySnapshot.forEach((doc) => {
                     links.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Sort by date desc
                 links.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                 tbody.innerHTML = '';
@@ -571,13 +592,24 @@
             window.location.href = window.location.pathname; // Reload to clear view state
         }
 
+        // Handle Create Link Form Submission Safely
+        function handleSubmitCreate() {
+            if (typeof window.createLink === 'function') {
+                window.createLink();
+            } else {
+                showToast("Hệ thống đang tải... Vui lòng đợi 3s rồi thử lại.", "info");
+            }
+        }
+
         function switchTab(t) {
             document.getElementById('btn-tab-stu').className = t==='stu' ? 'btn active flex-1 py-2 text-sm' : 'btn flex-1 py-2 text-sm';
             document.getElementById('btn-tab-manage').className = t==='manage' ? 'btn active flex-1 py-2 text-sm' : 'btn flex-1 py-2 text-sm';
             document.getElementById('tab_create_stu').className = t==='stu' ? 'block bg-white p-6 rounded-xl border border-gray-200 shadow-sm' : 'hidden';
             document.getElementById('tab_manage_links').className = t==='manage' ? 'block bg-white p-6 rounded-xl border border-gray-200 shadow-sm min-h-[400px] flex flex-col' : 'hidden';
             
-            if(t === 'manage') window.fetchLinks();
+            if(t === 'manage') {
+                if(typeof window.fetchLinks === 'function') window.fetchLinks();
+            }
         }
 
         function selectPlatform(pf, btn) {
@@ -597,14 +629,14 @@
             } else {
                 btn.classList.add('active');
                 grp.classList.add('active');
-                const inp = grp.querySelector('input');
+                const inp = grp.querySelector('.grp__input');
                 if(inp) setTimeout(() => inp.focus(), 100);
             }
         }
 
         function resetForm() {
             if(!confirm("Xóa trắng form?")) return;
-            document.querySelectorAll('input').forEach(i => i.value = '');
+            document.querySelectorAll('.grp__input').forEach(i => i.value = '');
             document.querySelectorAll('.active').forEach(e => e.classList.remove('active'));
             document.querySelector('.stu_b_ftr').click(); // Reset tab
         }
@@ -620,15 +652,19 @@
         }
 
         function showToast(msg, type) {
-            Toastify({
-                text: msg,
-                duration: 3000,
-                close: true,
-                gravity: "top", 
-                position: "right", 
-                backgroundColor: type === "success" ? "#10b981" : "#ef4444",
-                stopOnFocus: true,
-            }).showToast();
+            if (typeof Toastify === 'function') {
+                Toastify({
+                    text: msg,
+                    duration: 3000,
+                    close: true,
+                    gravity: "top", 
+                    position: "right", 
+                    backgroundColor: type === "success" ? "#10b981" : (type === "info" ? "#3b82f6" : "#ef4444"),
+                    stopOnFocus: true,
+                }).showToast();
+            } else {
+                alert(msg);
+            }
         }
 
         // --- USER VIEW RENDER ---
@@ -645,8 +681,12 @@
             reqCount = 0;
 
             if (data.tasks) {
-                Object.entries(data.tasks).forEach(([key, url], idx) => {
+                Object.entries(data.tasks).forEach(([key, taskData], idx) => {
                     const meta = TASK_MAP[key] || { label: 'Nhiệm vụ', icon: 'fa-link', color: 'text-gray-600' };
+                    // Support legacy structure (string url) or new structure (object)
+                    const url = typeof taskData === 'string' ? taskData : taskData.url;
+                    const label = (typeof taskData === 'object' && taskData.label) ? taskData.label : meta.label;
+                    
                     reqCount++;
 
                     const div = document.createElement('div');
@@ -657,7 +697,7 @@
                                 <i class="fa-brands ${meta.icon} ${meta.icon.includes('fa-solid') ? 'fa-solid' : ''}"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-gray-700 text-sm">${meta.label}</h4>
+                                <h4 class="font-bold text-gray-700 text-sm">${label}</h4>
                                 <p class="text-[10px] text-gray-400">Nhấn để thực hiện</p>
                             </div>
                         </div>
