@@ -397,9 +397,7 @@
             <div class="user-card-wrapper">
                 <!-- Header -->
                 <div class="relative bg-white pt-10 pb-6 px-6 text-center border-b border-slate-100">
-                    <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white text-3xl shadow-lg shadow-blue-500/30">
-                        <i class="fa-solid fa-gift"></i>
-                    </div>
+                    <!-- REMOVED THE GIFT ICON BOX HERE -->
                     <h1 id="u_title" class="text-xl font-bold text-slate-900 mb-1">Đang tải...</h1>
                     <p id="u_subtitle" class="text-sm text-slate-500">Hoàn thành nhiệm vụ để tiếp tục</p>
                     
@@ -819,10 +817,12 @@
                     document.getElementById('i_dest_name').value = data.destName;
                     
                     const type = data.type || 'link';
+                    // Switch UI
                     document.querySelector(`input[name="destType"][value="${type}"]`).click();
                     
-                    if(type === 'link') document.getElementById('i_dest_url').value = data.destUrl;
-                    else document.getElementById('i_dest_note').value = data.noteContent;
+                    // FIXED: Set values for BOTH inputs explicitly regardless of current UI state
+                    document.getElementById('i_dest_url').value = data.destUrl || '';
+                    document.getElementById('i_dest_note').value = data.noteContent || '';
 
                     // Reset Inputs
                     document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
@@ -851,7 +851,7 @@
                         }
                     }
                 }
-            } catch(e) {} finally { document.getElementById('global-loader').classList.add('hidden'); }
+            } catch(e) { console.log(e); } finally { document.getElementById('global-loader').classList.add('hidden'); }
         };
 
         window.deleteLink = async (id) => { 
