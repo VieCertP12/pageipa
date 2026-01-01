@@ -10,6 +10,7 @@
 </head>
 <body class="bg-slate-100 font-sans text-slate-800">
 
+    <!-- LOGIN -->
     <div id="login-box" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
         <div class="w-full max-w-sm p-8 bg-white rounded-2xl shadow-xl border">
             <h2 class="text-2xl font-bold text-center mb-6">Đăng Nhập Admin</h2>
@@ -21,6 +22,7 @@
         </div>
     </div>
 
+    <!-- DASHBOARD -->
     <div id="dashboard" class="hidden min-h-screen pb-20">
         <nav class="bg-white shadow-sm sticky top-0 z-40 h-16 px-4 flex items-center justify-between">
             <span class="font-bold text-indigo-600">Admin Panel</span>
@@ -28,6 +30,28 @@
         </nav>
 
         <div class="max-w-4xl mx-auto px-4 mt-8">
+            
+            <!-- CẤU HÌNH WEBSITE (MỚI) -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border mb-8 border-indigo-100">
+                <h3 class="font-bold text-lg mb-4 text-indigo-700 uppercase flex items-center gap-2">
+                    <i class="fas fa-cog"></i> Cấu hình Website
+                </h3>
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Tiêu đề chính (H1)</label>
+                        <input id="cfg-title" type="text" class="w-full p-2 border rounded focus:ring-2 ring-indigo-500 outline-none" placeholder="Ví dụ: SHARE CERTIFICATE">
+                    </div>
+                    <div class="md:col-span-2">
+                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Tiêu đề phụ / Mô tả ngắn</label>
+                         <input id="cfg-subtitle" type="text" class="w-full p-2 border rounded focus:ring-2 ring-indigo-500 outline-none" placeholder="Ví dụ: Kho tàng chứng chỉ ESign...">
+                    </div>
+                </div>
+                <div class="flex justify-end mt-4">
+                     <button onclick="saveConfig()" id="btn-save-cfg" class="bg-slate-800 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-slate-900 shadow-lg">Lưu Cấu Hình</button>
+                </div>
+            </div>
+
+            <!-- TABS -->
             <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
                 <button class="tab px-5 py-2 rounded-full bg-indigo-600 text-white font-bold text-sm" onclick="switchTab('esign')">ESign</button>
                 <button class="tab px-5 py-2 rounded-full bg-white border font-bold text-sm text-slate-500" onclick="switchTab('cert')">Cert</button>
@@ -36,13 +60,14 @@
 
             <div class="flex justify-between items-center mb-4">
                 <h2 class="font-bold text-xl uppercase" id="tab-title">QUẢN LÝ ESIGN</h2>
-                <button onclick="openModal()" class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-green-600">+ THÊM MỚI</button>
+                <button onclick="openModal()" class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-green-600 shadow">+ THÊM MỚI</button>
             </div>
 
             <div id="list-data" class="grid gap-3"></div>
         </div>
     </div>
 
+    <!-- MODAL -->
     <div id="modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
             <h3 class="font-bold text-lg mb-4" id="modal-title">Thêm Mới</h3>
@@ -71,7 +96,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc",
@@ -89,12 +114,12 @@
         let curType = 'esign';
         let allData = [];
 
-        // Auth Logic
         onAuthStateChanged(auth, u => {
             if(u) {
                 document.getElementById('login-box').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
-                load();
+                loadConfig(); // Load config
+                load();       // Load apps
             } else {
                 document.getElementById('login-box').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
@@ -111,7 +136,33 @@
 
         document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-        // Data Logic
+        // --- CONFIG LOGIC ---
+        async function loadConfig() {
+            try {
+                const docSnap = await getDoc(doc(db, "settings", "general"));
+                if (docSnap.exists()) {
+                    const d = docSnap.data();
+                    document.getElementById('cfg-title').value = d.title || "";
+                    document.getElementById('cfg-subtitle').value = d.subtitle || "";
+                }
+            } catch(e) { console.log(e); }
+        }
+
+        window.saveConfig = async () => {
+            const btn = document.getElementById('btn-save-cfg');
+            btn.innerText = "Đang lưu...";
+            try {
+                const title = document.getElementById('cfg-title').value;
+                const subtitle = document.getElementById('cfg-subtitle').value;
+                await setDoc(doc(db, "settings", "general"), { title, subtitle });
+                alert("Đã lưu cấu hình thành công!");
+            } catch(e) {
+                alert("Lỗi: " + e.message);
+            }
+            btn.innerText = "Lưu Cấu Hình";
+        }
+
+        // --- APP LOGIC ---
         async function load() {
             document.getElementById('list-data').innerHTML = '<div class="text-center py-4">Đang tải...</div>';
             const q = query(collection(db, "apps"));
@@ -137,7 +188,6 @@
             document.getElementById('list-data').innerHTML = html || '<p class="text-center text-slate-400 py-4">Chưa có dữ liệu</p>';
         }
 
-        // Global Funcs for HTML access
         window.switchTab = (t) => {
             curType = t;
             document.getElementById('tab-title').innerText = "QUẢN LÝ " + t.toUpperCase();
@@ -193,13 +243,9 @@
                 tag: document.getElementById('inp-tag').value || 'fire',
                 updatedAt: new Date().toISOString()
             };
-            
-            // Nếu là tạo mới thì download = 0
             if(!id) data.downloads = 0;
-
             const docId = id || (curType[0] + Date.now());
             await setDoc(doc(db, "apps", docId), data, { merge: true });
-            
             document.getElementById('modal').classList.add('hidden');
             btn.innerText = "Lưu";
             load();
