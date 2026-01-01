@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - ThaiSonCert Secured</title>
-    <!-- BẢO MẬT: CSP Chặn tải script lạ -->
+    <!-- BẢO MẬT: CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://cdnjs.cloudflare.com https://fonts.gstatic.com;">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,13 +20,8 @@
     <style> 
         .hidden { display: none !important; } 
         .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        /* Hiệu ứng cảnh báo */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
         .shake-anim { animation: shake 0.3s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800">
@@ -39,30 +34,31 @@
                 <div class="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-indigo-500/30 mb-4">
                     <i class="fas fa-shield-alt text-white text-3xl"></i>
                 </div>
-                <h2 class="text-3xl font-bold text-slate-800">Hệ Thống Quản Trị</h2>
-                <p class="text-slate-500 text-sm mt-2 font-medium">Khu vực bảo mật cao cấp</p>
+                <h2 class="text-3xl font-bold text-slate-800">Quản Trị Viên</h2>
+                <p class="text-slate-500 text-sm mt-2 font-medium">Bảo mật đa lớp</p>
             </div>
             
             <div class="space-y-4">
                 <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Email Quản Trị</label>
+                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Email</label>
                     <div class="relative">
                         <span class="absolute left-4 top-4 text-slate-400"><i class="fas fa-envelope"></i></span>
-                        <input type="email" id="adm-email" value="iamsonnk4@gmail.com" class="w-full pl-10 p-4 rounded-xl border border-slate-200 bg-slate-100 font-bold text-slate-600 focus:outline-none cursor-not-allowed" readonly>
+                        <!-- ĐÃ XÓA VALUE EMAIL CỨNG -->
+                        <input type="email" id="adm-email" placeholder="admin@example.com" class="w-full pl-10 p-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none font-medium">
                     </div>
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Mật khẩu truy cập</label>
+                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Mật khẩu</label>
                     <div class="relative">
                         <span class="absolute left-4 top-4 text-slate-400"><i class="fas fa-lock"></i></span>
                         <input type="password" id="adm-pass" placeholder="••••••••" class="w-full pl-10 p-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none font-medium">
                     </div>
                 </div>
                 <button id="btn-login" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition-all transform active:scale-95 flex justify-center items-center gap-2">
-                    <i class="fas fa-sign-in-alt"></i> XÁC THỰC & ĐĂNG NHẬP
+                    <i class="fas fa-sign-in-alt"></i> ĐĂNG NHẬP
                 </button>
             </div>
-            <p id="err-msg" class="text-red-500 text-center mt-4 text-sm font-bold bg-red-50 py-3 rounded-lg border border-red-100 hidden flex items-center justify-center gap-2"><i class="fas fa-exclamation-circle"></i> <span>Thông báo lỗi</span></p>
+            <p id="err-msg" class="text-red-500 text-center mt-4 text-sm font-bold bg-red-50 py-3 rounded-lg border border-red-100 hidden flex items-center justify-center gap-2"></p>
         </div>
     </div>
 
@@ -277,9 +273,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- ADMIN EMAIL CONFIG ---
-        const ADMIN_EMAIL = "iamsonnk4@gmail.com";
-
         // BẢO MẬT: Hàm làm sạch dữ liệu đầu vào (Chống XSS)
         const escapeHtml = (unsafe) => {
             if (typeof unsafe !== 'string') return unsafe;
@@ -309,25 +302,31 @@
         let curType = 'esign';
         let allData = [];
 
-        // Auth Logic - SECURE CHECK (Real-time monitoring)
+        // Auth Logic - SECURE CHECK (Kiểm tra bằng cách thử đọc dữ liệu)
         onAuthStateChanged(auth, async (u) => {
             if(u) {
-                // Kiểm tra email cứng (Layer 1 Security)
-                if(u.email !== ADMIN_EMAIL) {
+                // THAY ĐỔI QUAN TRỌNG: Không so sánh email cứng nữa.
+                // Thử đọc 1 file cấu hình để xem có quyền không.
+                // Nếu luật trên server chặn -> ném lỗi -> đăng xuất.
+                try {
+                    await getDoc(doc(db, "settings", "general")); // Thử đọc
+                    
+                    // Nếu đọc được -> Là Admin xịn -> Vào Dashboard
+                    document.getElementById('login-box').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    loadConfig();
+                    load();
+                    switchTab('esign');
+                    resetIdleTimer();
+                } catch (e) {
+                    // Nếu bị chặn -> Không phải Admin -> Đá văng
+                    console.error("Quyền truy cập bị từ chối:", e);
                     await signOut(auth);
                     const err = document.getElementById('err-msg');
-                    err.innerHTML = `<i class="fas fa-ban"></i> TÀI KHOẢN KHÔNG CÓ QUYỀN TRUY CẬP!`;
+                    err.innerHTML = `<i class="fas fa-ban"></i> TÀI KHOẢN NÀY KHÔNG CÓ QUYỀN ADMIN!`;
                     err.classList.remove('hidden');
                     document.getElementById('login-box').classList.add('shake-anim');
-                    return;
                 }
-
-                document.getElementById('login-box').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                loadConfig();
-                load();
-                switchTab('esign'); // Init tab UI
-                resetIdleTimer();   // Bắt đầu đếm giờ
             } else {
                 document.getElementById('login-box').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
@@ -335,13 +334,13 @@
         });
 
         document.getElementById('btn-login').addEventListener('click', () => {
+            const email = document.getElementById('adm-email').value; // Lấy email từ ô nhập
             const p = document.getElementById('adm-pass').value;
             const btn = document.getElementById('btn-login');
             const err = document.getElementById('err-msg');
             
-            // Basic Spam Block (Layer 0 Security)
-            if(!p) {
-                err.innerText = "Vui lòng nhập mật khẩu!";
+            if(!email || !p) {
+                err.innerText = "Vui lòng nhập đầy đủ Email và Mật khẩu!";
                 err.classList.remove('hidden');
                 return;
             }
@@ -350,11 +349,11 @@
             btn.disabled = true;
             err.classList.add('hidden');
             
-            signInWithEmailAndPassword(auth, ADMIN_EMAIL, p)
+            signInWithEmailAndPassword(auth, email, p)
             .catch(e => {
-                err.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Sai mật khẩu hoặc lỗi kết nối!`;
+                err.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Sai thông tin hoặc lỗi kết nối!`;
                 err.classList.remove('hidden');
-                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> XÁC THỰC & ĐĂNG NHẬP';
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ĐĂNG NHẬP';
                 btn.disabled = false;
                 document.getElementById('login-box').classList.add('shake-anim');
                 setTimeout(() => document.getElementById('login-box').classList.remove('shake-anim'), 500);
@@ -382,11 +381,8 @@
             btn.disabled = true;
             
             try {
-                // Kiểm tra lại quyền trước khi lưu (Client-side Double Check)
-                if(auth.currentUser?.email !== ADMIN_EMAIL) throw new Error("Mất quyền truy cập!");
-
                 await setDoc(doc(db, "settings", "general"), {
-                    title: document.getElementById('cfg-title').value, // Title cho phép HTML nên không escape ở đây (để còn tô màu)
+                    title: document.getElementById('cfg-title').value,
                     subtitle: escapeHtml(document.getElementById('cfg-subtitle').value)
                 });
                 btn.className = "bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg transition-all flex items-center gap-2";
@@ -410,7 +406,6 @@
                 const s = await getDocs(q);
                 allData = [];
                 s.forEach(d => allData.push({id: d.id, ...d.data()}));
-                // Sort newest first
                 allData.sort((a,b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
                 render();
             } catch(e) { console.error(e); }
@@ -486,10 +481,9 @@
             const img = document.getElementById('icon-preview');
             const place = document.getElementById('icon-placeholder');
             if(url) {
-                img.src = url; // Không escape ở đây để hiện ảnh, nhưng CSP sẽ chặn nếu nguồn lạ
+                img.src = url; 
                 img.classList.remove('hidden');
                 place.classList.add('hidden');
-                // Auto error handler
                 img.onerror = () => {
                     img.classList.add('hidden');
                     place.classList.remove('hidden');
@@ -562,21 +556,15 @@
             btn.disabled = true;
 
             try {
-                // Bảo mật bổ sung: Kiểm tra email lần nữa trước khi gửi
-                if(auth.currentUser?.email !== ADMIN_EMAIL) throw new Error("Phiên làm việc không hợp lệ!");
-
                 const id = document.getElementById('edit-id').value;
                 
                 let selectedTag = 'fire';
                 const tagRadio = document.querySelector('input[name="tag_icon"]:checked');
                 if(tagRadio) selectedTag = tagRadio.value;
 
-                // Escape HTML trước khi lưu (Tùy chọn: Hoặc escape khi hiển thị)
-                // Ở đây ta lưu raw, nhưng khi hiển thị ở trên đã dùng escapeHtml
-                
                 const data = {
                     type: curType,
-                    name: name, // Lưu raw để dễ sửa
+                    name: name,
                     desc: document.getElementById('inp-desc').value,
                     url: url,
                     icon: document.getElementById('inp-icon').value,
@@ -594,7 +582,7 @@
                 closeModal();
                 load();
             } catch(e) {
-                alert("Lỗi lưu dữ liệu: " + e.message + "\n(Vui lòng kiểm tra quyền Admin hoặc kết nối mạng)");
+                alert("Lỗi lưu: " + e.message + "\n(Kiểm tra lại quyền Admin!)");
             } finally {
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
