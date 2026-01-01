@@ -456,19 +456,23 @@
             if (!destUrl) return showToast("Thiếu link đích! Vui lòng nhập link cần khóa.", "error");
 
             const tasks = {};
-            // Collect active tasks using global mapping (defined below in non-module script)
-            for (const [key, meta] of Object.entries(window.TASK_MAP)) {
-                const grp = document.getElementById(`grp_${key}`);
-                const inp = document.getElementById(`i_${key}`);
-                const labelInp = document.getElementById(`lbl_${key}`);
-                
-                if (grp && grp.classList.contains('active') && inp && inp.value) {
-                    tasks[key] = {
-                        url: inp.value,
-                        // Get custom label if exists, else fallback to default
-                        label: labelInp ? labelInp.value : meta.label 
-                    };
+            // Collect active tasks
+            if (window.TASK_MAP) {
+                for (const [key, meta] of Object.entries(window.TASK_MAP)) {
+                    const grp = document.getElementById(`grp_${key}`);
+                    const inp = document.getElementById(`i_${key}`);
+                    const labelInp = document.getElementById(`lbl_${key}`);
+                    
+                    if (grp && grp.classList.contains('active') && inp && inp.value) {
+                        tasks[key] = {
+                            url: inp.value,
+                            label: labelInp ? labelInp.value : meta.label 
+                        };
+                    }
                 }
+            } else {
+                console.error("TASK_MAP is not defined");
+                return showToast("Lỗi hệ thống: TASK_MAP missing", "error");
             }
 
             if (Object.keys(tasks).length === 0) return showToast("Hãy chọn và nhập link cho ít nhất 1 nhiệm vụ", "error");
@@ -491,7 +495,10 @@
 
             } catch (e) {
                 console.error(e);
-                showToast("Lỗi khi lưu: " + e.message, "error");
+                let msg = "Lỗi khi lưu: " + e.message;
+                if(e.code === 'permission-denied') msg = "Lỗi quyền truy cập! Hãy vào Firebase Console -> Firestore Database -> Rules và cho phép đọc/ghi (Test Mode).";
+                showToast(msg, "error");
+                alert(msg); // Alert for visibility
             } finally {
                 document.getElementById('global-loader').classList.add('hidden');
             }
@@ -576,7 +583,7 @@
     <!-- UI LOGIC SCRIPT (Non-module) -->
     <script>
         // CONFIG
-        const TASK_MAP = {
+        window.TASK_MAP = {
             'yt1': { label: 'Đăng ký YouTube #1', icon: 'fa-youtube', color: 'text-red-600' },
             'yt2': { label: 'Đăng ký YouTube #2', icon: 'fa-youtube', color: 'text-red-600' },
             'ytl1': { label: 'Thích Video #1', icon: 'fa-thumbs-up', color: 'text-red-600' },
@@ -682,7 +689,7 @@
 
             if (data.tasks) {
                 Object.entries(data.tasks).forEach(([key, taskData], idx) => {
-                    const meta = TASK_MAP[key] || { label: 'Nhiệm vụ', icon: 'fa-link', color: 'text-gray-600' };
+                    const meta = window.TASK_MAP[key] || { label: 'Nhiệm vụ', icon: 'fa-link', color: 'text-gray-600' };
                     // Support legacy structure (string url) or new structure (object)
                     const url = typeof taskData === 'string' ? taskData : taskData.url;
                     const label = (typeof taskData === 'object' && taskData.label) ? taskData.label : meta.label;
