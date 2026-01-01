@@ -379,15 +379,35 @@
         window.logout = () => window.signOut(window.auth).then(() => window.location.href = window.location.pathname);
 
         function getTaskStyle(id, lblText) {
-            let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
+            let icon = 'fa-link', color = 'text-slate-600', bg = 'bg-slate-100';
+            const txt = lblText ? lblText.toLowerCase().trim() : '';
+            
+            // YOUTUBE
             if(id.includes('yt')) { 
                 icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; 
-                if(lblText && (lblText.includes('Like') || lblText.includes('Thích'))) icon = 'fa-thumbs-up';
-                if(lblText && (lblText.includes('Comment') || lblText.includes('Bình luận'))) icon = 'fa-comment';
+                if(id.includes('ytl') || txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up';
+                if(id.includes('ytc') || txt.includes('comment') || txt.includes('bình luận') || txt.includes('cmt')) icon = 'fa-comment';
+                if(id.includes('yts') || txt.includes('sub') || txt.includes('đăng ký')) icon = 'fa-youtube'; 
             }
-            else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
-            else if(id.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; if(lblText && (lblText.includes('Like') || lblText.includes('Tim'))) { icon = 'fa-heart'; color = 'text-pink-500'; } }
-            else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; }
+            // TELEGRAM
+            else if(id.includes('tg')) { 
+                icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; 
+            }
+            // TIKTOK
+            else if(id.includes('tk')) { 
+                icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; 
+                if(txt.includes('like') || txt.includes('tim') || txt.includes('heart')) { icon = 'fa-heart'; color = 'text-pink-500'; }
+                if(txt.includes('follow')) icon = 'fa-tiktok'; 
+            }
+            // FACEBOOK
+            else if(id.includes('fb')) { 
+                icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; 
+                if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up';
+                if(txt.includes('follow') || txt.includes('theo dõi')) icon = 'fa-facebook';
+                if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-share';
+                if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment';
+            }
+            
             return { icon, color, bg };
         }
 
@@ -555,7 +575,7 @@
                 entries.forEach(([key, taskData], idx) => {
                     const label = taskData.label || "Nhiệm vụ", url = taskData.url;
                     let { icon, color, bg } = taskData;
-                    if(!icon) { const style = getTaskStyle(key); icon = style.icon; color = style.color; bg = style.bg; }
+                    if(!icon) { const style = getTaskStyle(key, label); icon = style.icon; color = style.color; bg = style.bg; }
 
                     const isDisabled = idx !== 0, div = document.createElement('div');
                     div.id = `task-card-${idx}`; div.className = `task-row ${isDisabled ? 'disabled' : 'cursor-pointer'}`;
