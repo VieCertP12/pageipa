@@ -769,9 +769,38 @@
             document.querySelector('input[name="destType"][value="link"]').checked = true; toggleDestType();
             resetUIForEdit();
         }
-        function copyResult() { document.getElementById('resultLink').select(); document.execCommand('copy'); showToast("Đã copy!", "success"); }
-        function copyNote() { document.getElementById('noteContentDisplay').select(); document.execCommand('copy'); showToast("Đã copy nội dung!", "success"); }
+        window.copyResult = () => { document.getElementById('resultLink').select(); document.execCommand('copy'); showToast("Đã copy!", "success"); }
+        window.copyNote = () => { document.getElementById('noteContentDisplay').select(); document.execCommand('copy'); showToast("Đã copy nội dung!", "success"); }
+        window.copyToClip = (text) => {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => showToast("Đã copy!", "success"));
+            } else {
+                let textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast("Đã copy!", "success");
+                } catch (err) {
+                    showToast("Lỗi copy", "error");
+                }
+                document.body.removeChild(textArea);
+            }
+        }
         function showToast(msg, type) { if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, gravity: "top", position: "right", backgroundColor: type === "success" ? "#10b981" : "#ef4444" }).showToast(); else alert(msg); }
+        window.switchTab = switchTab;
+        window.selectPlatform = selectPlatform;
+        window.toggleInput = toggleInput;
+        window.toggleDestType = toggleDestType;
+        window.addTask = addTask;
+        window.resetUIForEdit = resetUIForEdit;
+        window.resetForm = resetForm;
+        window.handleSubmitCreate = handleSubmitCreate;
+        
         function switchView(v) { ['view-login','view-admin','view-user'].forEach(id => document.getElementById(id).classList.add('hidden')); const t = document.getElementById(`view-${v}`); t.classList.remove('hidden'); if(v==='admin') t.classList.add('flex'); }
 
         // --- SEQUENTIAL TASK LOGIC ---
