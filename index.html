@@ -6,6 +6,11 @@
     <title>Esign iPa Miễn Phí</title>
     <link rel="icon" href="https://i.imgur.com/L6HpZa6.png" type="image/x-icon">
     
+    <!-- BẢO MẬT: CSP & Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https:;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,6 +71,7 @@
             background-size: 20px 20px, 20px 20px, 100% 100%, 100% 100%;
             background-attachment: fixed;
             background-position: center top;
+            /* Ngăn chọn văn bản để hạn chế copy */
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -120,7 +126,7 @@
                     <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                         <i class="fa-brands fa-apple text-white"></i>
                     </div>
-                    <span class="font-bold text-lg tracking-tight text-slate-800">ThaiSon <span class="text-indigo-600">Cert</span></span>
+                    <span class="font-bold text-lg tracking-tight text-slate-800">ThaiSon<span class="text-indigo-600">Cert</span></span>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="hidden md:flex bg-slate-100/80 rounded-full p-1 border border-slate-200">
@@ -274,6 +280,17 @@
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function (e) { if(e.keyCode == 123) return false; }
 
+        // BẢO MẬT: Escape HTML khi hiển thị tên để chống XSS
+        const escapeHtml = (unsafe) => {
+            if (typeof unsafe !== 'string') return unsafe;
+            return unsafe
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
         // --- FETCH SETTINGS (TITLE/SUBTITLE) ---
         async function fetchSettings() {
             try {
@@ -281,15 +298,10 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if(data.title) {
-                        const titleEl = document.getElementById('site-title');
-                        // Split title to keep span coloring if needed, or just simple text
-                        // Here we apply simple text but keep the first word coloring logic if you want
-                        // Or just fully replace HTML to allow custom coloring
-                        // For safety, let's just replace text but try to keep branding style
-                        // Simplified: Replace inner HTML with styled text
-                        titleEl.innerHTML = `<span class="text-indigo-600">${data.title}</span>`;
+                        // Title cho phép HTML (để tô màu) nên không escape ở đây
+                        document.getElementById('site-title').innerHTML = data.title;
                     }
-                    if(data.subtitle) document.getElementById('site-subtitle').innerText = data.subtitle;
+                    if(data.subtitle) document.getElementById('site-subtitle').innerText = data.subtitle; // InnerText tự động escape
                 }
             } catch (e) { console.log("Config load err", e); }
         }
@@ -321,15 +333,15 @@
             const esignHtml = esign.map(item => `
                 <div class="glass-card rounded-2xl p-4 flex items-center gap-4 group">
                     <div class="relative w-16 h-16 rounded-xl border border-slate-200 group-hover:border-indigo-300 transition-colors shadow-sm bg-white">
-                        <img src="${item.icon || 'https://i.imgur.com/hPj8ui8.png'}" class="w-full h-full object-cover rounded-xl">
-                        ${item.badge ? `<span class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-md shadow-red-500/30">${item.badge}</span>` : ''}
+                        <img src="${escapeHtml(item.icon) || 'https://i.imgur.com/L6HpZa6.png'}" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/100?text=Icon'">
+                        ${item.badge ? `<span class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-md shadow-red-500/30">${escapeHtml(item.badge)}</span>` : ''}
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-base truncate pr-2 text-slate-800 group-hover:text-indigo-600 transition-colors">${item.name}</h3>
+                            <h3 class="font-bold text-base truncate pr-2 text-slate-800 group-hover:text-indigo-600 transition-colors">${escapeHtml(item.name)}</h3>
                             <span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
                         </div>
-                        <p class="text-xs text-slate-500 mt-1 truncate font-medium">${item.desc}</p>
+                        <p class="text-xs text-slate-500 mt-1 truncate font-medium">${escapeHtml(item.desc)}</p>
                         <div class="flex items-center gap-3 mt-3">
                             <span class="text-[10px] text-slate-500 flex items-center gap-1 font-semibold bg-slate-100 px-2 py-0.5 rounded-md">
                                 <i class="fas fa-download text-indigo-500"></i>
@@ -338,7 +350,7 @@
                         </div>
                     </div>
                     <button class="esign-download-btn w-10 h-10 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 flex items-center justify-center transition-all hover:scale-110" 
-                        data-name="${item.name}" data-url="${item.url}" data-id="${item.id}">
+                        data-name="${escapeHtml(item.name)}" data-url="${escapeHtml(item.url)}" data-id="${item.id}">
                         <i class="fas fa-arrow-down"></i>
                     </button>
                 </div>
@@ -355,11 +367,11 @@
             const certHtml = cert.map(item => `
                 <div class="glass-card rounded-2xl p-4 flex items-center gap-4 group">
                     <div class="relative w-16 h-16 rounded-xl border border-purple-100 group-hover:border-purple-300 transition-colors shadow-sm bg-white">
-                        <img src="${item.icon || 'https://i.imgur.com/nOPmMnk.png'}" alt="Cert Logo" class="w-full h-full object-cover rounded-xl">
+                        <img src="${escapeHtml(item.icon) || 'https://i.imgur.com/nOPmMnk.png'}" alt="Cert Logo" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/100?text=Icon'">
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="font-bold text-base truncate text-slate-800">${item.name}</h3>
-                        <p class="text-xs text-slate-500 mt-1 truncate font-medium">${item.desc}</p>
+                        <h3 class="font-bold text-base truncate text-slate-800">${escapeHtml(item.name)}</h3>
+                        <p class="text-xs text-slate-500 mt-1 truncate font-medium">${escapeHtml(item.desc)}</p>
                         <div class="flex items-center gap-3 mt-3">
                              <span class="text-[10px] text-slate-500 flex items-center gap-1 font-semibold bg-slate-100 px-2 py-0.5 rounded-md">
                                 <i class="fas fa-cloud-download-alt text-purple-500"></i>
@@ -367,7 +379,7 @@
                             </span>
                         </div>
                     </div>
-                    <a href="${item.url}" target="_blank" class="download-counter px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-600 text-purple-600 hover:text-white text-xs font-bold transition-all border border-purple-200" data-id="${item.id}">Tải Về</a>
+                    <a href="${escapeHtml(item.url)}" target="_blank" class="download-counter px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-600 text-purple-600 hover:text-white text-xs font-bold transition-all border border-purple-200" data-id="${item.id}">Tải Về</a>
                 </div>
             `).join('');
             document.getElementById('cert-list').innerHTML = certHtml;
@@ -380,19 +392,19 @@
             const modsHtml = mods.map(item => `
                 <div class="glass-card rounded-2xl p-4 flex items-center gap-4 group app-card-mod">
                     <div class="relative w-16 h-16 rounded-xl overflow-hidden border border-slate-200 group-hover:border-indigo-300 transition-colors shadow-sm">
-                        <img src="${item.icon}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <img src="${escapeHtml(item.icon)}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/100?text=Icon'">
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="font-bold text-base truncate text-slate-800 app-title">${item.name}</h3>
-                        <p class="text-xs text-indigo-600 mt-1 truncate font-medium">${item.desc}</p>
+                        <h3 class="font-bold text-base truncate text-slate-800 app-title">${escapeHtml(item.name)}</h3>
+                        <p class="text-xs text-indigo-600 mt-1 truncate font-medium">${escapeHtml(item.desc)}</p>
                         <div class="flex items-center gap-3 mt-3">
                              <span class="text-[10px] text-slate-500 flex items-center gap-1 font-semibold bg-slate-100 px-2 py-0.5 rounded-md">
-                                <i class="fas fa-${item.tag || 'fire'} text-orange-500"></i>
+                                <i class="fas fa-${escapeHtml(item.tag) || 'fire'} text-orange-500"></i>
                                 <span>${item.downloads || 0}</span>
                             </span>
                         </div>
                     </div>
-                    <a href="${item.url}" target="_blank" class="download-counter w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-110 transition-all" data-id="${item.id}">
+                    <a href="${escapeHtml(item.url)}" target="_blank" class="download-counter w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-110 transition-all" data-id="${item.id}">
                         <i class="fas fa-download text-xs"></i>
                     </a>
                 </div>
@@ -533,7 +545,7 @@
             adminTrigger.addEventListener('click', () => {
                 count++;
                 if(count === 5) {
-                    window.location.href = '3060ti.html';
+                    window.location.href = 'quan_ly_bi_mat.html';
                 }
                 setTimeout(() => count = 0, 2000);
             });
