@@ -3,50 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link4Sub Ultimate</title>
-    
+    <title>Link4Sub Ultimate - Professional Tool</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
-        
-        .animate-enter { animation: enter 0.4s ease-out forwards; }
-        @keyframes enter {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .loader-spin { animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .btn-glow { box-shadow: 0 0 15px rgba(37, 99, 235, 0.3); transition: all 0.3s; }
+        .btn-glow:hover { box-shadow: 0 0 25px rgba(37, 99, 235, 0.5); transform: scale(1.02); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .step-active { border-color: #2563eb; background: #eff6ff; }
+        .unlock-glow { animation: pulse-green 2s infinite; }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
     </style>
-    
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-[#F8FAFC] text-slate-800 overflow-x-hidden">
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
-        import React, { useState, useEffect } from 'https://esm.sh/react@18.2.0';
+        import React, { useState, useEffect, useMemo } from 'https://esm.sh/react@18.2.0';
         import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client';
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDoc, doc, updateDoc, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDoc, getDocs, deleteDoc, doc, updateDoc, serverTimestamp, increment, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { 
             LayoutDashboard, PlusCircle, Link as LinkIcon, Lock, Unlock, CheckCircle2, 
             Settings, Zap, Youtube, Facebook, Instagram, Send, Loader2, Copy, 
-            Trash2, GripVertical, Eye, Globe, ChevronRight, LogOut, Heart, ThumbsUp, MessageCircle
+            Trash2, Eye, Globe, ChevronRight, LogOut, ThumbsUp, MessageCircle, BarChart3, Clock
         } from 'https://esm.sh/lucide-react@0.294.0';
 
         // --- FIREBASE CONFIG (Giữ nguyên của bạn) ---
@@ -63,238 +49,284 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // --- ICONS CUSTOM ---
-        const TikTokIcon = () => (<svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>);
-        const DiscordIcon = () => (<svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>);
+        // --- ICONS & CONSTANTS ---
+        const TikTokIcon = ({size=20}) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>);
+        const DiscordIcon = ({size=20}) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>);
 
-        // --- CONSTANTS ---
         const PLATFORMS = {
-            youtube: { color: 'bg-[#FF0000]', icon: <Youtube/>, label: 'YouTube' },
-            facebook: { color: 'bg-[#1877F2]', icon: <Facebook/>, label: 'Facebook' },
-            tiktok: { color: 'bg-[#000000]', icon: <TikTokIcon/>, label: 'TikTok' },
-            instagram: { color: 'bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500', icon: <Instagram/>, label: 'Instagram' },
-            telegram: { color: 'bg-[#0088cc]', icon: <Send/>, label: 'Telegram' },
-            discord: { color: 'bg-[#5865F2]', icon: <DiscordIcon/>, label: 'Discord' },
-            website: { color: 'bg-slate-700', icon: <Globe/>, label: 'Website' },
+            youtube: { color: 'bg-[#FF0000]', icon: <Youtube />, label: 'YouTube' },
+            facebook: { color: 'bg-[#1877F2]', icon: <Facebook />, label: 'Facebook' },
+            tiktok: { color: 'bg-[#000000]', icon: <TikTokIcon />, label: 'TikTok' },
+            instagram: { color: 'bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500', icon: <Instagram />, label: 'Instagram' },
+            telegram: { color: 'bg-[#0088cc]', icon: <Send />, label: 'Telegram' },
+            discord: { color: 'bg-[#5865F2]', icon: <DiscordIcon />, label: 'Discord' },
+            website: { color: 'bg-slate-700', icon: <Globe />, label: 'Website' },
         };
 
-        // --- ADMIN COMPONENT ---
-        const AdminView = ({ user, onLogout }) => {
-            const [activeTab, setActiveTab] = useState('create'); // create | list
-            const [createdLink, setCreatedLink] = useState(null);
-            const [loading, setLoading] = useState(false);
+        // --- UTILS ---
+        const encodeLink = (str) => btoa(unescape(encodeURIComponent(str)));
+        const decodeLink = (str) => decodeURIComponent(escape(atob(str)));
 
-            // Form State
+        // --- MAIN COMPONENTS ---
+
+        const AdminView = ({ user, onLogout }) => {
+            const [activeTab, setActiveTab] = useState('create'); 
+            const [links, setLinks] = useState([]);
+            const [loading, setLoading] = useState(false);
+            const [stats, setStats] = useState({ totalLinks: 0, totalViews: 0 });
+
+            // Form Create State
             const [title, setTitle] = useState('Link Download VIP');
             const [subTitle, setSubTitle] = useState('Hoàn thành các bước để mở khoá');
             const [destUrl, setDestUrl] = useState('');
-            const [destName, setDestName] = useState('MỞ KHOÁ LINK');
+            const [destName, setDestName] = useState('BẤM ĐỂ MỞ KHOÁ');
             const [tasks, setTasks] = useState([]);
+            const [createdLink, setCreatedLink] = useState(null);
 
-            const addTask = (platform, type = 'default') => {
-                let label = `Follow ${PLATFORMS[platform].label}`;
-                if (type === 'like') label = 'Like Video';
-                if (type === 'sub') label = 'Đăng ký Kênh';
-                if (type === 'comment') label = 'Bình luận';
-                
+            useEffect(() => {
+                if (activeTab === 'list' || activeTab === 'dashboard') fetchLinks();
+            }, [activeTab]);
+
+            const fetchLinks = async () => {
+                setLoading(true);
+                try {
+                    const q = query(collection(db, "links"), where("creatorId", "==", user.uid), orderBy("createdAt", "desc"));
+                    const snap = await getDocs(q);
+                    const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    setLinks(list);
+                    const views = list.reduce((acc, curr) => acc + (curr.views || 0), 0);
+                    setStats({ totalLinks: list.length, totalViews: views });
+                } catch (e) { console.error(e); } finally { setLoading(false); }
+            };
+
+            const addTask = (platform) => {
                 setTasks([...tasks, {
                     id: Date.now(),
                     platform,
-                    actionType: type,
-                    label,
+                    label: `Theo dõi ${PLATFORMS[platform].label}`,
                     url: '',
                     placeholder: `Nhập link ${PLATFORMS[platform].label}...`
                 }]);
             };
 
-            const updateTask = (id, field, value) => {
-                setTasks(tasks.map(t => t.id === id ? { ...t, [field]: value } : t));
-            };
-
-            const removeTask = (id) => setTasks(tasks.filter(t => t.id !== id));
-
             const handleCreate = async () => {
-                if (!destUrl) return alert("Chưa nhập link đích!");
-                if (tasks.length === 0) return alert("Chưa có nhiệm vụ nào!");
-                
+                if (!destUrl || tasks.length === 0) return alert("Vui lòng nhập link đích và ít nhất 1 nhiệm vụ!");
                 setLoading(true);
                 try {
                     const docRef = await addDoc(collection(db, "links"), {
-                        title, subTitle, destUrl, destName,
-                        tasks, createdAt: serverTimestamp(),
-                        creatorId: user.uid, isActive: true, views: 0
+                        title, subTitle, 
+                        destUrl: encodeLink(destUrl), // Security: Mã hóa link gốc
+                        destName, tasks, 
+                        createdAt: serverTimestamp(),
+                        creatorId: user.uid, views: 0
                     });
                     setCreatedLink(`${window.location.origin}${window.location.pathname}?id=${docRef.id}`);
                 } catch (e) { alert(e.message); } finally { setLoading(false); }
             };
 
-            const reset = () => {
-                setCreatedLink(null); setTitle(''); setDestUrl(''); setTasks([]);
+            const deleteLink = async (id) => {
+                if (!confirm("Bạn có chắc muốn xóa link này?")) return;
+                await deleteDoc(doc(db, "links", id));
+                fetchLinks();
             };
 
             return (
-                <div className="flex min-h-screen bg-[#F8FAFC]">
-                    {/* Sidebar */}
-                    <div className="w-20 lg:w-64 bg-white border-r border-slate-200 flex flex-col fixed h-full z-10">
-                        <div className="p-6 flex items-center gap-3 border-b border-slate-100">
-                            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black">L</div>
-                            <span className="font-bold text-xl tracking-tight hidden lg:block text-slate-800">Link4Sub</span>
+                <div className="flex min-h-screen bg-[#F1F5F9]">
+                    {/* Desktop Sidebar */}
+                    <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col fixed h-full z-20">
+                        <div className="p-6 flex items-center gap-3">
+                            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-200">L</div>
+                            <span className="font-bold text-xl text-slate-800">Link4Sub</span>
                         </div>
-                        <nav className="p-4 space-y-2 flex-1">
-                            <button onClick={() => setActiveTab('create')} className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'create' ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-500 hover:bg-slate-50'}`}>
-                                <PlusCircle className="w-5 h-5" /> <span className="hidden lg:block">Tạo Link Mới</span>
-                            </button>
-                            <button onClick={() => setActiveTab('list')} className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'list' ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-500 hover:bg-slate-50'}`}>
-                                <LayoutDashboard className="w-5 h-5" /> <span className="hidden lg:block">Quản lý Link</span>
-                            </button>
+                        <nav className="px-4 flex-1 space-y-1">
+                            {[
+                                { id: 'dashboard', icon: <BarChart3 size={20}/>, label: 'Thống kê' },
+                                { id: 'create', icon: <PlusCircle size={20}/>, label: 'Tạo Link mới' },
+                                { id: 'list', icon: <LayoutDashboard size={20}/>, label: 'Quản lý Link' }
+                            ].map(item => (
+                                <button key={item.id} onClick={() => {setActiveTab(item.id); setCreatedLink(null);}} 
+                                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all font-medium ${activeTab === item.id ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-slate-50'}`}>
+                                    {item.icon} {item.label}
+                                </button>
+                            ))}
                         </nav>
                         <div className="p-4 border-t border-slate-100">
-                            <button onClick={onLogout} className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 font-medium transition-all">
-                                <LogOut className="w-5 h-5" /> <span className="hidden lg:block">Đăng xuất</span>
+                            <button onClick={onLogout} className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 font-bold transition-all">
+                                <LogOut size={20} /> Thoát
                             </button>
                         </div>
-                    </div>
+                    </aside>
 
-                    {/* Main Content */}
-                    <main className="flex-1 ml-20 lg:ml-64 p-4 lg:p-8">
-                        {createdLink ? (
-                            <div className="max-w-2xl mx-auto mt-20 text-center animate-enter">
-                                <div className="bg-white rounded-3xl p-10 shadow-xl border border-blue-100">
-                                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <CheckCircle2 className="w-10 h-10 text-green-600" />
+                    {/* Mobile Bottom Nav */}
+                    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around py-3 px-2 z-50">
+                        <button onClick={() => setActiveTab('dashboard')} className={`flex flex-col items-center gap-1 ${activeTab === 'dashboard' ? 'text-blue-600' : 'text-slate-400'}`}>
+                            <BarChart3 size={20}/> <span className="text-[10px] font-bold">Thống kê</span>
+                        </button>
+                        <button onClick={() => {setActiveTab('create'); setCreatedLink(null);}} className={`flex flex-col items-center gap-1 ${activeTab === 'create' ? 'text-blue-600' : 'text-slate-400'}`}>
+                            <PlusCircle size={20}/> <span className="text-[10px] font-bold">Tạo mới</span>
+                        </button>
+                        <button onClick={() => setActiveTab('list')} className={`flex flex-col items-center gap-1 ${activeTab === 'list' ? 'text-blue-600' : 'text-slate-400'}`}>
+                            <LayoutDashboard size={20}/> <span className="text-[10px] font-bold">Danh sách</span>
+                        </button>
+                    </nav>
+
+                    {/* Main Body */}
+                    <main className="flex-1 lg:ml-64 p-4 lg:p-10 pb-24">
+                        {activeTab === 'dashboard' && (
+                            <div className="space-y-6 max-w-5xl mx-auto animate-enter">
+                                <h1 className="text-2xl font-black text-slate-800">Tổng quan tài khoản</h1>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5">
+                                        <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600"><LinkIcon size={28}/></div>
+                                        <div>
+                                            <p className="text-sm font-bold text-slate-400 uppercase">Tổng số Link</p>
+                                            <p className="text-3xl font-black text-slate-800">{stats.totalLinks}</p>
+                                        </div>
                                     </div>
-                                    <h2 className="text-2xl font-bold text-slate-800 mb-2">Link đã tạo thành công!</h2>
-                                    <p className="text-slate-500 mb-6">Chia sẻ link này để người dùng thực hiện nhiệm vụ.</p>
-                                    
-                                    <div className="bg-slate-50 p-4 rounded-xl flex items-center gap-3 border border-slate-200 mb-8">
-                                        <LinkIcon className="w-5 h-5 text-slate-400" />
-                                        <input className="flex-1 bg-transparent outline-none text-sm font-medium text-slate-700" value={createdLink} readOnly />
-                                        <button onClick={() => {navigator.clipboard.writeText(createdLink); alert("Đã copy")}} className="bg-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm border border-slate-200 hover:bg-slate-100">Copy</button>
+                                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5">
+                                        <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-green-600"><Eye size={28}/></div>
+                                        <div>
+                                            <p className="text-sm font-bold text-slate-400 uppercase">Tổng lượt View</p>
+                                            <p className="text-3xl font-black text-slate-800">{stats.totalViews}</p>
+                                        </div>
                                     </div>
-                                    
-                                    <button onClick={reset} className="text-blue-600 font-bold hover:underline">Tạo link khác</button>
                                 </div>
                             </div>
-                        ) : (
-                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                                {/* Left Column: Configuration */}
-                                <div className="space-y-6">
-                                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Thông tin cơ bản</h3>
-                                        <div className="space-y-4">
-                                            <div>
-                                                <label className="block text-xs font-semibold text-slate-500 mb-1">Tiêu đề trang</label>
-                                                <input value={title} onChange={e => setTitle(e.target.value)} className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-semibold" placeholder="Nhập tiêu đề..." />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs font-semibold text-slate-500 mb-1">Mô tả phụ</label>
-                                                <input value={subTitle} onChange={e => setSubTitle(e.target.value)} className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Nhập mô tả..." />
-                                            </div>
+                        )}
+
+                        {activeTab === 'create' && (
+                            <div className="max-w-6xl mx-auto">
+                                {createdLink ? (
+                                    <div className="bg-white rounded-[2rem] p-10 shadow-xl border border-blue-100 text-center max-w-xl mx-auto mt-10">
+                                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"><CheckCircle2 className="w-12 h-12 text-green-600" /></div>
+                                        <h2 className="text-2xl font-black mb-2">Tạo Link Thành Công!</h2>
+                                        <p className="text-slate-500 mb-8">Copy link dưới đây để chia sẻ nhiệm vụ.</p>
+                                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center gap-3 mb-8">
+                                            <input className="flex-1 bg-transparent font-bold text-blue-600 outline-none" value={createdLink} readOnly />
+                                            <button onClick={() => {navigator.clipboard.writeText(createdLink); alert("Đã Copy!")}} className="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">Copy</button>
                                         </div>
+                                        <button onClick={() => setCreatedLink(null)} className="text-slate-400 font-bold hover:text-blue-600">Tiếp tục tạo link mới</button>
                                     </div>
-
-                                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Thêm nhiệm vụ</h3>
-                                        <div className="grid grid-cols-4 gap-3 mb-6">
-                                            <button onClick={() => addTask('youtube', 'sub')} className="flex flex-col items-center justify-center p-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-all gap-1">
-                                                <Youtube className="w-6 h-6" /> <span className="text-[10px] font-bold">Sub</span>
-                                            </button>
-                                            <button onClick={() => addTask('youtube', 'like')} className="flex flex-col items-center justify-center p-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-all gap-1">
-                                                <ThumbsUp className="w-6 h-6" /> <span className="text-[10px] font-bold">Like</span>
-                                            </button>
-                                            <button onClick={() => addTask('facebook')} className="flex flex-col items-center justify-center p-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 transition-all gap-1">
-                                                <Facebook className="w-6 h-6" /> <span className="text-[10px] font-bold">Like</span>
-                                            </button>
-                                            <button onClick={() => addTask('tiktok')} className="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition-all gap-1">
-                                                <TikTokIcon /> <span className="text-[10px] font-bold">Follow</span>
-                                            </button>
-                                        </div>
-
-                                        {/* Task List Inputs */}
-                                        <div className="space-y-3">
-                                            {tasks.map((task, idx) => (
-                                                <div key={task.id} className="flex gap-3 items-start animate-enter" style={{animationDelay: `${idx*0.05}s`}}>
-                                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white shrink-0 shadow-sm ${PLATFORMS[task.platform].color}`}>
-                                                        {PLATFORMS[task.platform].icon}
+                                ) : (
+                                    <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                                        {/* Form Section */}
+                                        <div className="xl:col-span-7 space-y-6">
+                                            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                                                <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2"><Settings size={16}/> Cấu hình cơ bản</h3>
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-slate-500 mb-1 ml-1">Tiêu đề chính</label>
+                                                        <input value={title} onChange={e => setTitle(e.target.value)} className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:ring-2 focus:ring-blue-500 font-bold" placeholder="Tải File Crack..." />
                                                     </div>
-                                                    <div className="flex-1 space-y-2">
-                                                        <input value={task.label} onChange={e => updateTask(task.id, 'label', e.target.value)} className="w-full text-sm font-bold bg-transparent outline-none border-b border-transparent hover:border-slate-200 focus:border-blue-500 pb-1" />
-                                                        <input value={task.url} onChange={e => updateTask(task.id, 'url', e.target.value)} placeholder={task.placeholder} className="w-full text-xs p-2 bg-slate-50 rounded-lg border border-slate-200 outline-none focus:border-blue-500" />
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-slate-500 mb-1 ml-1">Link đích (An toàn)</label>
+                                                        <div className="relative">
+                                                            <Lock className="absolute left-4 top-4 text-slate-400" size={20}/>
+                                                            <input value={destUrl} onChange={e => setDestUrl(e.target.value)} className="w-full pl-12 p-4 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:ring-2 focus:ring-green-500 font-medium text-green-700" placeholder="https://..." />
+                                                        </div>
                                                     </div>
-                                                    <button onClick={() => removeTask(task.id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"><Trash2 className="w-4 h-4" /></button>
-                                                </div>
-                                            ))}
-                                            {tasks.length === 0 && <p className="text-center text-slate-400 text-sm py-4 italic">Chưa có nhiệm vụ nào được chọn</p>}
-                                        </div>
-                                    </div>
-
-                                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Điểm đến (Unlock)</h3>
-                                        <div className="flex gap-4">
-                                            <div className="flex-1">
-                                                <label className="block text-xs font-semibold text-slate-500 mb-1">Link đích</label>
-                                                <div className="relative">
-                                                    <Lock className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                                                    <input value={destUrl} onChange={e => setDestUrl(e.target.value)} className="w-full pl-10 p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-green-500 text-green-700 font-medium" placeholder="https://..." />
                                                 </div>
                                             </div>
-                                            <div className="w-1/3">
-                                                <label className="block text-xs font-semibold text-slate-500 mb-1">Tên nút</label>
-                                                <input value={destName} onChange={e => setDestName(e.target.value)} className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500" placeholder="GET LINK" />
-                                            </div>
-                                        </div>
-                                        <button onClick={handleCreate} disabled={loading} className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
-                                            {loading ? <Loader2 className="animate-spin" /> : <><Zap className="w-5 h-5 fill-current" /> TẠO LINK NGAY</>}
-                                        </button>
-                                    </div>
-                                </div>
 
-                                {/* Right Column: Live Preview */}
-                                <div className="hidden xl:block relative">
-                                    <div className="sticky top-8">
-                                        <div className="flex items-center justify-between mb-4 px-4">
-                                            <h3 className="text-sm font-bold text-slate-500 uppercase">Live Preview</h3>
-                                            <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-bold">Mobile View</span>
+                                            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                                                <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Nhiệm vụ bắt buộc</h3>
+                                                <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-6">
+                                                    {Object.entries(PLATFORMS).map(([key, p]) => (
+                                                        <button key={key} onClick={() => addTask(key)} className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-50 hover:bg-blue-50 hover:text-blue-600 transition-all group">
+                                                            <div className={`p-2 rounded-xl text-white shadow-sm ${p.color} group-hover:scale-110 transition-all`}>{p.icon}</div>
+                                                            <span className="text-[10px] font-black uppercase">{p.label}</span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                                
+                                                <div className="space-y-3">
+                                                    {tasks.map((task, idx) => (
+                                                        <div key={task.id} className="flex gap-3 items-center p-3 bg-slate-50 rounded-2xl border border-slate-100 animate-enter">
+                                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 ${PLATFORMS[task.platform].color}`}>{PLATFORMS[task.platform].icon}</div>
+                                                            <div className="flex-1 space-y-1">
+                                                                <input value={task.label} onChange={e => setTasks(tasks.map(t => t.id === task.id ? {...t, label: e.target.value} : t))} className="w-full text-xs font-black bg-transparent outline-none border-b border-transparent focus:border-blue-500" />
+                                                                <input value={task.url} onChange={e => setTasks(tasks.map(t => t.id === task.id ? {...t, url: e.target.value} : t))} placeholder={task.placeholder} className="w-full text-xs bg-white p-2 rounded-lg outline-none border border-slate-200" />
+                                                            </div>
+                                                            <button onClick={() => setTasks(tasks.filter(t => t.id !== task.id))} className="p-2 text-slate-400 hover:text-red-500"><Trash2 size={18}/></button>
+                                                        </div>
+                                                    ))}
+                                                    {tasks.length === 0 && <div className="text-center py-10 text-slate-300 font-bold border-2 border-dashed border-slate-100 rounded-3xl">Chưa có nhiệm vụ nào</div>}
+                                                </div>
+                                            </div>
+
+                                            <button onClick={handleCreate} disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-[2rem] shadow-xl shadow-blue-100 flex items-center justify-center gap-3 transition-all active:scale-95">
+                                                {loading ? <Loader2 className="animate-spin"/> : <><Zap fill="currentColor"/> XUẤT BẢN LINK NGAY</>}
+                                            </button>
                                         </div>
-                                        {/* Mockup Phone */}
-                                        <div className="border-[8px] border-slate-900 rounded-[3rem] overflow-hidden shadow-2xl bg-[#F0F2F5] mx-auto max-w-[380px] h-[750px] relative">
-                                            {/* Top Notch */}
-                                            <div className="absolute top-0 left-1/2 -translate-x-1/2 h-6 w-32 bg-slate-900 rounded-b-xl z-20"></div>
-                                            
-                                            {/* Preview Content */}
-                                            <div className="h-full overflow-y-auto pt-12 px-4 pb-8 scrollbar-hide">
-                                                <div className="bg-white rounded-3xl p-6 shadow-sm mb-4">
-                                                    <div className="text-center mb-6">
-                                                        <h1 className="text-lg font-black text-slate-800 mb-1">{title || 'Tiêu đề trang'}</h1>
-                                                        <p className="text-xs text-slate-400">{subTitle}</p>
-                                                    </div>
-                                                    <div className="space-y-3">
-                                                        {tasks.length > 0 ? tasks.map(t => (
-                                                            <div key={t.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 shadow-sm bg-white">
-                                                                <div className="flex items-center gap-3">
-                                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white ${PLATFORMS[t.platform].color}`}>
-                                                                        {React.cloneElement(PLATFORMS[t.platform].icon, { className: "w-4 h-4" })}
+
+                                        {/* Preview Section */}
+                                        <div className="xl:col-span-5 hidden xl:block">
+                                            <div className="sticky top-10">
+                                                <div className="flex items-center justify-between mb-4 px-4">
+                                                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Live Preview</h3>
+                                                    <span className="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black">Mobile View</span>
+                                                </div>
+                                                <div className="mx-auto w-[320px] h-[650px] border-[10px] border-slate-900 rounded-[3rem] overflow-hidden shadow-2xl relative bg-slate-100">
+                                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-900 rounded-b-2xl z-20"></div>
+                                                    <div className="h-full overflow-y-auto pt-10 px-4 pb-10 scrollbar-hide flex flex-col items-center">
+                                                        <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-blue-600 font-black text-xl mb-4">L</div>
+                                                        <div className="bg-white rounded-3xl p-6 shadow-sm w-full text-center">
+                                                            <h4 className="font-black text-slate-800 leading-tight mb-2">{title}</h4>
+                                                            <p className="text-[10px] text-slate-400 mb-6">{subTitle}</p>
+                                                            <div className="space-y-2">
+                                                                {tasks.map((t, i) => (
+                                                                    <div key={t.id} className="flex items-center justify-between p-3 rounded-2xl border border-slate-50 bg-slate-50/50">
+                                                                        <div className="flex items-center gap-3">
+                                                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white ${PLATFORMS[t.platform].color}`}>
+                                                                                {React.cloneElement(PLATFORMS[t.platform].icon, { size: 14 })}
+                                                                            </div>
+                                                                            <span className="text-[10px] font-bold text-slate-700 text-left">{t.label}</span>
+                                                                        </div>
+                                                                        <ChevronRight size={14} className="text-slate-300"/>
                                                                     </div>
-                                                                    <span className="text-xs font-bold text-slate-700">{t.label}</span>
-                                                                </div>
-                                                                <ChevronRight className="w-4 h-4 text-slate-300" />
+                                                                ))}
                                                             </div>
-                                                        )) : (
-                                                            <div className="p-4 border-2 border-dashed border-slate-200 rounded-xl text-center text-slate-400 text-xs">
-                                                                Thêm nhiệm vụ để xem trước
+                                                            <div className="mt-6 p-4 rounded-2xl bg-slate-100 text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
+                                                                <Lock size={12}/> {destName}
                                                             </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="mt-6 pt-6 border-t border-slate-50">
-                                                        <div className="w-full py-3 bg-slate-100 rounded-xl text-slate-400 font-bold text-xs flex items-center justify-center gap-2">
-                                                            <Lock className="w-3 h-3" /> {destName}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                )}
+                            </div>
+                        )}
+
+                        {activeTab === 'list' && (
+                            <div className="max-w-5xl mx-auto space-y-6 animate-enter">
+                                <h1 className="text-2xl font-black text-slate-800">Tất cả Liên kết</h1>
+                                {loading ? <div className="text-center py-20"><Loader2 className="animate-spin mx-auto text-blue-600"/></div> : (
+                                    <div className="grid grid-cols-1 gap-4">
+                                        {links.map(link => (
+                                            <div key={link.id} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600"><LinkIcon/></div>
+                                                    <div>
+                                                        <h4 className="font-bold text-slate-800">{link.title}</h4>
+                                                        <div className="flex items-center gap-3 text-xs text-slate-400 font-medium">
+                                                            <span className="flex items-center gap-1"><Eye size={12}/> {link.views} views</span>
+                                                            <span className="flex items-center gap-1"><Clock size={12}/> {link.createdAt?.toDate().toLocaleDateString('vi-VN')}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <button onClick={() => {navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?id=${link.id}`); alert("Đã Copy!")}} 
+                                                        className="p-3 bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-xl transition-all"><Copy size={18}/></button>
+                                                    <button onClick={() => deleteLink(link.id)} className="p-3 bg-slate-50 hover:bg-red-50 text-slate-600 hover:text-red-600 rounded-xl transition-all"><Trash2 size={18}/></button>
+                                                    <a href={`${window.location.origin}${window.location.pathname}?id=${link.id}`} target="_blank" className="bg-slate-800 text-white px-5 py-3 rounded-xl font-bold text-sm">Xem Thử</a>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {links.length === 0 && <div className="text-center py-20 text-slate-300 font-bold">Bạn chưa tạo link nào.</div>}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </main>
@@ -302,12 +334,12 @@
             );
         };
 
-        // --- GUEST VIEW (Card Design) ---
         const GuestView = ({ linkId }) => {
             const [data, setData] = useState(null);
             const [loading, setLoading] = useState(true);
             const [completed, setCompleted] = useState(new Set());
-            const [checking, setChecking] = useState(null);
+            const [verifying, setVerifying] = useState(null); // idx of verifying task
+            const [confirmBtn, setConfirmBtn] = useState(null); // idx to show confirm
 
             useEffect(() => {
                 const fetch = async () => {
@@ -317,87 +349,98 @@
                             setData(snap.data());
                             updateDoc(doc(db, "links", linkId), { views: increment(1) });
                         }
-                    } catch (e) {} finally { setLoading(false); }
+                    } catch (e) { console.error(e); } finally { setLoading(false); }
                 };
                 fetch();
             }, [linkId]);
 
-            const handleClick = (idx, url) => {
-                if (completed.has(idx)) return;
+            const startTask = (idx, url) => {
                 window.open(url, '_blank');
-                setChecking(idx);
+                setVerifying(idx);
+                // Security UX: Ép người dùng đợi 5s để tạo tâm lý hệ thống đang kiểm tra
                 setTimeout(() => {
-                    setCompleted(prev => new Set(prev).add(idx));
-                    setChecking(null);
-                }, 5000); // 5s fake check
+                    setVerifying(null);
+                    setConfirmBtn(idx);
+                }, 5000);
             };
 
-            if (loading) return <div className="h-screen flex items-center justify-center bg-slate-50"><Loader2 className="w-10 h-10 text-blue-600 animate-spin" /></div>;
-            if (!data) return <div className="h-screen flex items-center justify-center text-slate-400 font-bold">Liên kết không tồn tại</div>;
+            const confirmTask = (idx) => {
+                setCompleted(new Set([...completed, idx]));
+                setConfirmBtn(null);
+            };
 
-            const progress = (completed.size / data.tasks.length) * 100;
+            const handleUnlock = () => {
+                if (completed.size === data.tasks.length) {
+                    const finalUrl = decodeLink(data.destUrl); // Giải mã tại đây
+                    window.open(finalUrl, '_blank');
+                }
+            };
+
+            if (loading) return <div className="h-screen flex items-center justify-center bg-slate-50"><Loader2 className="animate-spin text-blue-600" size={40}/></div>;
+            if (!data) return <div className="h-screen flex items-center justify-center font-black text-slate-400">LIÊN KẾT KHÔNG TỒN TẠI</div>;
+
             const isDone = completed.size === data.tasks.length;
+            const progress = (completed.size / data.tasks.length) * 100;
 
             return (
-                <div className="min-h-screen bg-[#F0F2F5] flex flex-col items-center justify-center p-4">
-                    <div className="w-full max-w-[420px] bg-white rounded-[32px] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] overflow-hidden relative">
-                        {/* Progress Line Top */}
-                        <div className="h-1.5 w-full bg-slate-100">
-                            <div className="h-full bg-blue-600 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(37,99,235,0.5)]" style={{width: `${progress}%`}}></div>
+                <div className="min-h-screen bg-[#F0F4F8] flex flex-col items-center justify-center p-4">
+                    <div className="w-full max-w-[420px] bg-white rounded-[2.5rem] shadow-2xl shadow-blue-100 overflow-hidden relative">
+                        {/* Improved Progress Bar */}
+                        <div className="h-2.5 w-full bg-slate-100">
+                            <div className="h-full bg-blue-600 transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(37,99,235,0.4)]" style={{width: `${progress}%`}}></div>
                         </div>
 
                         <div className="p-8 pb-4 text-center">
+                            <div className="w-16 h-16 bg-blue-600 rounded-[1.5rem] mx-auto flex items-center justify-center text-white font-black text-2xl mb-4 shadow-xl shadow-blue-200 animate-float">L</div>
                             <h1 className="text-2xl font-black text-slate-800 mb-2 leading-tight">{data.title}</h1>
-                            <p className="text-sm font-medium text-slate-400">{data.subTitle}</p>
+                            <p className="text-sm font-bold text-slate-400">{data.subTitle}</p>
                         </div>
 
-                        <div className="px-6 py-2 space-y-3">
+                        <div className="px-6 py-4 space-y-4">
                             {data.tasks.map((task, idx) => {
                                 const isComp = completed.has(idx);
-                                const isCheck = checking === idx;
+                                const isCheck = verifying === idx;
+                                const isConfirm = confirmBtn === idx;
+
                                 return (
-                                    <button 
-                                        key={idx} 
-                                        onClick={() => handleClick(idx, task.url)}
-                                        disabled={isComp || isCheck}
-                                        className={`w-full group relative overflow-hidden transition-all duration-300 ${isComp ? 'cursor-default' : 'hover:-translate-y-1'}`}
-                                    >
-                                        <div className={`p-3 rounded-2xl border-2 flex items-center justify-between bg-white transition-all ${isComp ? 'border-green-100 bg-green-50/50' : isCheck ? 'border-blue-100' : 'border-slate-100 shadow-sm'}`}>
+                                    <div key={idx} className={`relative group p-4 rounded-3xl border-2 transition-all duration-300 ${isComp ? 'bg-green-50 border-green-100 scale-[0.98]' : 'bg-white border-slate-100 hover:border-blue-200 shadow-sm'}`}>
+                                        <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-4">
-                                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-sm transition-all ${isComp ? 'bg-green-500 scale-90' : PLATFORMS[task.platform].color}`}>
-                                                    {isComp ? <CheckCircle2 className="w-6 h-6" /> : isCheck ? <Loader2 className="w-6 h-6 animate-spin" /> : React.cloneElement(PLATFORMS[task.platform].icon, { className: "w-6 h-6" })}
+                                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 ${isComp ? 'bg-green-500' : PLATFORMS[task.platform].color}`}>
+                                                    {isComp ? <CheckCircle2 size={24}/> : isCheck ? <Loader2 className="animate-spin" size={24}/> : React.cloneElement(PLATFORMS[task.platform].icon, { size: 24 })}
                                                 </div>
-                                                <div className="text-left">
-                                                    <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block mb-0.5">Bước {idx + 1}</span>
-                                                    <span className={`text-sm font-bold ${isComp ? 'text-green-700' : 'text-slate-700'}`}>
-                                                        {isCheck ? 'Đang kiểm tra...' : task.label}
-                                                    </span>
+                                                <div>
+                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">Bước {idx + 1}</span>
+                                                    <p className={`text-sm font-bold ${isComp ? 'text-green-700' : 'text-slate-800'}`}>{isCheck ? 'Đang kiểm tra...' : task.label}</p>
                                                 </div>
                                             </div>
-                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isComp ? 'bg-white text-green-500' : 'bg-slate-50 text-slate-300 group-hover:bg-blue-50 group-hover:text-blue-500'}`}>
-                                                {isComp ? <CheckCircle2 className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-                                            </div>
+                                            
+                                            {!isComp && !isCheck && !isConfirm && (
+                                                <button onClick={() => startTask(idx, task.url)} className="p-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-100"><ChevronRight size={20}/></button>
+                                            )}
+
+                                            {isConfirm && (
+                                                <button onClick={() => confirmTask(idx)} className="px-4 py-2 bg-green-500 text-white text-xs font-black rounded-xl animate-bounce">XÁC NHẬN</button>
+                                            )}
                                         </div>
-                                    </button>
-                                )
+                                    </div>
+                                );
                             })}
                         </div>
 
-                        <div className="p-6 pt-4">
+                        <div className="p-8 pt-4">
                             <button 
+                                onClick={handleUnlock}
                                 disabled={!isDone}
-                                onClick={() => isDone && window.open(data.destUrl, '_self')}
-                                className={`w-full py-4 rounded-xl font-black text-sm tracking-wide shadow-lg transition-all flex items-center justify-center gap-2 
+                                className={`w-full py-5 rounded-3xl font-black tracking-widest text-sm shadow-xl transition-all flex items-center justify-center gap-3
                                     ${isDone 
-                                        ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-green-200 hover:shadow-green-300 hover:scale-[1.02] cursor-pointer' 
-                                        : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
+                                        ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white btn-glow unlock-glow' 
+                                        : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
                                     }`}
                             >
-                                {isDone ? <><Unlock className="w-5 h-5" /> {data.destName}</> : <><Lock className="w-4 h-4" /> ĐANG KHOÁ</>}
+                                {isDone ? <><Unlock size={20}/> {data.destName}</> : <><Lock size={18}/> HOÀN THÀNH ĐỂ MỞ</>}
                             </button>
-                            <div className="mt-6 text-center">
-                                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Powered by Link4Sub</p>
-                            </div>
+                            <p className="text-[10px] font-black text-slate-300 text-center mt-6 uppercase tracking-[0.2em]">Security verified by Link4Sub</p>
                         </div>
                     </div>
                 </div>
@@ -407,18 +450,24 @@
         const AuthView = () => {
             const [email, setEmail] = useState('');
             const [password, setPassword] = useState('');
-            const handleLogin = (e) => { e.preventDefault(); signInWithEmailAndPassword(auth, email, password).catch(err => alert(err.message)); }
+            const [loading, setLoading] = useState(false);
+            const handleLogin = (e) => { 
+                e.preventDefault(); 
+                setLoading(true);
+                signInWithEmailAndPassword(auth, email, password)
+                .catch(err => {alert("Sai tài khoản hoặc mật khẩu!"); setLoading(false);}); 
+            }
             return (
-                <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-                    <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm border border-slate-100">
-                        <div className="text-center mb-8">
-                            <div className="w-12 h-12 bg-blue-600 rounded-xl mx-auto flex items-center justify-center text-white font-black text-xl mb-4">L</div>
-                            <h1 className="text-xl font-bold text-slate-800">Admin Panel</h1>
-                        </div>
+                <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6">
+                    <div className="bg-white p-10 rounded-[3rem] shadow-2xl w-full max-w-md border border-slate-100 text-center">
+                        <div className="w-16 h-16 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center text-white font-black text-2xl mb-6 shadow-xl shadow-blue-100">L</div>
+                        <h1 className="text-2xl font-black text-slate-800 mb-8">Admin Portal</h1>
                         <form onSubmit={handleLogin} className="space-y-4">
-                            <input type="email" placeholder="Email" className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-blue-500" value={email} onChange={e => setEmail(e.target.value)} />
-                            <input type="password" placeholder="Mật khẩu" className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-blue-500" value={password} onChange={e => setPassword(e.target.value)} />
-                            <button className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">ĐĂNG NHẬP</button>
+                            <input type="email" placeholder="Email Admin" className="w-full p-5 rounded-2xl bg-slate-50 border border-slate-100 outline-none focus:ring-2 focus:ring-blue-500 font-medium" value={email} onChange={e => setEmail(e.target.value)} />
+                            <input type="password" placeholder="Mật khẩu" className="w-full p-5 rounded-2xl bg-slate-50 border border-slate-100 outline-none focus:ring-2 focus:ring-blue-500 font-medium" value={password} onChange={e => setPassword(e.target.value)} />
+                            <button className="w-full bg-slate-900 text-white font-black py-5 rounded-2xl hover:bg-black transition-all shadow-xl shadow-slate-200 flex items-center justify-center gap-2">
+                                {loading ? <Loader2 className="animate-spin"/> : "ĐĂNG NHẬP HỆ THỐNG"}
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -437,7 +486,7 @@
                 return () => unsub();
             }, []);
 
-            if (loading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin text-blue-600"/></div>;
+            if (loading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin text-blue-600" size={40}/></div>;
             if (isGuest) return <GuestView linkId={new URLSearchParams(window.location.search).get('id')} />;
             return user ? <AdminView user={user} onLogout={() => signOut(auth)} /> : <AuthView />;
         };
