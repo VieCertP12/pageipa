@@ -69,6 +69,12 @@
         .btn_iftr:hover { background: #F2F2F7; }
         .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
         .btn_iftr.active i { color: white; }
+        
+        /* Add Button Style */
+        .btn_add {
+            border: 1px dashed #3b82f6; color: #3b82f6;
+        }
+        .btn_add:hover { background: #eff6ff; }
 
         .grp { display: none; animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .grp.active { display: block; }
@@ -178,25 +184,34 @@
                             <button type="button" class="stu_b_ftr" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i><span>Facebook</span></button>
                         </div>
 
+                        <!-- PLATFORM BUTTONS (WITH ADD BUTTON) -->
                         <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm mb-8 flex flex-wrap gap-3 min-h-[80px] items-center transition-all duration-300">
+                            <!-- YT -->
                             <div class="stu_ftr active w-full" id="ftr_yt">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Đăng ký Kênh</button>
                                 <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like Video</button>
                                 <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
+                                <button type="button" class="btn_iftr btn_add" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Thêm</button>
                             </div>
+                            <!-- TG -->
                             <div class="stu_ftr w-full" id="ftr_tg">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Group #1</button>
-                                <button type="button" class="btn_iftr" onclick="toggleInput('tg2', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Channel #1</button>
+                                <button type="button" class="btn_iftr btn_add" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Thêm</button>
                             </div>
+                            <!-- TK -->
                             <div class="stu_ftr w-full" id="ftr_tk">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button>
                                 <button type="button" class="btn_iftr" onclick="toggleInput('tkl1', this)" style="--clr:#000000"><i class="fa-solid fa-heart"></i> Like</button>
+                                <button type="button" class="btn_iftr btn_add" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Thêm</button>
                             </div>
+                            <!-- FB -->
                             <div class="stu_ftr w-full" id="ftr_fb">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button>
+                                <button type="button" class="btn_iftr btn_add" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Thêm</button>
                             </div>
                         </div>
 
+                        <!-- INPUTS AREA -->
                         <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                             <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_yt1">
                                 <input type="text" id="lbl_yt1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-red-500 transition" value="Đăng ký kênh YouTube">
@@ -210,9 +225,8 @@
                                 <input type="text" id="lbl_ytc1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-red-500 transition" value="Bình luận Video">
                                 <input class="apple-input bg-gray-50" id="i_ytc1" type="url" placeholder="Link video...">
                             </div>
-                            <!-- Other platforms -->
+                            <!-- Default Inputs for other platforms -->
                             <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_tg1"><input type="text" id="lbl_tg1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-blue-500 transition" value="Tham gia Telegram"><input class="apple-input bg-gray-50" id="i_tg1" type="url" placeholder="Link Group..."></div>
-                            <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_tg2"><input type="text" id="lbl_tg2" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-blue-500 transition" value="Tham gia Channel"><input class="apple-input bg-gray-50" id="i_tg2" type="url" placeholder="Link Channel..."></div>
                             <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_tk1"><input type="text" id="lbl_tk1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-black transition" value="Follow Tiktok"><input class="apple-input bg-gray-50" id="i_tk1" type="url" placeholder="Link Profile..."></div>
                             <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_tkl1"><input type="text" id="lbl_tkl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-pink-500 transition" value="Like Tiktok"><input class="apple-input bg-gray-50" id="i_tkl1" type="url" placeholder="Link Video..."></div>
                             <div class="grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm" id="grp_fb1"><input type="text" id="lbl_fb1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-blue-700 transition" value="Follow Facebook"><input class="apple-input bg-gray-50" id="i_fb1" type="url" placeholder="Link Profile..."></div>
@@ -398,16 +412,26 @@
             if (!destUrl) return showToast("Thiếu link đích!", "error");
 
             const tasks = {};
-            if (window.TASK_MAP) {
-                for (const [key, meta] of Object.entries(window.TASK_MAP)) {
-                    const grp = document.getElementById(`grp_${key}`);
-                    const inp = document.getElementById(`i_${key}`);
-                    const lbl = document.getElementById(`lbl_${key}`);
-                    if (grp && grp.classList.contains('active') && inp && inp.value) {
-                        tasks[key] = { url: inp.value, label: lbl ? lbl.value : meta.label };
-                    }
+            // Iterate over all active inputs
+            document.querySelectorAll('.grp.active').forEach(grp => {
+                const id = grp.id.replace('grp_', '');
+                const inp = grp.querySelector('.apple-input');
+                const lbl = grp.querySelector('input[type="text"]:not(.apple-input)');
+                if(inp && inp.value) {
+                    // Extract Platform info for storage
+                    let icon = 'fa-link', color = 'text-gray-600';
+                    if(id.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; }
+                    else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; }
+                    else if(id.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; }
+                    else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; }
+                    
+                    tasks[id] = { 
+                        url: inp.value, 
+                        label: lbl ? lbl.value : 'Nhiệm vụ',
+                        icon, color
+                    };
                 }
-            }
+            });
 
             if (Object.keys(tasks).length === 0) return showToast("Nhập ít nhất 1 nhiệm vụ", "error");
 
@@ -473,6 +497,7 @@
             try { await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { active: status }); showToast(status ? "Đã bật Link" : "Đã tắt Link", "info"); } catch (e) {}
         };
 
+        // EDIT LINK (Including Dynamic Tasks)
         window.editLink = async (id) => {
             document.getElementById('global-loader').classList.remove('hidden');
             try {
@@ -489,17 +514,29 @@
                     document.getElementById('i_note').value = data.note || '';
                     document.getElementById('i_dest_name').value = data.destName;
                     document.getElementById('i_dest_url').value = data.destUrl;
+                    
                     resetUIForEdit();
+                    
                     if(data.tasks) {
                         for (const [key, taskData] of Object.entries(data.tasks)) {
-                            const grp = document.getElementById(`grp_${key}`);
+                            // If element exists (Standard)
+                            let grp = document.getElementById(`grp_${key}`);
+                            if(!grp) {
+                                // If Dynamic, Create it!
+                                const platform = key.split('_')[0]; // yt, tg...
+                                addTask(platform, key, taskData.label, taskData.url);
+                                continue;
+                            }
+                            
                             const inp = document.getElementById(`i_${key}`);
                             const lbl = document.getElementById(`lbl_${key}`);
-                            const btn = document.querySelector(`button[onclick*="'${key}'"]`);
                             if (grp && inp) {
                                 grp.classList.add('active');
                                 inp.value = typeof taskData === 'string' ? taskData : taskData.url;
                                 if(lbl && typeof taskData === 'object') lbl.value = taskData.label;
+                                
+                                // Activate Button
+                                const btn = document.querySelector(`button[onclick*="'${key}'"]`);
                                 if(btn) btn.classList.add('active');
                             }
                         }
@@ -542,23 +579,56 @@
 
     <!-- UI Logic -->
     <script>
-        window.TASK_MAP = {
-            'yt1': { label: 'Đăng ký YouTube', icon: 'fa-youtube', color: 'text-red-600' },
-            'ytl1': { label: 'Like Video', icon: 'fa-thumbs-up', color: 'text-red-600' },
-            'ytc1': { label: 'Comment Video', icon: 'fa-comment', color: 'text-red-600' },
-            'tg1': { label: 'Join Group', icon: 'fa-telegram', color: 'text-blue-500' },
-            'tg2': { label: 'Join Channel', icon: 'fa-telegram', color: 'text-blue-500' },
-            'tk1': { label: 'Follow Tiktok', icon: 'fa-tiktok', color: 'text-black' },
-            'tkl1': { label: 'Like Tiktok', icon: 'fa-heart', color: 'text-pink-500' },
-            'fb1': { label: 'Follow Facebook', icon: 'fa-facebook', color: 'text-blue-700' }
-        };
+        // ADD NEW TASK FUNCTION
+        function addTask(platform, existingId = null, existingLabel = null, existingUrl = "") {
+            const id = existingId || `${platform}_custom_${Date.now()}`;
+            const container = document.getElementById(`ftr_${platform}`);
+            const inputContainer = document.getElementById('dynamic_inputs');
+            
+            // 1. Create Button (Visual only for consistency, or we can skip buttons for custom tasks)
+            // Ideally, we just create the INPUT field directly for custom tasks
+            
+            let label = "Nhiệm vụ mới";
+            let color = "text-gray-600";
+            if(platform === 'yt') { label = "Đăng ký YouTube"; color = "text-red-600"; }
+            if(platform === 'tg') { label = "Tham gia Telegram"; color = "text-blue-500"; }
+            if(platform === 'tk') { label = "Follow Tiktok"; color = "text-black"; }
+            if(platform === 'fb') { label = "Follow Facebook"; color = "text-blue-700"; }
+            
+            if(existingLabel) label = existingLabel;
 
+            const div = document.createElement('div');
+            div.id = `grp_${id}`;
+            div.className = "grp bg-white p-5 rounded-2xl border border-gray-200 shadow-sm active"; 
+            
+            div.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <input type="text" id="lbl_${id}" class="text-xs font-bold ${color.replace('text-', 'text-')} uppercase w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500 transition" value="${label}">
+                    <button type="button" onclick="removeTask('${id}')" class="text-gray-400 hover:text-red-500 ml-2"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <input class="apple-input bg-gray-50" id="i_${id}" type="url" placeholder="Nhập Link ${platform.toUpperCase()}..." value="${existingUrl}">
+            `;
+            
+            inputContainer.appendChild(div);
+            // Auto focus if new
+            if(!existingId) setTimeout(() => document.getElementById(`i_${id}`).focus(), 100);
+        }
+
+        function removeTask(id) {
+            const el = document.getElementById(`grp_${id}`);
+            if(el) el.remove();
+        }
+
+        window.addTask = addTask; // Export
+        window.removeTask = removeTask;
+
+        // ... Standard UI functions ...
         function handleSubmitCreate() { if(typeof window.createLink === 'function') window.createLink(); }
         function switchTab(t) {
             document.getElementById('btn-tab-stu').className = t==='stu'?'btn active':'btn';
             document.getElementById('btn-tab-manage').className = t==='manage'?'btn active':'btn';
             document.getElementById('tab_create_stu').className = t==='stu'?'block max-w-3xl mx-auto':'hidden';
-            document.getElementById('tab_manage_links').className = t==='manage'?'block max-w-4xl mx-auto':'hidden';
+            document.getElementById('tab_manage_links').className = t==='manage'?'block max-w-5xl mx-auto':'hidden';
             if(t==='manage' && typeof window.fetchLinks === 'function') window.fetchLinks();
         }
         function selectPlatform(pf, btn) {
@@ -576,6 +646,8 @@
             document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
             document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
             document.getElementById('resultArea').classList.add('hidden');
+            // Remove custom tasks
+            document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
         }
         function resetForm() {
             if(!confirm("Làm mới form?")) return;
@@ -599,7 +671,7 @@
 
         // --- SEQUENTIAL TASK LOGIC ---
         let done=0, req=0, finalUrl='';
-        let tasksList = []; // Store tasks array for sequential access
+        let tasksList = []; 
 
         function renderUserView(data) {
             document.getElementById('u_title').innerText = data.title;
@@ -610,16 +682,25 @@
             done = 0; req = 0; tasksList = [];
 
             if(data.tasks) {
-                // Convert to array to manage index
                 const entries = Object.entries(data.tasks);
                 req = entries.length;
 
                 entries.forEach(([key, taskData], idx) => {
-                    const meta = window.TASK_MAP[key] || { label: 'Nhiệm vụ', icon: 'fa-link', color: 'text-gray-600' };
-                    const url = typeof taskData === 'string' ? taskData : taskData.url;
-                    const label = (typeof taskData === 'object' && taskData.label) ? taskData.label : meta.label;
+                    const label = taskData.label || "Nhiệm vụ";
+                    const url = taskData.url;
                     
-                    // Task State
+                    // Recover icon/color if stored, else guess
+                    let icon = taskData.icon || 'fa-link';
+                    let color = taskData.color || 'text-gray-600';
+                    
+                    // Backward compability guessing
+                    if(!taskData.icon) {
+                        if(key.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; }
+                        else if(key.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; }
+                        else if(key.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; }
+                        else if(key.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; }
+                    }
+
                     const isFirst = idx === 0;
                     const isDisabled = !isFirst;
 
@@ -629,8 +710,8 @@
                     
                     div.innerHTML = `
                         <div class="flex items-center gap-5">
-                            <div class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center ${meta.color} text-2xl shadow-sm border border-gray-100 icon-container relative">
-                                <i class="fa-brands ${meta.icon} ${meta.icon.includes('fa-solid')?'fa-solid':''}"></i>
+                            <div class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center ${color} text-2xl shadow-sm border border-gray-100 icon-container relative">
+                                <i class="fa-brands ${icon} ${icon.includes('fa-solid')?'fa-solid':''}"></i>
                                 ${isDisabled ? '<div class="absolute inset-0 bg-white/60 backdrop-blur-[1px] rounded-2xl flex items-center justify-center"><i class="fa-solid fa-lock text-gray-400 text-sm"></i></div>' : ''}
                             </div>
                             <div>
