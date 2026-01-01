@@ -1,193 +1,403 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link4Sub Pro - System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Link4Sub</title>
+    
+    <!-- Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- CONFIG TAILWIND -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#6366f1',
+                            secondary: '#a855f7',
+                            gold: '#f59e0b',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* CHỐNG BÔI ĐEN TOÀN TRANG */
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow: hidden; user-select: none; -webkit-user-select: none; }
-        
-        /* CHO PHÉP ADMIN COPY VÀ NHẬP LIỆU */
+        /* BASE STYLES & BACKGROUND FROM ESIGN TEMPLATE */
+        body {
+            background-color: #ffffff;
+            color: #1e293b;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            position: relative;
+            background-image: 
+                linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+                linear-gradient(to bottom, #f0f0f0 1px, transparent 1px),
+                radial-gradient(circle 600px at 0% 0%, #d5c5ff, transparent),
+                radial-gradient(circle 600px at 100% 0%, #d5c5ff, transparent);
+            background-size: 20px 20px, 20px 20px, 100% 100%, 100% 100%;
+            background-attachment: fixed;
+            background-position: center top;
+            /* Security: Prevent Selection */
+            user-select: none; -webkit-user-select: none;
+        }
+
+        /* Exceptions for Admin Inputs */
         .pc-input, textarea, .allow-select { user-select: text !important; -webkit-user-select: text !important; }
 
-        .pc-input { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 14px; width: 100%; transition: all 0.2s; color: #334155; }
-        .pc-input:focus { border-color: var(--theme-color, #3b82f6); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        /* GLASSMORPHISM UTILS */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         
-        .pc-btn { background-color: #3b82f6; color: white; border-radius: 8px; font-weight: 600; padding: 10px 20px; transition: all 0.2s; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-        .pc-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        .pc-btn-secondary { background: #fff; border: 1px solid #e2e8f0; color: #64748b; }
-        .pc-btn-secondary:hover { background: #f8fafc; color: #334155; border-color: #cbd5e1; }
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
 
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; color: #64748b; font-weight: 500; font-size: 14px; transition: all 0.2s; cursor: pointer; margin-bottom: 4px; }
-        .nav-item:hover { background: #f1f5f9; color: #1e293b; }
-        .nav-item.active { background: #eff6ff; color: #3b82f6; font-weight: 600; }
-        .nav-item i { width: 20px; text-align: center; }
+        /* CUSTOM INPUTS & BUTTONS */
+        .pc-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            width: 100%;
+            transition: all 0.3s;
+            color: #334155;
+        }
+        .pc-input:focus {
+            background: #fff;
+            border-color: #6366f1;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
 
-        .ios-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .pc-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            border-radius: 12px;
+            font-weight: 700;
+            padding: 12px 24px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        .pc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.4);
+        }
+        .pc-btn:active { transform: translateY(0); }
+        .pc-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .pc-btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            box-shadow: none;
+        }
+        .pc-btn-secondary:hover {
+            background: #fff;
+            color: #334155;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        /* Sidebar Navigation */
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; border-radius: 12px;
+            color: #64748b; font-weight: 600; font-size: 14px;
+            transition: all 0.2s; cursor: pointer; margin-bottom: 4px;
+        }
+        .nav-item:hover { background: rgba(99, 102, 241, 0.05); color: #6366f1; }
+        .nav-item.active { background: linear-gradient(to right, rgba(99, 102, 241, 0.1), transparent); color: #6366f1; border-left: 3px solid #6366f1; }
+        .nav-item i { width: 24px; text-align: center; }
+
+        /* Switches */
+        .ios-switch { position: relative; display: inline-block; width: 42px; height: 24px; }
         .ios-switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        input:checked + .slider { background-color: #10b981; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        input:checked + .slider { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
         input:checked + .slider:before { transform: translateX(18px); }
 
-        /* Platform Icons */
-        .stu_b_ftr { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 12px; background: #fff; color: #94a3b8; border: 1px solid #e2e8f0; font-size: 11px; gap: 6px; cursor: pointer; transition: all 0.2s; }
-        .stu_b_ftr:hover { border-color: #cbd5e1; transform: translateY(-2px); }
-        .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); background: #fff; box-shadow: 0 4px 12px -2px rgba(0,0,0,0.1); }
+        /* Platform Icons Admin */
+        .stu_b_ftr { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 80px; height: 80px; border-radius: 16px; background: rgba(255,255,255,0.8); 
+            color: #94a3b8; border: 1px solid #e2e8f0; font-size: 11px; gap: 6px; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .stu_b_ftr:hover { border-color: #cbd5e1; transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); background: #fff; box-shadow: 0 4px 12px -2px rgba(0,0,0,0.1); font-weight: 700; }
         .stu_b_ftr i { font-size: 28px; }
 
-        .btn_iftr { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; background: #fff; color: #475569; font-size: 13px; font-weight: 500; border: 1px solid #e2e8f0; margin: 4px; cursor: pointer; transition: all 0.2s; }
-        .btn_iftr:hover { background: #f8fafc; border-color: #cbd5e1; }
-        .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); }
+        .btn_iftr { 
+            display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; 
+            border-radius: 12px; background: rgba(255,255,255,0.8); color: #475569; font-size: 13px; font-weight: 600;
+            border: 1px solid #e2e8f0; margin: 4px; cursor: pointer; transition: all 0.2s;
+        }
+        .btn_iftr:hover { background: #fff; transform: translateY(-1px); }
+        .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .btn_iftr.active i { color: white; }
-        .btn_add { border: 1px dashed #3b82f6; color: #3b82f6; background: #f0f9ff; }
+        .btn_add { border: 1px dashed #6366f1; color: #6366f1; background: rgba(99, 102, 241, 0.05); }
 
         .grp { display: none; } .grp.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .loader { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+        
+        .loader { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .user-view-container { background-color: #F1F5F9; position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow-y: auto; }
-        .user-card-wrapper { max-width: 480px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; background: white; box-shadow: 0 0 50px rgba(0,0,0,0.08); }
-        @media(min-width: 768px) { .user-card-wrapper { min-height: auto; margin-top: 5vh; margin-bottom: 5vh; border-radius: 24px; overflow: hidden; border: 1px solid #e2e8f0; } }
-        
-        .task-row { background: white; padding: 16px; border-radius: 16px; display: flex; align-items: center; margin-bottom: 12px; border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        .task-row:hover { border-color: #e2e8f0; transform: translateY(-2px); box-shadow: 0 8px 12px rgba(0,0,0,0.04); }
-        .task-row.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(1); background: #f8fafc; border-style: dashed; }
-        
-        .task-icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; margin-right: 16px; }
-        .mini-loader { width: 20px; height: 20px; border: 2px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
-        
-        .stat-badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; }
-        .stat-v { background: #eff6ff; color: #3b82f6; } .stat-c { background: #f0fdf4; color: #16a34a; } .stat-u { background: #fefce8; color: #ca8a04; } .stat-x { background: #f1f5f9; color: #64748b; }
+        /* Stats Badge */
+        .stat-badge { font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+        .stat-v { background: #e0e7ff; color: #4f46e5; } 
+        .stat-c { background: #dcfce7; color: #16a34a; } 
+        .stat-u { background: #fef9c3; color: #ca8a04; } 
+        .stat-x { background: #f1f5f9; color: #64748b; }
 
         /* Theme Colors */
         .theme-btn { transition: all 0.2s; border: 2px solid transparent; }
         .theme-btn.active { transform: scale(1.1); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--t-color); }
+
+        /* USER TASK STYLES - ESIGN STYLE */
+        .task-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 16px;
+            border-radius: 20px;
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .task-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .task-card.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(1); background: rgba(241, 245, 249, 0.5); border-style: dashed; }
+        
+        .task-icon-wrapper {
+            width: 56px; height: 56px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .mini-loader { width: 20px; height: 20px; border: 2px solid #e2e8f0; border-top-color: #6366f1; border-radius: 50%; animation: spin 1s linear infinite; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
     <div id="app" class="w-full h-full flex relative">
-        <div id="global-loader" class="absolute inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hidden"><div class="loader mb-3"></div><div class="text-sm text-slate-500 font-medium">Đang tải dữ liệu...</div></div>
+        <div id="global-loader" class="absolute inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hidden backdrop-blur-sm"><div class="loader mb-3"></div><div class="text-sm text-slate-500 font-bold">Đang tải dữ liệu...</div></div>
         
-        <!-- LOGIN -->
-        <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center bg-slate-100 hidden">
-            <div class="bg-white p-10 rounded-2xl shadow-xl w-full max-w-sm border border-slate-200">
+        <!-- === VIEW: LOGIN === -->
+        <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <!-- Background Blob -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/20 rounded-full blur-[100px] -z-10"></div>
+            
+            <div class="glass-card p-10 rounded-[2rem] w-full max-w-sm animate-fade-in">
                 <div class="text-center mb-8">
-                    <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-white text-2xl shadow-lg shadow-blue-500/30"><i class="fa-solid fa-link"></i></div>
-                    <h1 class="text-2xl font-bold text-slate-800">Admin Login</h1>
+                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white text-3xl shadow-lg shadow-indigo-500/30">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <h1 class="text-2xl font-black text-slate-800 tracking-tight">Admin Portal</h1>
+                    <p class="text-sm text-slate-500 font-medium">Link4Sub Pro System</p>
                 </div>
-                <div class="space-y-4">
-                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email</label><input type="email" id="adminEmail" class="pc-input" placeholder="admin@example.com"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1">Mật khẩu</label><input type="password" id="adminPass" class="pc-input" placeholder="••••••"></div>
-                    <button onclick="authLogin()" class="pc-btn w-full justify-center mt-2 py-3 shadow-lg shadow-blue-500/20">Đăng nhập</button>
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Email</label>
+                        <input type="email" id="adminEmail" class="pc-input" placeholder="admin@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Mật khẩu</label>
+                        <input type="password" id="adminPass" class="pc-input" placeholder="••••••">
+                    </div>
+                    <button onclick="authLogin()" class="pc-btn w-full py-3.5 text-base shadow-lg shadow-indigo-500/20">
+                        Đăng nhập
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- ADMIN -->
-        <div id="view-admin" class="w-full h-full flex hidden bg-slate-50">
-            <div class="w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0">
-                <div class="h-16 flex items-center px-6 border-b border-slate-100">
-                    <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center mr-3 font-bold"><i class="fa-solid fa-bolt"></i></div><span class="font-bold text-slate-800 text-lg">Link4Sub Pro</span>
+        <!-- === VIEW: ADMIN === -->
+        <div id="view-admin" class="w-full h-full flex hidden">
+            <!-- Sidebar -->
+            <div class="w-72 glass-nav border-r border-slate-200/60 flex flex-col flex-shrink-0 z-20">
+                <div class="h-20 flex items-center px-8">
+                    <div class="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl flex items-center justify-center mr-3 font-bold shadow-md"><i class="fa-solid fa-bolt"></i></div>
+                    <span class="font-extrabold text-slate-800 text-xl tracking-tight">Link4Sub<span class="text-indigo-600">Pro</span></span>
                 </div>
-                <div class="p-4 flex-1 overflow-y-auto">
-                    <div class="text-xs font-bold text-slate-400 uppercase mb-3 px-2">Menu</div>
-                    <div class="nav-item active" onclick="switchTab('stu')" id="btn-tab-stu"><i class="fa-solid fa-plus-circle"></i> Tạo Link Mới</div>
-                    <div class="nav-item" onclick="switchTab('manage')" id="btn-tab-manage"><i class="fa-solid fa-list-ul"></i> Quản Lý Link</div>
+                
+                <div class="p-6 flex-1 overflow-y-auto space-y-1">
+                    <div class="text-[10px] font-extrabold text-slate-400 uppercase mb-4 px-2 tracking-wider">Dashboard</div>
+                    <div class="nav-item active" onclick="switchTab('stu')" id="btn-tab-stu">
+                        <i class="fa-solid fa-plus-circle"></i> Tạo Link Mới
+                    </div>
+                    <div class="nav-item" onclick="switchTab('manage')" id="btn-tab-manage">
+                        <i class="fa-solid fa-layer-group"></i> Quản Lý Link
+                    </div>
                 </div>
-                <div class="p-4 border-t border-slate-100"><button onclick="logout()" class="nav-item w-full text-red-500 hover:bg-red-50 hover:text-red-600"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</button></div>
+                
+                <div class="p-6 border-t border-slate-200/50">
+                    <button onclick="logout()" class="nav-item w-full text-red-500 hover:bg-red-50 hover:text-red-600 justify-center">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
+                    </button>
+                </div>
             </div>
 
-            <div class="flex-1 flex flex-col overflow-hidden relative">
-                <div class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
-                    <h2 class="text-lg font-bold text-slate-800" id="page-title">Tạo Liên Kết Mới</h2>
-                    <div class="flex items-center gap-3"><span class="text-sm text-slate-500">Xin chào, <b>Admin</b></span><div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user"></i></div></div>
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden relative z-10">
+                <!-- Topbar -->
+                <div class="h-20 glass-nav flex items-center justify-between px-10 shrink-0">
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-800" id="page-title">Tạo Liên Kết Mới</h2>
+                        <p class="text-xs text-slate-500 font-medium mt-0.5">Quản lý hệ thống Link4Sub</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right hidden md:block">
+                            <div class="text-sm font-bold text-slate-700">Administrator</div>
+                            <div class="text-[10px] text-slate-400 font-medium">Super User</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 border border-slate-200"><i class="fa-solid fa-user"></i></div>
+                    </div>
                 </div>
-                <div class="flex-1 overflow-y-auto p-8">
-                    <div id="tab_create_stu" class="max-w-5xl mx-auto">
+
+                <!-- Scrollable Content -->
+                <div class="flex-1 overflow-y-auto p-10">
+                    
+                    <!-- TAB 1: CREATE -->
+                    <div id="tab_create_stu" class="max-w-5xl mx-auto animate-fade-in">
                         <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
                             <input type="hidden" id="edit_doc_id" value="">
                             
                             <!-- Card 1: Basic -->
-                            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
-                                <h3 class="text-sm font-bold text-slate-800 uppercase mb-4 flex justify-between items-center">
-                                    <span><i class="fa-regular fa-file-lines mr-2"></i> Thông tin cơ bản</span><span id="editModeBadge" class="hidden text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Chế độ sửa</span>
+                            <div class="glass-card rounded-[1.5rem] p-8 mb-8">
+                                <h3 class="text-base font-bold text-slate-800 uppercase mb-6 flex justify-between items-center">
+                                    <span><i class="fa-regular fa-file-lines mr-2 text-indigo-500"></i> Thông tin cơ bản</span>
+                                    <span id="editModeBadge" class="hidden text-[10px] bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-bold shadow-sm">CHẾ ĐỘ SỬA</span>
                                 </h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                                    <div><label class="block text-sm font-medium text-slate-600 mb-1">Tiêu đề chính</label><input type="text" id="i_ttl" class="pc-input" placeholder="Nhập tiêu đề nhiệm vụ..."></div>
-                                    <div><label class="block text-sm font-medium text-slate-600 mb-1">Mô tả phụ</label><input type="text" id="i_sttl" class="pc-input" placeholder="Hướng dẫn người dùng..."></div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                                    <div><label class="block text-sm font-bold text-slate-600 mb-2 ml-1">Tiêu đề chính</label><input type="text" id="i_ttl" class="pc-input" placeholder="Nhập tiêu đề nhiệm vụ..."></div>
+                                    <div><label class="block text-sm font-bold text-slate-600 mb-2 ml-1">Mô tả phụ</label><input type="text" id="i_sttl" class="pc-input" placeholder="Hướng dẫn người dùng..."></div>
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div><label class="block text-sm font-medium text-slate-600 mb-1">Ghi chú (Nội bộ)</label><input type="text" id="i_note" class="pc-input" placeholder="Ghi chú riêng cho Admin..."></div>
-                                    <div><label class="block text-sm font-medium text-blue-600 mb-1">Lời nhắn cho User</label><input type="text" id="i_user_note" class="pc-input bg-blue-50/50 border-blue-100" placeholder="Hiển thị thông báo màu vàng cho user..."></div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div><label class="block text-sm font-bold text-slate-600 mb-2 ml-1">Ghi chú (Nội bộ)</label><input type="text" id="i_note" class="pc-input" placeholder="Ghi chú riêng cho Admin..."></div>
+                                    <div><label class="block text-sm font-bold text-blue-600 mb-2 ml-1">Lời nhắn cho User</label><input type="text" id="i_user_note" class="pc-input bg-blue-50/50 border-blue-100 text-blue-700" placeholder="Hiển thị thông báo màu vàng cho user..."></div>
                                 </div>
                             </div>
 
-                            <!-- Card 2: Advanced (NEW) -->
-                            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6 relative overflow-hidden">
-                                <div class="absolute top-0 right-0 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">PRO FEATURE</div>
-                                <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-sliders mr-2"></i> Nâng cao & Giao diện</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <!-- Card 2: Advanced -->
+                            <div class="glass-card rounded-[1.5rem] p-8 mb-8 relative overflow-hidden group">
+                                <div class="absolute top-0 right-0 bg-gradient-to-l from-orange-500 to-amber-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-bl-xl shadow-lg">PRO FEATURE</div>
+                                <h3 class="text-base font-bold text-slate-800 uppercase mb-6"><i class="fa-solid fa-sliders mr-2 text-indigo-500"></i> Nâng cao & Giao diện</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                                     <div>
-                                        <label class="block text-sm font-medium text-slate-600 mb-1"><i class="fa-solid fa-key text-slate-400 mr-1"></i> Mật khẩu (Tùy chọn)</label>
+                                        <label class="block text-sm font-bold text-slate-600 mb-2 ml-1"><i class="fa-solid fa-key text-slate-400 mr-2"></i> Mật khẩu (Tùy chọn)</label>
                                         <input type="text" id="i_password" class="pc-input" placeholder="Để trống nếu không cần...">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-slate-600 mb-1"><i class="fa-solid fa-users-slash text-slate-400 mr-1"></i> Giới hạn lượt mở</label>
+                                        <label class="block text-sm font-bold text-slate-600 mb-2 ml-1"><i class="fa-solid fa-users-slash text-slate-400 mr-2"></i> Giới hạn lượt mở</label>
                                         <input type="number" id="i_limit" class="pc-input" placeholder="0 = Vô hạn">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-slate-600 mb-1"><i class="fa-solid fa-clock text-slate-400 mr-1"></i> Ngày hết hạn</label>
+                                        <label class="block text-sm font-bold text-slate-600 mb-2 ml-1"><i class="fa-solid fa-clock text-slate-400 mr-2"></i> Ngày hết hạn</label>
                                         <input type="datetime-local" id="i_expiry" class="pc-input">
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-600 mb-2">Màu chủ đạo User</label>
+                                    <label class="block text-sm font-bold text-slate-600 mb-3 ml-1">Màu chủ đạo User</label>
                                     <div class="flex gap-3" id="theme_selector">
-                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-blue-600 active" style="--t-color:#2563eb" onclick="selectTheme('blue', this)"></button>
-                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-red-600" style="--t-color:#dc2626" onclick="selectTheme('red', this)"></button>
-                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-purple-600" style="--t-color:#9333ea" onclick="selectTheme('purple', this)"></button>
-                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-emerald-600" style="--t-color:#059669" onclick="selectTheme('green', this)"></button>
-                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-slate-800" style="--t-color:#1e293b" onclick="selectTheme('slate', this)"></button>
-                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-pink-600" style="--t-color:#db2777" onclick="selectTheme('pink', this)"></button>
-                                        <button type="button" class="theme-btn w-8 h-8 rounded-full bg-orange-600" style="--t-color:#ea580c" onclick="selectTheme('orange', this)"></button>
+                                        <button type="button" class="theme-btn w-10 h-10 rounded-full bg-blue-600 active shadow-lg" style="--t-color:#2563eb" onclick="selectTheme('blue', this)"></button>
+                                        <button type="button" class="theme-btn w-10 h-10 rounded-full bg-red-600 shadow-lg" style="--t-color:#dc2626" onclick="selectTheme('red', this)"></button>
+                                        <button type="button" class="theme-btn w-10 h-10 rounded-full bg-purple-600 shadow-lg" style="--t-color:#9333ea" onclick="selectTheme('purple', this)"></button>
+                                        <button type="button" class="theme-btn w-10 h-10 rounded-full bg-emerald-600 shadow-lg" style="--t-color:#059669" onclick="selectTheme('green', this)"></button>
+                                        <button type="button" class="theme-btn w-10 h-10 rounded-full bg-slate-800 shadow-lg" style="--t-color:#1e293b" onclick="selectTheme('slate', this)"></button>
+                                        <button type="button" class="theme-btn w-10 h-10 rounded-full bg-pink-600 shadow-lg" style="--t-color:#db2777" onclick="selectTheme('pink', this)"></button>
+                                        <button type="button" class="theme-btn w-10 h-10 rounded-full bg-orange-600 shadow-lg" style="--t-color:#ea580c" onclick="selectTheme('orange', this)"></button>
                                     </div>
                                     <input type="hidden" id="i_theme" value="blue">
                                 </div>
                             </div>
 
                             <!-- Card 3: Dest -->
-                            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
-                                <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-bullseye mr-2"></i> Cấu hình Đích đến <span class="text-xs text-red-500 font-normal ml-2">(Tự động mã hóa)</span></h3>
-                                <div class="flex gap-6 mb-4">
-                                    <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="destType" value="link" checked onchange="toggleDestType()" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-slate-700">Link Đích (URL)</span></label>
-                                    <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="destType" value="note" onchange="toggleDestType()" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-slate-700">Ghi Chú (Key/Code)</span></label>
+                            <div class="glass-card rounded-[1.5rem] p-8 mb-8">
+                                <h3 class="text-base font-bold text-slate-800 uppercase mb-6"><i class="fa-solid fa-bullseye mr-2 text-indigo-500"></i> Cấu hình Đích đến <span class="text-[10px] text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded ml-2 font-bold border border-emerald-100">SECURE ENCRYPTED</span></h3>
+                                <div class="flex gap-8 mb-6 p-1 bg-slate-100/50 rounded-xl inline-flex border border-slate-200/50">
+                                    <label class="flex items-center gap-3 cursor-pointer px-4 py-2 rounded-lg hover:bg-white transition-all">
+                                        <input type="radio" name="destType" value="link" checked onchange="toggleDestType()" class="w-4 h-4 text-indigo-600 accent-indigo-600">
+                                        <span class="text-sm font-bold text-slate-700">Link Đích (URL)</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 cursor-pointer px-4 py-2 rounded-lg hover:bg-white transition-all">
+                                        <input type="radio" name="destType" value="note" onchange="toggleDestType()" class="w-4 h-4 text-indigo-600 accent-indigo-600">
+                                        <span class="text-sm font-bold text-slate-700">Ghi Chú (Key/Code)</span>
+                                    </label>
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div><label class="block text-sm font-medium text-slate-600 mb-1">Tên nút Mở khóa</label><input type="text" id="i_dest_name" class="pc-input" placeholder="Ví dụ: Lấy Link Ngay"></div>
-                                    <div id="dest_container_link"><label class="block text-sm font-medium text-slate-600 mb-1">Link gốc (URL)</label><input type="url" id="i_dest_url" class="pc-input" placeholder="https://..."></div>
-                                    <div id="dest_container_note" class="hidden"><label class="block text-sm font-medium text-slate-600 mb-1">Nội dung Ghi chú</label><textarea id="i_dest_note" class="pc-input h-24 font-mono" placeholder="Nhập Key, Code..."></textarea></div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div><label class="block text-sm font-bold text-slate-600 mb-2 ml-1">Tên nút Mở khóa</label><input type="text" id="i_dest_name" class="pc-input" placeholder="Ví dụ: Lấy Link Ngay"></div>
+                                    <div id="dest_container_link"><label class="block text-sm font-bold text-slate-600 mb-2 ml-1">Link gốc (URL)</label><input type="url" id="i_dest_url" class="pc-input" placeholder="https://..."></div>
+                                    <div id="dest_container_note" class="hidden"><label class="block text-sm font-bold text-slate-600 mb-2 ml-1">Nội dung Ghi chú</label><textarea id="i_dest_note" class="pc-input h-24 font-mono" placeholder="Nhập Key, Code..."></textarea></div>
                                 </div>
                             </div>
 
                             <!-- Card 4: Tasks -->
-                            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
-                                <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-list-check mr-2"></i> Thiết lập Nhiệm vụ</h3>
-                                <div class="flex gap-4 mb-6">
+                            <div class="glass-card rounded-[1.5rem] p-8 mb-8">
+                                <h3 class="text-base font-bold text-slate-800 uppercase mb-6"><i class="fa-solid fa-list-check mr-2 text-indigo-500"></i> Thiết lập Nhiệm vụ</h3>
+                                <div class="flex gap-4 mb-8 overflow-x-auto pb-2">
                                     <button type="button" class="stu_b_ftr active" onclick="selectPlatform('yt', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i><span>YouTube</span></button>
                                     <button type="button" class="stu_b_ftr" onclick="selectPlatform('tg', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i><span>Telegram</span></button>
                                     <button type="button" class="stu_b_ftr" onclick="selectPlatform('tk', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i><span>TikTok</span></button>
                                     <button type="button" class="stu_b_ftr" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i><span>Facebook</span></button>
                                 </div>
-                                <div class="p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300 mb-6 flex flex-wrap gap-2">
+                                <div class="p-6 bg-slate-50/80 rounded-2xl border border-dashed border-slate-300 mb-8 flex flex-wrap gap-3">
                                     <div id="ftr_yt" class="w-full">
                                         <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Đăng ký Kênh</button>
                                         <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like Video</button>
@@ -208,43 +418,46 @@
                                     </div>
                                 </div>
                                 <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    <div class="grp" id="grp_yt1"><div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition"><input type="text" id="lbl_yt1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Đăng ký kênh YouTube"><input class="pc-input bg-slate-50" id="i_yt1" type="url" placeholder="Link kênh..."></div></div>
-                                    <div class="grp" id="grp_ytl1"><div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition"><input type="text" id="lbl_ytl1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Like Video"><input class="pc-input bg-slate-50" id="i_ytl1" type="url" placeholder="Link video..."></div></div>
-                                    <div class="grp" id="grp_ytc1"><div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition"><input type="text" id="lbl_ytc1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Comment Video"><input class="pc-input bg-slate-50" id="i_ytc1" type="url" placeholder="Link video..."></div></div>
-                                    <div class="grp" id="grp_tg1"><div class="bg-white border border-slate-200 p-3 rounded-lg"><input type="text" id="lbl_tg1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Join Telegram"><input class="pc-input bg-slate-50" id="i_tg1" type="url" placeholder="Link Group..."></div></div>
-                                    <div class="grp" id="grp_tk1"><div class="bg-white border border-slate-200 p-3 rounded-lg"><input type="text" id="lbl_tk1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Tiktok"><input class="pc-input bg-slate-50" id="i_tk1" type="url" placeholder="Link Profile..."></div></div>
-                                    <div class="grp" id="grp_fb1"><div class="bg-white border border-slate-200 p-3 rounded-lg"><input type="text" id="lbl_fb1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Facebook"><input class="pc-input bg-slate-50" id="i_fb1" type="url" placeholder="Link Fanpage..."></div></div>
+                                    <div class="grp" id="grp_yt1"><div class="bg-white border border-slate-200 p-4 rounded-2xl hover:border-indigo-400 transition shadow-sm"><input type="text" id="lbl_yt1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Đăng ký kênh YouTube"><input class="pc-input bg-slate-50" id="i_yt1" type="url" placeholder="Link kênh..."></div></div>
+                                    <div class="grp" id="grp_ytl1"><div class="bg-white border border-slate-200 p-4 rounded-2xl hover:border-indigo-400 transition shadow-sm"><input type="text" id="lbl_ytl1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Like Video"><input class="pc-input bg-slate-50" id="i_ytl1" type="url" placeholder="Link video..."></div></div>
+                                    <div class="grp" id="grp_ytc1"><div class="bg-white border border-slate-200 p-4 rounded-2xl hover:border-indigo-400 transition shadow-sm"><input type="text" id="lbl_ytc1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Comment Video"><input class="pc-input bg-slate-50" id="i_ytc1" type="url" placeholder="Link video..."></div></div>
+                                    <div class="grp" id="grp_tg1"><div class="bg-white border border-slate-200 p-4 rounded-2xl hover:border-indigo-400 transition shadow-sm"><input type="text" id="lbl_tg1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Join Telegram"><input class="pc-input bg-slate-50" id="i_tg1" type="url" placeholder="Link Group..."></div></div>
+                                    <div class="grp" id="grp_tk1"><div class="bg-white border border-slate-200 p-4 rounded-2xl hover:border-indigo-400 transition shadow-sm"><input type="text" id="lbl_tk1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Tiktok"><input class="pc-input bg-slate-50" id="i_tk1" type="url" placeholder="Link Profile..."></div></div>
+                                    <div class="grp" id="grp_fb1"><div class="bg-white border border-slate-200 p-4 rounded-2xl hover:border-indigo-400 transition shadow-sm"><input type="text" id="lbl_fb1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Facebook"><input class="pc-input bg-slate-50" id="i_fb1" type="url" placeholder="Link Fanpage..."></div></div>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200 sticky bottom-0 z-10">
-                                <button type="button" onclick="resetForm()" class="pc-btn pc-btn-secondary px-6">Làm mới</button>
-                                <button type="submit" id="btnAction" class="pc-btn flex-1 py-3 text-lg shadow-lg shadow-blue-500/20"><i class="fa-solid fa-rocket"></i> Tạo Liên Kết</button>
+                            <div class="flex items-center gap-4 glass-nav p-4 rounded-2xl sticky bottom-4 z-20 shadow-lg border border-white/50 backdrop-blur-xl">
+                                <button type="button" onclick="resetForm()" class="pc-btn pc-btn-secondary px-8 py-3.5">Làm mới</button>
+                                <button type="submit" id="btnAction" class="pc-btn flex-1 py-3.5 text-lg shadow-lg shadow-indigo-500/30"><i class="fa-solid fa-rocket"></i> Tạo Liên Kết</button>
                             </div>
-                            <div id="resultArea" class="hidden mt-6 bg-green-50 border border-green-200 p-6 rounded-xl text-center">
-                                <h3 class="text-green-700 font-bold text-lg mb-2"><i class="fa-solid fa-check-circle mr-2"></i>Thành công!</h3>
-                                <div class="flex gap-2 max-w-2xl mx-auto"><input id="resultLink" type="text" readonly class="pc-input bg-white text-center font-medium"><button type="button" onclick="copyResult()" class="pc-btn bg-green-600 hover:bg-green-700">Copy</button><a href="#" id="previewLink" target="_blank" class="pc-btn pc-btn-secondary">Xem</a></div>
+                            <div id="resultArea" class="hidden mt-8 bg-green-50 border border-green-200 p-8 rounded-3xl text-center shadow-sm">
+                                <h3 class="text-green-700 font-extrabold text-xl mb-3"><i class="fa-solid fa-check-circle mr-2"></i>Thành công!</h3>
+                                <div class="flex gap-3 max-w-2xl mx-auto"><input id="resultLink" type="text" readonly class="pc-input bg-white text-center font-bold text-indigo-600"><button type="button" onclick="copyResult()" class="pc-btn bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/30">Copy</button><a href="#" id="previewLink" target="_blank" class="pc-btn pc-btn-secondary">Xem</a></div>
                             </div>
                         </form>
                     </div>
 
-                    <div id="tab_manage_links" class="hidden max-w-6xl mx-auto">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="relative w-64"><input type="text" placeholder="Tìm kiếm link..." class="pc-input pl-10"><i class="fa-solid fa-search absolute left-3 top-3 text-slate-400"></i></div>
+                    <div id="tab_manage_links" class="hidden max-w-7xl mx-auto animate-fade-in">
+                        <div class="flex justify-between items-center mb-8">
+                            <div class="relative w-80">
+                                <input type="text" placeholder="Tìm kiếm link..." class="pc-input pl-12 shadow-sm">
+                                <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
+                            </div>
                             <button onclick="fetchLinks()" class="pc-btn pc-btn-secondary"><i class="fa-solid fa-rotate mr-2"></i> Làm mới dữ liệu</button>
                         </div>
-                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="glass-card rounded-[1.5rem] overflow-hidden">
                             <table class="w-full text-left">
-                                <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase">
+                                <thead class="bg-slate-50/80 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
                                     <tr>
-                                        <th class="py-4 px-6">Tiêu đề / Link</th>
-                                        <th class="py-4 px-6">Thống kê</th>
-                                        <th class="py-4 px-6">Ghi chú</th>
-                                        <th class="py-4 px-6">Loại</th>
-                                        <th class="py-4 px-6 text-center">Trạng thái</th>
-                                        <th class="py-4 px-6 text-right">Hành động</th>
+                                        <th class="py-5 px-8">Tiêu đề / Link</th>
+                                        <th class="py-5 px-8">Thống kê</th>
+                                        <th class="py-5 px-8">Ghi chú</th>
+                                        <th class="py-5 px-8">Loại</th>
+                                        <th class="py-5 px-8 text-center">Trạng thái</th>
+                                        <th class="py-5 px-8 text-right">Hành động</th>
                                     </tr>
                                 </thead>
-                                <tbody id="links-table-body" class="text-sm text-slate-600 divide-y divide-slate-100"></tbody>
+                                <tbody id="links-table-body" class="text-sm text-slate-600 divide-y divide-slate-100/50"></tbody>
                             </table>
                         </div>
                     </div>
@@ -252,50 +465,86 @@
             </div>
         </div>
 
-        <!-- USER VIEW -->
-        <div id="view-user" class="hidden user-view-container">
+        <!-- === VIEW: USER (ESIGN STYLE) === -->
+        <div id="view-user" class="hidden user-view-container pt-10 px-4 pb-20">
             <!-- Password Gate -->
-            <div id="u_pass_gate" class="hidden fixed inset-0 z-[60] bg-slate-100 flex items-center justify-center p-4">
-                <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center border border-slate-200">
-                    <div class="w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-xl"><i class="fa-solid fa-lock"></i></div>
-                    <h2 class="text-lg font-bold text-slate-800 mb-2">Liên kết được bảo vệ</h2>
-                    <p class="text-sm text-slate-500 mb-6">Vui lòng nhập mật khẩu để tiếp tục</p>
-                    <input type="password" id="u_pass_input" class="pc-input mb-3 text-center" placeholder="Nhập mật khẩu...">
-                    <button onclick="checkUserPass()" class="pc-btn w-full justify-center">Mở khóa</button>
+            <div id="u_pass_gate" class="hidden fixed inset-0 z-[60] bg-white/80 backdrop-blur-md flex items-center justify-center p-4">
+                <div class="glass-card p-10 rounded-[2.5rem] w-full max-w-sm text-center shadow-2xl animate-fade-in">
+                    <div class="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center mx-auto mb-6 text-white text-2xl shadow-lg shadow-slate-900/20"><i class="fa-solid fa-lock"></i></div>
+                    <h2 class="text-xl font-black text-slate-900 mb-2">Private Access</h2>
+                    <p class="text-sm text-slate-500 mb-8 font-medium">Nội dung này được bảo vệ.</p>
+                    <input type="password" id="u_pass_input" class="pc-input mb-4 text-center font-bold tracking-widest text-lg" placeholder="••••••">
+                    <button onclick="checkUserPass()" class="pc-btn w-full justify-center py-3.5 shadow-lg shadow-indigo-500/20">Mở khóa</button>
                 </div>
             </div>
 
-            <!-- Error Gate (Limit/Expiry) -->
-            <div id="u_error_gate" class="hidden fixed inset-0 z-[60] bg-slate-100 flex items-center justify-center p-4">
-                <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center border border-slate-200">
-                    <div class="w-14 h-14 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fa-solid fa-ban"></i></div>
-                    <h2 class="text-lg font-bold text-slate-800 mb-2" id="u_error_title">Liên kết không khả dụng</h2>
-                    <p class="text-sm text-slate-500" id="u_error_msg">Link đã hết hạn hoặc bị xóa.</p>
+            <!-- Error Gate -->
+            <div id="u_error_gate" class="hidden fixed inset-0 z-[60] bg-white/80 backdrop-blur-md flex items-center justify-center p-4">
+                <div class="glass-card p-10 rounded-[2.5rem] w-full max-w-sm text-center shadow-2xl animate-fade-in">
+                    <div class="w-16 h-16 bg-red-100 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl"><i class="fa-solid fa-ban"></i></div>
+                    <h2 class="text-xl font-black text-slate-900 mb-2" id="u_error_title">Không khả dụng</h2>
+                    <p class="text-sm text-slate-500 font-medium" id="u_error_msg">Link đã hết hạn hoặc bị xóa.</p>
                 </div>
             </div>
 
-            <div class="user-card-wrapper">
-                <div id="u_header" class="relative bg-white pt-10 pb-6 px-6 text-center border-b border-slate-100">
-                    <h1 id="u_title" class="text-xl font-bold text-slate-900 mb-1">Đang tải...</h1><p id="u_subtitle" class="text-sm text-slate-500">Hoàn thành nhiệm vụ để tiếp tục</p>
-                    <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm text-yellow-800 text-left flex gap-3"><i class="fa-solid fa-circle-info mt-1 text-yellow-600"></i><span></span></div>
-                </div>
-                <div class="px-6 py-4">
-                    <div class="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100 p-3 rounded-xl flex items-center gap-3">
-                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-orange-500 shadow-sm text-lg"><i class="fa-solid fa-crown"></i></div>
-                        <div class="text-sm"><div class="font-bold text-slate-800">Nếu bạn cài không được?</div><div class="text-slate-500 text-xs">Hãy truy cập <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold hover:underline">Muachungchi.com</a>, giá chỉ từ 150k/năm.</div></div>
+            <div class="user-card-wrapper glass-card rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/60 max-w-md mx-auto w-full animate-fade-in">
+                <!-- Header Hero -->
+                <div id="u_header" class="relative pt-12 pb-8 px-8 text-center">
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-indigo-50/50 to-transparent -z-10"></div>
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-indigo-100 text-indigo-600 text-[10px] font-bold mb-6 shadow-sm">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                        </span>
+                        Premium Link
+                    </div>
+                    <h1 id="u_title" class="text-3xl font-black text-slate-900 mb-3 tracking-tight leading-tight">Đang tải...</h1>
+                    <p id="u_subtitle" class="text-sm text-slate-500 font-medium max-w-[80%] mx-auto leading-relaxed">Hoàn thành nhiệm vụ để tiếp tục</p>
+                    
+                    <div id="u_note_area" class="hidden mt-6 bg-amber-50 border border-amber-100 p-4 rounded-2xl text-xs text-amber-800 text-left flex gap-3 shadow-sm">
+                        <i class="fa-solid fa-circle-info mt-0.5 text-amber-500 text-base"></i>
+                        <span class="font-medium leading-relaxed"></span>
                     </div>
                 </div>
-                <div id="u_tasks" class="px-6 flex-1 space-y-3 pb-6"></div>
-                <div class="p-6 bg-white border-t border-slate-100 mt-auto sticky bottom-0 z-10">
-                    <div id="progressArea" class="hidden mb-3"><div class="flex justify-between text-xs text-slate-400 font-bold mb-1 uppercase"><span>Tiến độ</span> <span id="progressText">0%</span></div><div class="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div id="progressBar" class="h-full bg-green-500 w-0 transition-all duration-300"></div></div></div>
-                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-slate-100 text-slate-400 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all"><i class="fa-solid fa-lock"></i> <span>Hoàn thành nhiệm vụ</span></button>
-                    <div id="noteResult" class="hidden mt-4"><div class="bg-slate-50 border border-slate-200 rounded-xl p-1"><div class="flex justify-between items-center px-3 py-2 border-b border-slate-200"><span class="text-xs font-bold text-slate-400 uppercase">Nội dung</span><button onclick="copyNote()" class="text-xs bg-white border border-slate-200 px-2 py-1 rounded text-blue-600 font-bold shadow-sm">COPY</button></div><textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-3 text-sm font-mono text-slate-700 outline-none resize-none h-20"></textarea></div></div>
-                    <div class="mt-4 text-center"><a href="#" onclick="window.location.href=window.location.pathname" class="text-[10px] font-bold text-slate-300 uppercase tracking-widest hover:text-slate-500">Create your link</a></div>
+
+                <!-- Tasks List -->
+                <div id="u_tasks" class="px-6 flex-1 space-y-3 pb-8">
+                    <!-- Tasks will be injected here with .task-card class -->
+                </div>
+
+                <!-- Footer -->
+                <div class="p-8 bg-white/50 border-t border-slate-100 mt-auto backdrop-blur-md">
+                    <div id="progressArea" class="hidden mb-4">
+                        <div class="flex justify-between text-[10px] text-slate-400 font-bold mb-2 uppercase tracking-wider"><span>Tiến độ</span> <span id="progressText">0%</span></div>
+                        <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="progressBar" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 w-0 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(16,185,129,0.4)]"></div>
+                        </div>
+                    </div>
+                    
+                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-slate-100 text-slate-400 font-bold py-4 rounded-2xl flex items-center justify-center gap-3 cursor-not-allowed transition-all text-sm uppercase tracking-wide">
+                        <i class="fa-solid fa-lock"></i> <span>Hoàn thành nhiệm vụ</span>
+                    </button>
+
+                    <!-- Note Result -->
+                    <div id="noteResult" class="hidden mt-6 animate-fade-in">
+                        <div class="bg-white border border-slate-200 rounded-2xl p-1 shadow-sm">
+                            <div class="flex justify-between items-center px-4 py-3 border-b border-slate-100">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Secret Content</span>
+                                <button onclick="copyNote()" class="text-[10px] bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-100 transition-colors">COPY</button>
+                            </div>
+                            <textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-4 text-sm font-mono text-slate-700 outline-none resize-none h-24"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 text-center">
+                        <a href="#" onclick="window.location.href=window.location.pathname" class="text-[9px] font-bold text-slate-300 uppercase tracking-widest hover:text-indigo-500 transition-colors">Powered by Link4Sub Pro</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- LOGIC JS REMAINS THE SAME -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -379,7 +628,7 @@
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`btn-tab-${t}`).classList.add('active');
             document.getElementById('tab_create_stu').className = t==='stu'?'block max-w-5xl mx-auto':'hidden';
-            document.getElementById('tab_manage_links').className = t==='manage'?'block max-w-6xl mx-auto':'hidden';
+            document.getElementById('tab_manage_links').className = t==='manage'?'block max-w-7xl mx-auto':'hidden';
             document.getElementById('page-title').innerText = t==='stu' ? 'Tạo Liên Kết Mới' : 'Quản Lý Liên Kết';
             if(t==='manage') fetchLinks();
         }
@@ -415,7 +664,7 @@
             if(existingLabel) label = existingLabel;
 
             const div = document.createElement('div'); div.id = `grp_${id}`; div.className = "grp active"; 
-            div.innerHTML = `<div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition relative"><input type="text" id="lbl_${id}" class="text-xs font-bold ${color} uppercase mb-2 w-full bg-transparent outline-none" value="${label}"><input class="pc-input bg-slate-50" id="i_${id}" type="url" placeholder="Dán link vào đây..." value="${existingUrl}"><button type="button" onclick="this.closest('.grp').remove()" class="absolute top-2 right-2 text-slate-300 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button></div>`;
+            div.innerHTML = `<div class="bg-white border border-slate-200 p-4 rounded-2xl hover:border-indigo-400 transition shadow-sm relative"><input type="text" id="lbl_${id}" class="text-xs font-bold ${color} uppercase mb-2 w-full bg-transparent outline-none" value="${label}"><input class="pc-input bg-slate-50" id="i_${id}" type="url" placeholder="Dán link vào đây..." value="${existingUrl}"><button type="button" onclick="this.closest('.grp').remove()" class="absolute top-3 right-3 text-slate-300 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button></div>`;
             document.getElementById('dynamic_inputs').appendChild(div);
             if(!existingId) setTimeout(() => document.getElementById(`i_${id}`).focus(), 100);
         }
@@ -511,7 +760,7 @@
 
         window.fetchLinks = async () => {
             const list = document.getElementById('links-table-body');
-            list.innerHTML = '<tr><td colspan="6" class="py-8 text-center"><div class="loader inline-block border-slate-300 border-t-blue-500"></div></td></tr>';
+            list.innerHTML = '<tr><td colspan="6" class="py-8 text-center"><div class="loader inline-block border-slate-300 border-t-indigo-500"></div></td></tr>';
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'links'));
                 let links = []; querySnapshot.forEach((doc) => links.push({ id: doc.id, ...doc.data() }));
@@ -524,8 +773,8 @@
                     const views = link.views || 0, clicks = link.clicks || 0, unlocks = link.unlocks || 0;
                     const clickRate = views > 0 ? Math.round((clicks / views) * 100) : 0, unlockRate = views > 0 ? Math.round((unlocks / views) * 100) : 0, bounceRate = views > 0 ? 100 - clickRate : 0;
 
-                    const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 transition border-b border-slate-50";
-                    tr.innerHTML = `<td class="py-4 px-6"><div class="font-bold text-slate-800 truncate max-w-[200px]">${link.title}</div><div class="text-xs text-slate-400">${new Date(link.createdAt).toLocaleDateString('vi-VN')}</div></td><td class="py-4 px-6"><div class="flex flex-col gap-1"><div class="stat-badge stat-v" title="Lượt xem"><i class="fa-solid fa-eye"></i> ${views}</div><div class="stat-badge stat-c" title="Tỉ lệ nhấp task"><i class="fa-solid fa-computer-mouse"></i> ${clickRate}%</div><div class="stat-badge stat-u" title="Tỉ lệ mở khóa"><i class="fa-solid fa-unlock"></i> ${unlockRate}%</div></div></td><td class="py-4 px-6 text-sm text-slate-500">${link.note || '-'}</td><td class="py-4 px-6 text-center">${typeBadge}</td><td class="py-4 px-6 text-center"><label class="ios-switch scale-90"><input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)"><span class="slider"></span></label></td><td class="py-4 px-6 text-right"><button onclick="editLink('${link.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded transition mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-slate-500 hover:bg-slate-100 p-2 rounded transition mr-1"><i class="fa-regular fa-copy"></i></button><button onclick="deleteLink('${link.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded transition"><i class="fa-solid fa-trash"></i></button></td>`;
+                    const tr = document.createElement('tr'); tr.className = "hover:bg-indigo-50/50 transition border-b border-slate-50";
+                    tr.innerHTML = `<td class="py-5 px-8"><div class="font-bold text-slate-800 truncate max-w-[200px]">${link.title}</div><div class="text-xs text-slate-400">${new Date(link.createdAt).toLocaleDateString('vi-VN')}</div></td><td class="py-5 px-8"><div class="flex flex-col gap-1"><div class="stat-badge stat-v" title="Lượt xem"><i class="fa-solid fa-eye"></i> ${views}</div><div class="stat-badge stat-c" title="Tỉ lệ nhấp task"><i class="fa-solid fa-computer-mouse"></i> ${clickRate}%</div><div class="stat-badge stat-u" title="Tỉ lệ mở khóa"><i class="fa-solid fa-unlock"></i> ${unlockRate}%</div></div></td><td class="py-5 px-8 text-sm text-slate-500">${link.note || '-'}</td><td class="py-5 px-8 text-center">${typeBadge}</td><td class="py-5 px-8 text-center"><label class="ios-switch scale-90"><input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)"><span class="slider"></span></label></td><td class="py-5 px-8 text-right"><button onclick="editLink('${link.id}')" class="text-indigo-600 hover:bg-indigo-50 p-2.5 rounded-xl transition mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-slate-500 hover:bg-slate-100 p-2.5 rounded-xl transition mr-1"><i class="fa-regular fa-copy"></i></button><button onclick="deleteLink('${link.id}')" class="text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition"><i class="fa-solid fa-trash"></i></button></td>`;
                     list.appendChild(tr);
                 });
             } catch (e) { list.innerHTML = '<tr><td colspan="6" class="text-red-500 text-center py-4">Lỗi tải dữ liệu</td></tr>'; }
@@ -627,34 +876,24 @@
         function applyUserTheme(theme) {
             // Colors: blue, red, purple, green, slate, pink, orange
             const colors = {
-                blue: { bg: 'bg-blue-600', text: 'text-blue-600', sub: 'bg-blue-50', hover: 'hover:bg-blue-700' },
-                red: { bg: 'bg-red-600', text: 'text-red-600', sub: 'bg-red-50', hover: 'hover:bg-red-700' },
-                purple: { bg: 'bg-purple-600', text: 'text-purple-600', sub: 'bg-purple-50', hover: 'hover:bg-purple-700' },
-                green: { bg: 'bg-emerald-600', text: 'text-emerald-600', sub: 'bg-emerald-50', hover: 'hover:bg-emerald-700' },
-                slate: { bg: 'bg-slate-800', text: 'text-slate-800', sub: 'bg-slate-100', hover: 'hover:bg-slate-900' },
-                pink: { bg: 'bg-pink-600', text: 'text-pink-600', sub: 'bg-pink-50', hover: 'hover:bg-pink-700' },
-                orange: { bg: 'bg-orange-600', text: 'text-orange-600', sub: 'bg-orange-50', hover: 'hover:bg-orange-700' },
+                blue: { bg: 'bg-blue-600', text: 'text-blue-600', sub: 'bg-blue-50', hover: 'hover:bg-blue-700', shadow: 'shadow-blue-500/30' },
+                red: { bg: 'bg-red-600', text: 'text-red-600', sub: 'bg-red-50', hover: 'hover:bg-red-700', shadow: 'shadow-red-500/30' },
+                purple: { bg: 'bg-purple-600', text: 'text-purple-600', sub: 'bg-purple-50', hover: 'hover:bg-purple-700', shadow: 'shadow-purple-500/30' },
+                green: { bg: 'bg-emerald-600', text: 'text-emerald-600', sub: 'bg-emerald-50', hover: 'hover:bg-emerald-700', shadow: 'shadow-emerald-500/30' },
+                slate: { bg: 'bg-slate-800', text: 'text-slate-800', sub: 'bg-slate-100', hover: 'hover:bg-slate-900', shadow: 'shadow-slate-500/30' },
+                pink: { bg: 'bg-pink-600', text: 'text-pink-600', sub: 'bg-pink-50', hover: 'hover:bg-pink-700', shadow: 'shadow-pink-500/30' },
+                orange: { bg: 'bg-orange-600', text: 'text-orange-600', sub: 'bg-orange-50', hover: 'hover:bg-orange-700', shadow: 'shadow-orange-500/30' },
             };
             const c = colors[theme] || colors.blue;
             
-            // Dynamic CSS Injection for Unlock Button
-            const style = document.createElement('style');
-            style.innerHTML = `
-                .u-btn-primary { background-color: ${c.bg.replace('bg-', '') === 'slate-800' ? '#1e293b' : ''} !important; } 
-                .u-text-primary { color: var(--theme-color) !important; }
-            `; 
-            // We can actually just use the classes since we included Tailwind CDN
             const btn = document.getElementById('unlockBtn');
-            // Reset existing color classes if any (simplified: just force new ones via style attr or logic)
-            // A better way with Tailwind CDN: Replace classes in JS
-            btn.className = `w-full ${c.bg} ${c.hover} text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 animate-bounce cursor-pointer transform transition-transform`;
-            if(theme !== 'blue') btn.classList.remove('shadow-blue-500/30'); // Remove default shadow color if diff theme
+            btn.className = `w-full ${c.bg} ${c.hover} text-white font-bold py-4 rounded-2xl shadow-lg ${c.shadow} flex items-center justify-center gap-3 animate-bounce cursor-pointer transform transition-transform uppercase tracking-wider text-sm`;
         }
 
         function renderUserView(data) {
             document.getElementById('u_title').innerText = data.title; document.getElementById('u_subtitle').innerText = data.subtitle;
             const noteArea = document.getElementById('u_note_area');
-            if(data.userNote) { noteArea.innerHTML = `<span class="flex-1">${data.userNote}</span>`; noteArea.classList.remove('hidden'); } else noteArea.classList.add('hidden');
+            if(data.userNote) { noteArea.innerHTML = `<i class="fa-solid fa-circle-info mt-0.5 text-amber-500 text-base"></i><span class="font-medium leading-relaxed">${data.userNote}</span>`; noteArea.classList.remove('hidden'); } else noteArea.classList.add('hidden');
 
             const list = document.getElementById('u_tasks'); list.innerHTML = ''; done = 0; req = 0; tasksList = [];
             if(data.tasks) {
@@ -664,9 +903,26 @@
                     let { icon, color, bg } = taskData;
                     if(!icon) { const style = getTaskStyle(key, label); icon = style.icon; color = style.color; bg = style.bg; }
 
+                    // Fix colors for glass theme - using stronger backgrounds
+                    if(bg === 'bg-slate-100') bg = 'bg-slate-200';
+                    if(bg === 'bg-red-50') bg = 'bg-red-100';
+                    if(bg === 'bg-blue-50') bg = 'bg-blue-100';
+
                     const isDisabled = idx !== 0, div = document.createElement('div');
-                    div.id = `task-card-${idx}`; div.className = `task-row ${isDisabled ? 'disabled' : 'cursor-pointer'}`;
-                    div.innerHTML = `<div class="task-icon-box ${bg} ${color}"><i class="fa-brands ${icon} ${icon.includes('fa-solid')?'fa-solid':''}"></i></div><div class="flex-1"><h4 class="font-bold text-slate-800 text-sm leading-tight mb-0.5">${label}</h4><p class="text-[11px] text-slate-400 font-bold uppercase tracking-wide status-text">${isDisabled ? 'Đang khóa' : 'Nhấn để mở'}</p></div><div id="status-${idx}" class="text-slate-300">${isDisabled ? '<i class="fa-solid fa-lock text-sm"></i>' : '<i class="fa-solid fa-chevron-right text-lg"></i>'}</div>`;
+                    div.id = `task-card-${idx}`; div.className = `task-card ${isDisabled ? 'disabled' : 'cursor-pointer'}`;
+                    
+                    div.innerHTML = `
+                        <div class="task-icon-wrapper ${bg} ${color}">
+                            <i class="fa-brands ${icon} ${icon.includes('fa-solid')?'fa-solid':''}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-slate-800 text-base leading-tight mb-1 truncate">${label}</h4>
+                            <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider status-text">${isDisabled ? 'Đang khóa' : 'Nhấn để mở'}</p>
+                        </div>
+                        <div id="status-${idx}" class="text-slate-300 pr-2">
+                            ${isDisabled ? '<i class="fa-solid fa-lock text-sm"></i>' : '<i class="fa-solid fa-chevron-right text-lg"></i>'}
+                        </div>
+                    `;
                     div.onclick = () => doTask(idx, url); list.appendChild(div); tasksList.push({ id: idx, url: url, done: false });
                 });
             }
@@ -679,12 +935,15 @@
             if(currentLinkId) trackStat(currentLinkId, 'clicks');
             window.open(url, '_blank');
             card.classList.add('active'); const icon = document.getElementById(`status-${idx}`), text = card.querySelector('.status-text');
-            icon.innerHTML = '<div class="mini-loader"></div>'; text.innerText = "Đang kiểm tra..."; text.className = "text-[11px] font-bold uppercase tracking-wide status-text text-blue-600";
+            icon.innerHTML = '<div class="mini-loader"></div>'; text.innerText = "Đang kiểm tra..."; text.className = "text-[11px] font-bold uppercase tracking-wide status-text text-indigo-600";
 
             setTimeout(() => {
                 tasksList[idx].done = true; done++;
-                card.classList.remove('active'); card.style.opacity = "1"; card.style.backgroundColor = "#F0FDF4"; card.style.borderColor = "#DCFCE7";
-                icon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500 text-xl"></i>'; text.innerText = "Hoàn thành"; text.className = "text-[11px] text-green-600 font-bold uppercase tracking-wide status-text";
+                card.classList.remove('active'); 
+                card.style.background = "rgba(240, 253, 244, 0.8)";
+                card.style.borderColor = "#86efac";
+                
+                icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500 text-2xl"></i>'; text.innerText = "Hoàn thành"; text.className = "text-[11px] text-emerald-600 font-bold uppercase tracking-wide status-text";
                 if (idx + 1 < tasksList.length) {
                     const nextCard = document.getElementById(`task-card-${idx+1}`), nextIcon = document.getElementById(`status-${idx+1}`), nextText = nextCard.querySelector('.status-text');
                     nextCard.classList.remove('disabled'); nextIcon.innerHTML = '<i class="fa-solid fa-chevron-right text-slate-400"></i>'; nextText.innerText = "Nhấn để mở";
@@ -695,7 +954,7 @@
 
         function resetLockBtn(name) {
             const btn = document.getElementById('unlockBtn');
-            btn.disabled = true; btn.className = "w-full bg-slate-100 text-slate-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all shadow-none border border-transparent";
+            btn.disabled = true; btn.className = "w-full bg-slate-100 text-slate-400 font-bold py-4 rounded-2xl flex items-center justify-center gap-3 cursor-not-allowed transition-all shadow-none border border-transparent uppercase tracking-wide text-sm";
             btn.innerHTML = `<i class="fa-solid fa-lock"></i><span>${name || 'Đang khóa'}</span>`;
             document.getElementById('progressArea').classList.add('hidden'); document.getElementById('noteResult').classList.add('hidden');
         }
@@ -708,9 +967,17 @@
                 btn.disabled = false; 
                 // Re-apply theme color to button
                 const theme = finalData.theme || 'blue';
-                const colors = { blue: 'bg-blue-600 hover:bg-blue-700', red: 'bg-red-600 hover:bg-red-700', purple: 'bg-purple-600 hover:bg-purple-700', green: 'bg-emerald-600 hover:bg-emerald-700', slate: 'bg-slate-800 hover:bg-slate-900', pink: 'bg-pink-600 hover:bg-pink-700', orange: 'bg-orange-600 hover:bg-orange-700' };
+                const colors = { 
+                    blue: 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30', 
+                    red: 'bg-red-600 hover:bg-red-700 shadow-red-500/30', 
+                    purple: 'bg-purple-600 hover:bg-purple-700 shadow-purple-500/30', 
+                    green: 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/30', 
+                    slate: 'bg-slate-800 hover:bg-slate-900 shadow-slate-500/30', 
+                    pink: 'bg-pink-600 hover:bg-pink-700 shadow-pink-500/30', 
+                    orange: 'bg-orange-600 hover:bg-orange-700 shadow-orange-500/30' 
+                };
                 const c = colors[theme] || colors.blue;
-                btn.className = `w-full ${c} text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 animate-bounce cursor-pointer transform transition-transform`;
+                btn.className = `w-full ${c} text-white font-bold py-4 rounded-2xl shadow-lg flex items-center justify-center gap-3 animate-bounce cursor-pointer transform transition-transform uppercase tracking-wide text-sm`;
                 btn.innerHTML = `<i class="fa-solid fa-unlock-keyhole"></i><span>Mở Khóa Ngay</span>`;
                 if(navigator.vibrate) navigator.vibrate(200);
             }
@@ -723,7 +990,7 @@
             if(finalData.type === 'note') {
                 const noteArea = document.getElementById('noteResult'); document.getElementById('noteContentDisplay').value = L4S_SEC.dec(finalData.noteContent);
                 noteArea.classList.remove('hidden'); noteArea.scrollIntoView({ behavior: 'smooth' });
-                btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Đã Mở Ghi Chú</span>`; btn.disabled = true; btn.className = "w-full bg-slate-800 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-default";
+                btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Đã Mở Ghi Chú</span>`; btn.disabled = true; btn.className = "w-full bg-slate-800 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-3 cursor-default shadow-none";
             } else if(finalData.destUrl) { const realUrl = L4S_SEC.dec(finalData.destUrl); if(realUrl) window.location.replace(realUrl); }
         }
         window.goToDest = window.doUnlock;
