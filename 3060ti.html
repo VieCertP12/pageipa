@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style> .hidden { display: none !important; } </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800">
+
+    <div id="login-box" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+        <div class="w-full max-w-sm p-8 bg-white rounded-2xl shadow-xl border">
+            <h2 class="text-2xl font-bold text-center mb-6">Đăng Nhập Admin</h2>
+            <p class="text-center text-xs text-slate-400 mb-4">Email: iamsonnk4@gmail.com</p>
+            <input type="email" id="adm-email" value="iamsonnk4@gmail.com" class="w-full p-3 mb-3 border rounded-lg bg-slate-50" readonly>
+            <input type="password" id="adm-pass" placeholder="Nhập mật khẩu bạn đã tạo..." class="w-full p-3 mb-6 border rounded-lg focus:ring-2 ring-indigo-500 outline-none">
+            <button id="btn-login" class="w-full bg-indigo-600 text-white p-3 rounded-lg font-bold hover:bg-indigo-700">VÀO HỆ THỐNG</button>
+            <p id="err-msg" class="text-red-500 text-center mt-3 text-sm hidden"></p>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden min-h-screen pb-20">
+        <nav class="bg-white shadow-sm sticky top-0 z-40 h-16 px-4 flex items-center justify-between">
+            <span class="font-bold text-indigo-600">Admin Panel</span>
+            <button id="btn-logout" class="text-sm text-red-500 font-bold">Thoát</button>
+        </nav>
+
+        <div class="max-w-4xl mx-auto px-4 mt-8">
+            <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+                <button class="tab px-5 py-2 rounded-full bg-indigo-600 text-white font-bold text-sm" onclick="switchTab('esign')">ESign</button>
+                <button class="tab px-5 py-2 rounded-full bg-white border font-bold text-sm text-slate-500" onclick="switchTab('cert')">Cert</button>
+                <button class="tab px-5 py-2 rounded-full bg-white border font-bold text-sm text-slate-500" onclick="switchTab('mods')">Mods</button>
+            </div>
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="font-bold text-xl uppercase" id="tab-title">QUẢN LÝ ESIGN</h2>
+                <button onclick="openModal()" class="bg-green-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-green-600">+ THÊM MỚI</button>
+            </div>
+
+            <div id="list-data" class="grid gap-3"></div>
+        </div>
+    </div>
+
+    <div id="modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+            <h3 class="font-bold text-lg mb-4" id="modal-title">Thêm Mới</h3>
+            <input type="hidden" id="edit-id">
+            <div class="space-y-3">
+                <input id="inp-name" type="text" placeholder="Tên ứng dụng" class="w-full p-2 border rounded">
+                <input id="inp-desc" type="text" placeholder="Mô tả ngắn" class="w-full p-2 border rounded">
+                <input id="inp-url" type="text" placeholder="Link tải (Plist / IPA / Web)" class="w-full p-2 border rounded">
+                <input id="inp-icon" type="text" placeholder="Link ảnh Icon" class="w-full p-2 border rounded">
+                <div class="grid grid-cols-2 gap-3">
+                    <select id="inp-badge" class="p-2 border rounded"><option value="">Không Badge</option><option value="HOT">HOT (Đỏ)</option><option value="NEW">NEW (Xanh)</option><option value="GOOD">GOOD (Vàng)</option></select>
+                    <select id="inp-status" class="p-2 border rounded"><option value="active">Hiện</option><option value="hidden">Ẩn</option></select>
+                </div>
+                <div id="div-tag" class="hidden">
+                    <label class="text-xs font-bold text-slate-500">Icon Tag (Cho Mods):</label>
+                    <select id="inp-tag" class="w-full p-2 border rounded"><option value="fire">Lửa</option><option value="bolt">Sét</option><option value="star">Sao</option></select>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="document.getElementById('modal').classList.add('hidden')" class="px-4 py-2 text-slate-500">Hủy</button>
+                <button id="btn-save" class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-bold">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc",
+            authDomain: "sharechungchi.firebaseapp.com",
+            projectId: "sharechungchi",
+            storageBucket: "sharechungchi.firebasestorage.app",
+            messagingSenderId: "39399207872",
+            appId: "1:39399207872:web:087afb400ef0be078b0e25"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let curType = 'esign';
+        let allData = [];
+
+        // Auth Logic
+        onAuthStateChanged(auth, u => {
+            if(u) {
+                document.getElementById('login-box').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                load();
+            } else {
+                document.getElementById('login-box').classList.remove('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('btn-login').addEventListener('click', () => {
+            const p = document.getElementById('adm-pass').value;
+            signInWithEmailAndPassword(auth, "iamsonnk4@gmail.com", p).catch(e => {
+                document.getElementById('err-msg').innerText = "Sai mật khẩu!";
+                document.getElementById('err-msg').classList.remove('hidden');
+            });
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+
+        // Data Logic
+        async function load() {
+            document.getElementById('list-data').innerHTML = '<div class="text-center py-4">Đang tải...</div>';
+            const q = query(collection(db, "apps"));
+            const s = await getDocs(q);
+            allData = [];
+            s.forEach(d => allData.push({id: d.id, ...d.data()}));
+            render();
+        }
+
+        function render() {
+            const list = allData.filter(i => i.type === curType);
+            const html = list.map(i => `
+                <div class="bg-white p-3 rounded-lg border flex items-center gap-3 ${i.status==='hidden'?'opacity-50':''}">
+                    <img src="${i.icon || 'https://i.imgur.com/L6HpZa6.png'}" class="w-10 h-10 rounded object-cover bg-slate-100">
+                    <div class="flex-1 min-w-0">
+                        <div class="font-bold text-sm truncate">${i.name}</div>
+                        <div class="text-xs text-slate-500">${i.downloads||0} lượt tải</div>
+                    </div>
+                    <button onclick="window.edit('${i.id}')" class="w-8 h-8 bg-blue-100 text-blue-600 rounded flex items-center justify-center"><i class="fas fa-pen text-xs"></i></button>
+                    <button onclick="window.del('${i.id}')" class="w-8 h-8 bg-red-100 text-red-600 rounded flex items-center justify-center"><i class="fas fa-trash text-xs"></i></button>
+                </div>
+            `).join('');
+            document.getElementById('list-data').innerHTML = html || '<p class="text-center text-slate-400 py-4">Chưa có dữ liệu</p>';
+        }
+
+        // Global Funcs for HTML access
+        window.switchTab = (t) => {
+            curType = t;
+            document.getElementById('tab-title').innerText = "QUẢN LÝ " + t.toUpperCase();
+            if(t==='mods') document.getElementById('div-tag').classList.remove('hidden'); 
+            else document.getElementById('div-tag').classList.add('hidden');
+            render();
+        };
+
+        window.openModal = () => {
+            document.getElementById('edit-id').value = '';
+            document.getElementById('inp-name').value = '';
+            document.getElementById('inp-desc').value = '';
+            document.getElementById('inp-url').value = '';
+            document.getElementById('inp-icon').value = '';
+            document.getElementById('inp-status').value = 'active';
+            document.getElementById('modal-title').innerText = "Thêm Mới " + curType;
+            document.getElementById('modal').classList.remove('hidden');
+        };
+
+        window.edit = (id) => {
+            const item = allData.find(x => x.id === id);
+            if(!item) return;
+            document.getElementById('edit-id').value = id;
+            document.getElementById('inp-name').value = item.name;
+            document.getElementById('inp-desc').value = item.desc;
+            document.getElementById('inp-url').value = item.url;
+            document.getElementById('inp-icon').value = item.icon || '';
+            document.getElementById('inp-badge').value = item.badge || '';
+            document.getElementById('inp-status').value = item.status || 'active';
+            if(item.tag) document.getElementById('inp-tag').value = item.tag;
+            document.getElementById('modal-title').innerText = "Sửa Ứng Dụng";
+            document.getElementById('modal').classList.remove('hidden');
+        };
+
+        window.del = async (id) => {
+            if(confirm("Xóa vĩnh viễn?")) {
+                await deleteDoc(doc(db, "apps", id));
+                load();
+            }
+        };
+
+        document.getElementById('btn-save').addEventListener('click', async () => {
+            const btn = document.getElementById('btn-save'); btn.innerText = "Lưu...";
+            const id = document.getElementById('edit-id').value;
+            const data = {
+                type: curType,
+                name: document.getElementById('inp-name').value,
+                desc: document.getElementById('inp-desc').value,
+                url: document.getElementById('inp-url').value,
+                icon: document.getElementById('inp-icon').value,
+                badge: document.getElementById('inp-badge').value,
+                status: document.getElementById('inp-status').value,
+                tag: document.getElementById('inp-tag').value || 'fire',
+                updatedAt: new Date().toISOString()
+            };
+            
+            // Nếu là tạo mới thì download = 0
+            if(!id) data.downloads = 0;
+
+            const docId = id || (curType[0] + Date.now());
+            await setDoc(doc(db, "apps", docId), data, { merge: true });
+            
+            document.getElementById('modal').classList.add('hidden');
+            btn.innerText = "Lưu";
+            load();
+        });
+    </script>
+</body>
+</html>
