@@ -3,27 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link 4 Sub - Apple Style Admin</title>
+    <title>Link 4 Sub - Professional System</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: SF Pro Display Alternative (Inter) -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <style>
-        /* APPLE UI THEME */
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #F2F2F7; /* iOS System Gray 6 */
-            color: #1c1c1e;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #F2F2F7; color: #1c1c1e; }
         
-        /* Glassmorphism Panel */
+        /* Custom UI Components */
         .apple-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
@@ -32,129 +26,61 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
             border-radius: 20px;
         }
-
-        /* iOS Inputs */
         .apple-input {
-            background: #E5E5EA; /* iOS System Gray 5 */
-            border: none;
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 15px;
-            width: 100%;
-            transition: all 0.2s ease;
-            color: #000;
+            background: #E5E5EA; border: none; border-radius: 12px;
+            padding: 12px 16px; font-size: 15px; width: 100%; transition: all 0.2s ease; color: #000;
         }
-        .apple-input:focus {
-            background: #D1D1D6;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3);
-        }
-
-        /* iOS Buttons */
+        .apple-input:focus { background: #D1D1D6; outline: none; box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3); }
         .apple-btn {
-            background-color: #007AFF; /* iOS Blue */
-            color: white;
-            border-radius: 12px;
-            font-weight: 600;
-            padding: 12px 20px;
-            transition: transform 0.1s, opacity 0.2s;
-            border: none;
+            background-color: #007AFF; color: white; border-radius: 12px; font-weight: 600;
+            padding: 12px 20px; transition: transform 0.1s, opacity 0.2s; border: none;
         }
         .apple-btn:active { transform: scale(0.98); opacity: 0.8; }
-        .apple-btn-secondary {
-            background-color: rgba(118, 118, 128, 0.12);
-            color: #007AFF;
-        }
+        .apple-btn-secondary { background-color: rgba(118, 118, 128, 0.12); color: #007AFF; }
 
-        /* Toggle Switch (iOS Style) */
-        .ios-switch {
-            position: relative;
-            display: inline-block;
-            width: 51px;
-            height: 31px;
-        }
+        /* Switches & Sliders */
+        .ios-switch { position: relative; display: inline-block; width: 51px; height: 31px; }
         .ios-switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #E9E9EA;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 27px;
-            width: 27px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        input:checked + .slider { background-color: #34C759; } /* iOS Green */
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #E9E9EA; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 27px; width: 27px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: #34C759; }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* Nav Tabs */
-        .nav-segment {
-            background: #E5E5EA;
-            padding: 4px;
-            border-radius: 10px;
-            display: inline-flex;
-        }
-        .nav-segment .btn {
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #8E8E93;
-            transition: all 0.2s;
-        }
-        .nav-segment .btn.active {
-            background: white;
-            color: #000;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-        }
+        /* Navigation */
+        .nav-segment { background: #E5E5EA; padding: 4px; border-radius: 10px; display: inline-flex; }
+        .nav-segment .btn { padding: 6px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #8E8E93; transition: all 0.2s; }
+        .nav-segment .btn.active { background: white; color: #000; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
 
-        /* Platform Icons */
+        /* Icons & Grids */
         .stu_b_ftr { 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 70px; height: 70px; 
-            border-radius: 18px; 
-            background: #F2F2F7; 
-            color: #8E8E93;
-            transition: all 0.2s;
-            font-size: 10px;
-            gap: 4px;
-            border: 1px solid transparent;
+            width: 70px; height: 70px; border-radius: 18px; background: #F2F2F7; 
+            color: #8E8E93; transition: all 0.2s; font-size: 10px; gap: 4px; border: 1px solid transparent;
         }
         .stu_b_ftr i { font-size: 24px; margin-bottom: 2px; }
         .stu_b_ftr.active { background: #fff; color: var(--clr); border-color: var(--clr); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .stu_b_ftr:hover { background: #E5E5EA; }
 
-        /* Sub Buttons */
         .btn_iftr { 
-            display: inline-flex; align-items: center; gap: 6px; 
-            padding: 8px 12px; border-radius: 20px; 
-            background: #fff; color: #666; font-size: 12px; font-weight: 500;
-            border: 1px solid #E5E5EA; margin: 4px;
-            transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; 
+            border-radius: 20px; background: #fff; color: #666; font-size: 12px; font-weight: 500;
+            border: 1px solid #E5E5EA; margin: 4px; transition: all 0.2s;
         }
         .btn_iftr:hover { background: #F2F2F7; }
         .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); }
         .btn_iftr.active i { color: white; }
 
-        /* Animations */
-        .fade-in { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-        
         .grp { display: none; }
         .grp.active { display: block; animation: slideDown 0.3s; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-        /* Loader */
+        /* User Task States */
+        .task-disabled { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
+        .task-waiting { pointer-events: none; border-color: #3b82f6; background-color: #eff6ff; }
+        
+        /* Spinner */
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid #007AFF; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -165,7 +91,10 @@
         
         <!-- Loading Overlay -->
         <div id="global-loader" class="absolute inset-0 bg-white/90 z-[60] flex items-center justify-center hidden backdrop-blur-sm">
-            <div class="loader"></div>
+            <div class="flex flex-col items-center">
+                <div class="loader mb-2"></div>
+                <div class="text-xs text-gray-500 font-medium">Đang xử lý...</div>
+            </div>
         </div>
 
         <!-- VIEW 1: LOGIN -->
@@ -180,36 +109,30 @@
                 <input type="email" id="adminEmail" placeholder="Email" class="apple-input mb-3">
                 <input type="password" id="adminPass" placeholder="Mật khẩu" class="apple-input mb-6">
                 
-                <button onclick="authLogin()" class="apple-btn w-full shadow-lg shadow-blue-200/50">
-                    Đăng nhập
-                </button>
+                <button onclick="authLogin()" class="apple-btn w-full shadow-lg shadow-blue-200/50">Đăng nhập</button>
             </div>
         </div>
 
         <!-- VIEW 2: ADMIN DASHBOARD -->
         <div id="view-admin" class="hidden flex-col h-full relative fade-in">
-            <!-- Sidebar / Header -->
+            <!-- Header -->
             <div class="h-16 border-b border-gray-200 flex justify-between items-center px-6 bg-white/50 backdrop-blur-md z-10 shrink-0">
                 <div class="flex items-center gap-2">
                     <div class="w-8 h-8 bg-black text-white rounded-lg flex items-center justify-center"><i class="fa-solid fa-link text-sm"></i></div>
                     <span class="font-bold text-gray-800 tracking-tight">Link Manager</span>
                 </div>
-                
-                <!-- Nav Segments -->
                 <div class="nav-segment">
                     <button onclick="switchTab('stu')" id="btn-tab-stu" class="btn active">Tạo Mới</button>
                     <button onclick="switchTab('manage')" id="btn-tab-manage" class="btn">Danh Sách</button>
                 </div>
-
                 <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
 
             <div class="flex-1 overflow-y-auto bg-gray-50/50 p-4 md:p-8">
-                
-                <!-- TAB 1: CREATE LINK -->
+                <!-- TAB 1: CREATE -->
                 <div id="tab_create_stu" class="max-w-3xl mx-auto">
                     <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
-                        <input type="hidden" id="edit_doc_id" value=""> <!-- Hidden ID for Edit Mode -->
+                        <input type="hidden" id="edit_doc_id" value="">
 
                         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
                             <h2 class="text-lg font-bold text-gray-800 mb-4 flex justify-between items-center">
@@ -217,23 +140,12 @@
                                 <span id="editModeBadge" class="hidden text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Đang sửa</span>
                             </h2>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <label class="text-xs font-semibold text-gray-400 uppercase ml-1 mb-1 block">Tiêu đề</label>
-                                    <input class="apple-input" id="i_ttl" type="text" placeholder="Nhập tiêu đề nhiệm vụ...">
-                                </div>
-                                <div>
-                                    <label class="text-xs font-semibold text-gray-400 uppercase ml-1 mb-1 block">Mô tả phụ</label>
-                                    <input class="apple-input" id="i_sttl" type="text" placeholder="Hướng dẫn người dùng...">
-                                </div>
+                                <div><label class="text-xs font-semibold text-gray-400 uppercase ml-1 mb-1 block">Tiêu đề</label><input class="apple-input" id="i_ttl" type="text" placeholder="Nhập tiêu đề nhiệm vụ..."></div>
+                                <div><label class="text-xs font-semibold text-gray-400 uppercase ml-1 mb-1 block">Mô tả phụ</label><input class="apple-input" id="i_sttl" type="text" placeholder="Hướng dẫn người dùng..."></div>
                             </div>
-                            <!-- NOTE INPUT ADDED HERE -->
-                            <div>
-                                <label class="text-xs font-semibold text-gray-400 uppercase ml-1 mb-1 block">Ghi chú (Admin)</label>
-                                <input class="apple-input" id="i_note" type="text" placeholder="Ví dụ: Link cho Group Zalo A, Key ngày 12/5...">
-                            </div>
+                            <div><label class="text-xs font-semibold text-gray-400 uppercase ml-1 mb-1 block">Ghi chú (Admin)</label><input class="apple-input" id="i_note" type="text" placeholder="Ví dụ: Link cho Group Zalo A..."></div>
                         </div>
 
-                        <!-- Platforms -->
                         <div class="flex gap-3 overflow-x-auto pb-2 mb-4 scrollbar-hide justify-center md:justify-start">
                             <button type="button" class="stu_b_ftr active" onclick="selectPlatform('yt', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i><span>YouTube</span></button>
                             <button type="button" class="stu_b_ftr" onclick="selectPlatform('tg', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i><span>Telegram</span></button>
@@ -241,42 +153,32 @@
                             <button type="button" class="stu_b_ftr" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i><span>Facebook</span></button>
                         </div>
 
-                        <!-- Sub Tasks Selector -->
                         <div class="bg-white/60 p-4 rounded-xl border border-dashed border-gray-300 mb-6 flex flex-wrap gap-2 min-h-[60px] items-center">
-                            <!-- YT -->
                             <div class="stu_ftr active w-full" id="ftr_yt">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Đăng ký #1</button>
-                                <button type="button" class="btn_iftr" onclick="toggleInput('yt2', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Đăng ký #2</button>
+                                <!-- Removed yt2 as requested -->
                                 <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like Video</button>
                                 <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
                             </div>
-                            <!-- TG -->
                             <div class="stu_ftr w-full" id="ftr_tg">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Group #1</button>
                                 <button type="button" class="btn_iftr" onclick="toggleInput('tg2', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Channel #1</button>
                             </div>
-                            <!-- TK -->
                             <div class="stu_ftr w-full" id="ftr_tk">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button>
                                 <button type="button" class="btn_iftr" onclick="toggleInput('tkl1', this)" style="--clr:#000000"><i class="fa-solid fa-heart"></i> Like</button>
                             </div>
-                            <!-- FB -->
                             <div class="stu_ftr w-full" id="ftr_fb">
                                 <button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button>
                             </div>
                         </div>
 
-                        <!-- Dynamic Inputs -->
                         <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <!-- JS will toggle visibility here -->
                             <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_yt1">
-                                <input type="text" id="lbl_yt1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Đăng ký kênh YouTube #1">
+                                <input type="text" id="lbl_yt1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Đăng ký kênh YouTube">
                                 <input class="apple-input" id="i_yt1" type="url" placeholder="https://youtube.com/...">
                             </div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_yt2">
-                                <input type="text" id="lbl_yt2" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Đăng ký kênh YouTube #2">
-                                <input class="apple-input" id="i_yt2" type="url" placeholder="https://youtube.com/...">
-                            </div>
+                            <!-- Removed grp_yt2 -->
                             <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_ytl1">
                                 <input type="text" id="lbl_ytl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Like Video">
                                 <input class="apple-input" id="i_ytl1" type="url" placeholder="Link video...">
@@ -285,71 +187,35 @@
                                 <input type="text" id="lbl_ytc1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Bình luận Video">
                                 <input class="apple-input" id="i_ytc1" type="url" placeholder="Link video...">
                             </div>
-                            
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tg1">
-                                <input type="text" id="lbl_tg1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Tham gia Telegram">
-                                <input class="apple-input" id="i_tg1" type="url" placeholder="Link Group...">
-                            </div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tg2">
-                                <input type="text" id="lbl_tg2" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Tham gia Channel">
-                                <input class="apple-input" id="i_tg2" type="url" placeholder="Link Channel...">
-                            </div>
-
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tk1">
-                                <input type="text" id="lbl_tk1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Follow Tiktok">
-                                <input class="apple-input" id="i_tk1" type="url" placeholder="Link Profile...">
-                            </div>
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tkl1">
-                                <input type="text" id="lbl_tkl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Like Tiktok">
-                                <input class="apple-input" id="i_tkl1" type="url" placeholder="Link Video...">
-                            </div>
-
-                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_fb1">
-                                <input type="text" id="lbl_fb1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Follow Facebook">
-                                <input class="apple-input" id="i_fb1" type="url" placeholder="Link Profile...">
-                            </div>
+                            <!-- Other platforms -->
+                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tg1"><input type="text" id="lbl_tg1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Tham gia Telegram"><input class="apple-input" id="i_tg1" type="url" placeholder="Link Group..."></div>
+                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tg2"><input type="text" id="lbl_tg2" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Tham gia Channel"><input class="apple-input" id="i_tg2" type="url" placeholder="Link Channel..."></div>
+                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tk1"><input type="text" id="lbl_tk1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Follow Tiktok"><input class="apple-input" id="i_tk1" type="url" placeholder="Link Profile..."></div>
+                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_tkl1"><input type="text" id="lbl_tkl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Like Tiktok"><input class="apple-input" id="i_tkl1" type="url" placeholder="Link Video..."></div>
+                            <div class="grp bg-white p-4 rounded-xl border border-gray-100" id="grp_fb1"><input type="text" id="lbl_fb1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none border-b border-transparent hover:border-gray-300 focus:border-blue-500" value="Follow Facebook"><input class="apple-input" id="i_fb1" type="url" placeholder="Link Profile..."></div>
                         </div>
 
-                        <!-- Destination (Always Visible) -->
                         <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white mb-6 shadow-lg">
-                            <h3 class="text-sm font-bold uppercase tracking-wider mb-4 text-gray-400 flex items-center gap-2">
-                                <i class="fa-solid fa-flag-checkered text-green-400"></i> Đích đến (Bắt buộc)
-                            </h3>
+                            <h3 class="text-sm font-bold uppercase tracking-wider mb-4 text-gray-400 flex items-center gap-2"><i class="fa-solid fa-flag-checkered text-green-400"></i> Đích đến (Bắt buộc)</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="text-xs font-medium text-gray-400 block mb-1">Tên nút</label>
-                                    <input class="apple-input bg-white/10 text-white placeholder-gray-500 focus:bg-white/20" id="i_dest_name" type="text" placeholder="Mở khóa Link">
-                                </div>
-                                <div>
-                                    <label class="text-xs font-medium text-gray-400 block mb-1">Link gốc</label>
-                                    <input class="apple-input bg-white/10 text-white placeholder-gray-500 focus:bg-white/20" id="i_dest_url" type="url" placeholder="https://drive.google.com/...">
-                                </div>
+                                <div><label class="text-xs font-medium text-gray-400 block mb-1">Tên nút</label><input class="apple-input bg-white/10 text-white placeholder-gray-500 focus:bg-white/20" id="i_dest_name" type="text" placeholder="Mở khóa Link"></div>
+                                <div><label class="text-xs font-medium text-gray-400 block mb-1">Link gốc</label><input class="apple-input bg-white/10 text-white placeholder-gray-500 focus:bg-white/20" id="i_dest_url" type="url" placeholder="https://drive.google.com/..."></div>
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
                         <div class="flex flex-col gap-3">
-                            <button type="submit" id="btnAction" class="apple-btn w-full text-lg shadow-lg shadow-blue-500/30">
-                                Tạo Liên Kết
-                            </button>
-                            <button type="button" onclick="resetForm()" class="text-gray-400 text-sm hover:text-gray-600 py-2">
-                                Làm mới form
-                            </button>
+                            <button type="submit" id="btnAction" class="apple-btn w-full text-lg shadow-lg shadow-blue-500/30">Tạo Liên Kết</button>
+                            <button type="button" onclick="resetForm()" class="text-gray-400 text-sm hover:text-gray-600 py-2">Làm mới form</button>
                         </div>
 
-                        <!-- Result Area (Displayed below button) -->
                         <div id="resultArea" class="hidden mt-6 bg-green-50 border border-green-200 rounded-xl p-4 flex flex-col items-center text-center fade-in">
                             <div class="text-green-600 font-bold mb-1"><i class="fa-solid fa-check-circle"></i> Đã tạo Link!</div>
-                            <p class="text-xs text-gray-500 mb-3">Thông tin trong form vẫn được giữ để bạn sửa nhanh.</p>
                             <div class="flex w-full gap-2">
                                 <input id="resultLink" type="text" readonly class="flex-1 bg-white border border-gray-200 rounded-lg px-3 text-sm text-gray-600 outline-none">
                                 <button type="button" onclick="copyResult()" class="bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 px-3 py-2 rounded-lg text-sm font-bold">Copy</button>
                             </div>
-                            <div class="mt-2 text-xs">
-                                <a href="#" id="previewLink" target="_blank" class="text-blue-500 hover:underline">Xem thử giao diện User</a>
-                            </div>
+                            <div class="mt-2 text-xs"><a href="#" id="previewLink" target="_blank" class="text-blue-500 hover:underline">Xem thử</a></div>
                         </div>
-
                     </form>
                 </div>
 
@@ -359,7 +225,6 @@
                         <h2 class="text-xl font-bold text-gray-800">Quản lý Link</h2>
                         <button onclick="fetchLinks()" class="apple-btn-secondary text-sm"><i class="fa-solid fa-rotate mr-1"></i> Refresh</button>
                     </div>
-
                     <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                         <table class="w-full text-left">
                             <thead class="bg-gray-50 border-b border-gray-100">
@@ -376,17 +241,15 @@
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- VIEW 3: USER INTERFACE (Modern) -->
+        <!-- VIEW 3: USER INTERFACE -->
         <div id="view-user" class="hidden h-full flex flex-col bg-white overflow-y-auto">
             <div class="max-w-md mx-auto min-h-full flex flex-col pb-10 w-full relative">
-                <!-- Header Bg -->
                 <div class="absolute top-0 left-0 w-full h-48 bg-gradient-to-br from-blue-500 to-purple-600 rounded-b-[40px] z-0"></div>
                 
-                <div class="pt-16 pb-6 px-6 text-center relative z-10">
+                <div class="pt-12 pb-4 px-6 text-center relative z-10">
                     <div class="bg-white w-20 h-20 rounded-2xl mx-auto shadow-lg flex items-center justify-center mb-4 text-3xl text-blue-500">
                         <i class="fa-solid fa-unlock-keyhole"></i>
                     </div>
@@ -394,7 +257,17 @@
                     <p id="u_subtitle" class="text-sm text-blue-100">Vui lòng chờ một chút</p>
                 </div>
 
-                <div id="u_tasks" class="px-6 space-y-3 flex-1 relative z-10 mt-4">
+                <!-- NEW AD BANNER -->
+                <div class="mx-6 relative z-10 mb-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-orange-100 p-4 rounded-xl shadow-sm text-center">
+                    <p class="text-sm text-gray-700">
+                        <i class="fa-solid fa-triangle-exclamation text-orange-500 mr-1"></i>
+                        Lỗi cài đặt? Hết hạn chứng chỉ? <br>
+                        👉 Ghé ngay <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold hover:underline">Muachungchi.com</a>
+                        <span class="block text-xs text-gray-500 mt-1">Giải pháp ổn định chỉ từ 150k/năm!</span>
+                    </p>
+                </div>
+
+                <div id="u_tasks" class="px-6 space-y-3 flex-1 relative z-10">
                     <!-- Tasks injected here -->
                 </div>
 
@@ -408,9 +281,7 @@
                     </button>
                 </div>
                 
-                <div class="mt-4 text-center pb-4">
-                    <a href="#" onclick="window.location.href = window.location.pathname" class="text-[10px] text-gray-300 uppercase font-bold tracking-widest hover:text-gray-400">Create your own link</a>
-                </div>
+                <div class="mt-4 text-center pb-4"><a href="#" onclick="window.location.href = window.location.pathname" class="text-[10px] text-gray-300 uppercase font-bold tracking-widest hover:text-gray-400">Create your own link</a></div>
             </div>
         </div>
 
@@ -420,9 +291,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- CẤU HÌNH FIREBASE ---
         let firebaseConfig;
         if (typeof __firebase_config !== 'undefined') {
             firebaseConfig = JSON.parse(__firebase_config);
@@ -438,65 +308,50 @@
         }
 
         let app, auth, db;
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-        } catch (e) { console.error("Firebase Init Error", e); }
-
+        try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); } catch (e) {}
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'link4sub-pro';
         let currentUser = null;
 
-        // --- CORE LOGIC ---
-        window.initApp = async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const linkId = urlParams.get('id');
+        function getLinkId() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('id')) return params.get('id');
+            if (window.location.hash.includes('id=')) return new URLSearchParams(window.location.hash.replace('#', '?')).get('id');
+            return null;
+        }
 
-            // CRITICAL FIX: If viewing a link, prevent Login screen flash
+        window.initApp = async () => {
+            const linkId = getLinkId();
             if (linkId) {
                 document.getElementById('view-login').classList.add('hidden');
-                document.getElementById('global-loader').classList.remove('hidden'); // Show loading
-                
-                // Force Anonymous Auth if not logged in
-                if (!auth.currentUser) {
-                    try { await signInAnonymously(auth); } 
-                    catch (e) { console.error("Guest Auth Error", e); }
-                }
+                document.getElementById('view-admin').classList.add('hidden');
+                document.getElementById('view-user').classList.remove('hidden');
+                document.getElementById('global-loader').classList.remove('hidden'); 
+                if (!auth.currentUser) try { await signInAnonymously(auth); } catch (e) {}
             }
         };
 
         if (auth) {
             onAuthStateChanged(auth, (user) => {
                 currentUser = user;
-                const urlParams = new URLSearchParams(window.location.search);
-                const linkId = urlParams.get('id');
-
+                const linkId = getLinkId();
                 if (linkId) {
-                    // Always show user view if ID present
-                    switchView('user'); 
-                    loadUserLink(linkId);
+                    switchView('user'); loadUserLink(linkId);
                     document.getElementById('global-loader').classList.add('hidden');
                 } else if (user && !user.isAnonymous) {
-                    // Admin Logged In
-                    switchView('admin');
-                    fetchLinks();
+                    switchView('admin'); fetchLinks();
                 } else {
-                    // Guest on Admin Page -> Login
-                    switchView('login');
+                    if(!linkId) switchView('login');
                 }
             });
         }
 
         // --- DATABASE OPERATIONS ---
-        
-        // 1. CREATE or UPDATE
         window.createLink = async () => {
             if (!currentUser) return showToast("Vui lòng đăng nhập lại", "error");
-
-            const docId = document.getElementById('edit_doc_id').value; // Check if updating
+            const docId = document.getElementById('edit_doc_id').value;
             const title = document.getElementById('i_ttl').value || 'Tiêu đề mặc định';
             const subtitle = document.getElementById('i_sttl').value || 'Hoàn thành các bước...';
-            const note = document.getElementById('i_note').value || ''; // NEW: Note
+            const note = document.getElementById('i_note').value || '';
             const destName = document.getElementById('i_dest_name').value || 'Mở khóa Link';
             const destUrl = document.getElementById('i_dest_url').value;
 
@@ -507,13 +362,9 @@
                 for (const [key, meta] of Object.entries(window.TASK_MAP)) {
                     const grp = document.getElementById(`grp_${key}`);
                     const inp = document.getElementById(`i_${key}`);
-                    const labelInp = document.getElementById(`lbl_${key}`);
-                    
+                    const lbl = document.getElementById(`lbl_${key}`);
                     if (grp && grp.classList.contains('active') && inp && inp.value) {
-                        tasks[key] = {
-                            url: inp.value,
-                            label: labelInp ? labelInp.value : meta.label 
-                        };
+                        tasks[key] = { url: inp.value, label: lbl ? lbl.value : meta.label };
                     }
                 }
             }
@@ -522,26 +373,16 @@
 
             document.getElementById('global-loader').classList.remove('hidden');
             try {
-                const payload = {
-                    title, subtitle, note, destName, destUrl, tasks, // Added note to payload
-                    active: true, // Default ON
-                    createdAt: new Date().toISOString()
-                };
-
+                const payload = { title, subtitle, note, destName, destUrl, tasks, active: true, createdAt: new Date().toISOString() };
                 let resultId = docId;
-
                 if (docId) {
-                    // UPDATE
                     await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', docId), payload);
                     showToast("Đã cập nhật link!", "success");
                 } else {
-                    // CREATE
                     const docRef = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'links'), payload);
                     resultId = docRef.id;
                     showToast("Tạo link thành công!", "success");
                 }
-
-                // Show Result and scroll to it
                 const finalLink = window.location.origin + window.location.pathname + "?id=" + resultId;
                 const resArea = document.getElementById('resultArea');
                 resArea.classList.remove('hidden');
@@ -549,122 +390,72 @@
                 document.getElementById('previewLink').href = finalLink;
                 resArea.scrollIntoView({ behavior: 'smooth' });
                 
-                // Do NOT reset form, just change button back if was editing
                 if(docId) {
                     document.getElementById('btnAction').innerText = "Tạo Liên Kết Mới";
-                    document.getElementById('edit_doc_id').value = ""; // Clear ID so next click creates new
+                    document.getElementById('edit_doc_id').value = "";
                     document.getElementById('formTitle').innerText = "Thông tin chung";
-                    document.getElementById('editModeBadge').classList.add('hidden'); // Hide badge
+                    document.getElementById('editModeBadge').classList.add('hidden');
                 }
-
-            } catch (e) {
-                console.error(e);
-                showToast("Lỗi: " + e.message, "error");
-            } finally {
-                document.getElementById('global-loader').classList.add('hidden');
-            }
+            } catch (e) { showToast("Lỗi: " + e.message, "error"); } 
+            finally { document.getElementById('global-loader').classList.add('hidden'); }
         };
 
-        // 2. FETCH LIST
         window.fetchLinks = async () => {
             if (!currentUser) return;
             const tbody = document.getElementById('links-table-body');
             tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center"><div class="loader inline-block"></div></td></tr>';
-
             try {
                 const querySnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'links'));
                 let links = [];
-                querySnapshot.forEach((doc) => {
-                    links.push({ id: doc.id, ...doc.data() });
-                });
-
+                querySnapshot.forEach((doc) => links.push({ id: doc.id, ...doc.data() }));
                 links.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                tbody.innerHTML = '';
-                if (links.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-gray-400">Chưa có dữ liệu.</td></tr>';
-                    return;
-                }
-
+                tbody.innerHTML = links.length === 0 ? '<tr><td colspan="4" class="py-8 text-center text-gray-400">Chưa có dữ liệu.</td></tr>' : '';
                 links.forEach(link => {
-                    const date = new Date(link.createdAt).toLocaleDateString('vi-VN');
-                    const isActive = link.active !== false; 
+                    const isActive = link.active !== false;
                     const noteText = link.note ? `<span class="bg-yellow-100 text-yellow-800 text-[10px] px-2 py-1 rounded border border-yellow-200">${link.note}</span>` : '<span class="text-gray-300 italic text-xs">--</span>';
-                    
                     const tr = document.createElement('tr');
                     tr.className = "border-b border-gray-50 hover:bg-gray-50 transition";
                     tr.innerHTML = `
-                        <td class="py-4 px-6">
-                            <div class="font-semibold text-gray-800 truncate max-w-[180px]">${link.title}</div>
-                            <div class="text-xs text-gray-400">${date}</div>
-                        </td>
-                        <td class="py-4 px-6 text-sm">
-                            ${noteText}
-                        </td>
-                        <td class="py-4 px-6 text-center">
-                            <label class="ios-switch">
-                                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)">
-                                <span class="slider"></span>
-                            </label>
-                        </td>
+                        <td class="py-4 px-6"><div class="font-semibold text-gray-800 truncate max-w-[180px]">${link.title}</div><div class="text-xs text-gray-400">${new Date(link.createdAt).toLocaleDateString('vi-VN')}</div></td>
+                        <td class="py-4 px-6 text-sm">${noteText}</td>
+                        <td class="py-4 px-6 text-center"><label class="ios-switch"><input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)"><span class="slider"></span></label></td>
                         <td class="py-4 px-6 text-right space-x-2">
-                            <button onclick="editLink('${link.id}')" class="text-blue-600 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition" title="Sửa (Cây bút)"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-gray-500 hover:bg-gray-100 p-2 rounded-lg transition" title="Copy"><i class="fa-regular fa-copy"></i></button>
-                            <button onclick="deleteLink('${link.id}')" class="text-red-400 hover:bg-red-50 p-2 rounded-lg transition" title="Xoá"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    `;
+                            <button onclick="editLink('${link.id}')" class="text-blue-600 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-gray-500 hover:bg-gray-100 p-2 rounded-lg transition"><i class="fa-regular fa-copy"></i></button>
+                            <button onclick="deleteLink('${link.id}')" class="text-red-400 hover:bg-red-50 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                        </td>`;
                     tbody.appendChild(tr);
                 });
-
-            } catch (e) {
-                console.error(e);
-                tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-red-400">Lỗi tải dữ liệu.</td></tr>';
-            }
+            } catch (e) { tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-red-400">Lỗi tải.</td></tr>'; }
         };
 
-        // 3. TOGGLE STATUS
         window.toggleStatus = async (id, status) => {
-            try {
-                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { active: status });
-                showToast(status ? "Đã bật Link" : "Đã tắt Link", "info");
-            } catch (e) { showToast("Lỗi cập nhật", "error"); }
+            try { await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { active: status }); showToast(status ? "Đã bật Link" : "Đã tắt Link", "info"); } catch (e) {}
         };
 
-        // 4. EDIT PREPARATION
         window.editLink = async (id) => {
             document.getElementById('global-loader').classList.remove('hidden');
             try {
                 const docSnap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    
-                    // Switch to Create Tab
                     switchTab('stu');
-                    
-                    // Fill Global Infos
                     document.getElementById('edit_doc_id').value = id;
                     document.getElementById('formTitle').innerText = "Đang chỉnh sửa";
-                    document.getElementById('editModeBadge').classList.remove('hidden'); // Show badge
-                    document.getElementById('btnAction').innerText = "Lưu Thay Đổi"; // Change button text
-                    
+                    document.getElementById('editModeBadge').classList.remove('hidden');
+                    document.getElementById('btnAction').innerText = "Lưu Thay Đổi";
                     document.getElementById('i_ttl').value = data.title;
                     document.getElementById('i_sttl').value = data.subtitle;
-                    document.getElementById('i_note').value = data.note || ''; // Fill Note
+                    document.getElementById('i_note').value = data.note || '';
                     document.getElementById('i_dest_name').value = data.destName;
                     document.getElementById('i_dest_url').value = data.destUrl;
-
-                    // Clear old actives
                     resetUIForEdit();
-
-                    // Fill Tasks
                     if(data.tasks) {
                         for (const [key, taskData] of Object.entries(data.tasks)) {
-                            // Activate Input Group
                             const grp = document.getElementById(`grp_${key}`);
                             const inp = document.getElementById(`i_${key}`);
                             const lbl = document.getElementById(`lbl_${key}`);
                             const btn = document.querySelector(`button[onclick*="'${key}'"]`);
-
                             if (grp && inp) {
                                 grp.classList.add('active');
                                 inp.value = typeof taskData === 'string' ? taskData : taskData.url;
@@ -673,15 +464,11 @@
                             }
                         }
                     }
-                    
-                    // Scroll to top
                     document.getElementById('tab_create_stu').scrollIntoView({ behavior: 'smooth' });
                 }
-            } catch(e) { console.error(e); }
-            finally { document.getElementById('global-loader').classList.add('hidden'); }
+            } catch(e) {} finally { document.getElementById('global-loader').classList.add('hidden'); }
         };
 
-        // 5. USER LOAD (With Active Check)
         window.loadUserLink = async (id) => {
             try {
                 const docSnap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
@@ -690,19 +477,14 @@
                     if(data.active === false) {
                         document.getElementById('u_title').innerText = "Link tạm khóa";
                         document.getElementById('u_subtitle').innerText = "Liên kết này hiện đang bị tắt bởi Admin.";
-                        return;
-                    }
-                    renderUserView(data);
+                    } else renderUserView(data);
                 } else {
                     document.getElementById('u_title').innerText = "Không tìm thấy";
                     document.getElementById('u_subtitle').innerText = "Link không tồn tại hoặc đã bị xóa.";
                 }
-            } catch (e) {
-                document.getElementById('u_title').innerText = "Lỗi kết nối";
-            }
+            } catch (e) { document.getElementById('u_title').innerText = "Lỗi kết nối"; }
         };
 
-        // EXPORT functions
         window.authLogin = () => {
             const email = document.getElementById('adminEmail').value;
             const pass = document.getElementById('adminPass').value;
@@ -713,24 +495,15 @@
                 showToast("Lỗi đăng nhập: " + e.code, "error");
             });
         };
-
         window.logout = () => signOut(auth).then(() => window.location.href = window.location.pathname);
-        window.deleteLink = async (id) => {
-            if(confirm("Xóa vĩnh viễn?")) {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
-                showToast("Đã xóa", "success");
-                fetchLinks();
-            }
-        }
-
+        window.deleteLink = async (id) => { if(confirm("Xóa vĩnh viễn?")) { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id)); showToast("Đã xóa", "success"); fetchLinks(); } }
         initApp();
     </script>
 
     <!-- UI Logic -->
     <script>
         window.TASK_MAP = {
-            'yt1': { label: 'Đăng ký YouTube #1', icon: 'fa-youtube', color: 'text-red-600' },
-            'yt2': { label: 'Đăng ký YouTube #2', icon: 'fa-youtube', color: 'text-red-600' },
+            'yt1': { label: 'Đăng ký YouTube', icon: 'fa-youtube', color: 'text-red-600' },
             'ytl1': { label: 'Like Video', icon: 'fa-thumbs-up', color: 'text-red-600' },
             'ytc1': { label: 'Comment Video', icon: 'fa-comment', color: 'text-red-600' },
             'tg1': { label: 'Join Group', icon: 'fa-telegram', color: 'text-blue-500' },
@@ -740,10 +513,7 @@
             'fb1': { label: 'Follow Facebook', icon: 'fa-facebook', color: 'text-blue-700' }
         };
 
-        function handleSubmitCreate() {
-            if(typeof window.createLink === 'function') window.createLink();
-        }
-
+        function handleSubmitCreate() { if(typeof window.createLink === 'function') window.createLink(); }
         function switchTab(t) {
             document.getElementById('btn-tab-stu').className = t==='stu'?'btn active':'btn';
             document.getElementById('btn-tab-manage').className = t==='manage'?'btn active':'btn';
@@ -751,121 +521,145 @@
             document.getElementById('tab_manage_links').className = t==='manage'?'block max-w-4xl mx-auto':'hidden';
             if(t==='manage' && typeof window.fetchLinks === 'function') window.fetchLinks();
         }
-
         function selectPlatform(pf, btn) {
             document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             document.querySelectorAll('.stu_ftr').forEach(f => f.classList.remove('active'));
-            const t = document.getElementById(`ftr_${pf}`);
-            if(t) t.classList.add('active');
+            const t = document.getElementById(`ftr_${pf}`); if(t) t.classList.add('active');
         }
-
         function toggleInput(id, btn) {
-            const grp = document.getElementById(`grp_${id}`);
-            if(!grp) return;
-            if(btn.classList.contains('active')) {
-                btn.classList.remove('active');
-                grp.classList.remove('active');
-            } else {
-                btn.classList.add('active');
-                grp.classList.add('active');
-                const inp = grp.querySelector('.apple-input');
-                if(inp) setTimeout(() => inp.focus(), 100);
-            }
+            const grp = document.getElementById(`grp_${id}`); if(!grp) return;
+            if(btn.classList.contains('active')) { btn.classList.remove('active'); grp.classList.remove('active'); }
+            else { btn.classList.add('active'); grp.classList.add('active'); const inp = grp.querySelector('.apple-input'); if(inp) setTimeout(() => inp.focus(), 100); }
         }
-
         function resetUIForEdit() {
             document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
             document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
             document.getElementById('resultArea').classList.add('hidden');
         }
-
         function resetForm() {
             if(!confirm("Làm mới form?")) return;
-            document.getElementById('fgSTU').reset();
-            document.getElementById('edit_doc_id').value = "";
-            document.getElementById('btnAction').innerText = "Tạo Liên Kết";
-            document.getElementById('formTitle').innerText = "Thông tin chung";
-            document.getElementById('editModeBadge').classList.add('hidden');
-            resetUIForEdit();
+            document.getElementById('fgSTU').reset(); document.getElementById('edit_doc_id').value = ""; document.getElementById('btnAction').innerText = "Tạo Liên Kết";
+            document.getElementById('formTitle').innerText = "Thông tin chung"; document.getElementById('editModeBadge').classList.add('hidden'); resetUIForEdit();
         }
-
         function copyResult() {
-            const el = document.getElementById('resultLink');
-            el.select();
-            document.execCommand('copy');
-            showToast("Đã copy!", "success");
+            document.getElementById('resultLink').select(); document.execCommand('copy'); showToast("Đã copy!", "success");
         }
-
         function copyToClip(txt) {
-            const t = document.createElement('textarea');
-            t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t);
-            showToast("Đã copy!", "success");
+            const t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); showToast("Đã copy!", "success");
         }
-
         function showToast(msg, type) {
-            if(typeof Toastify === 'function') {
-                Toastify({ text: msg, duration: 2000, close: true, gravity: "top", position: "right", backgroundColor: type === "success" ? "#34C759" : (type === "info" ? "#007AFF" : "#FF3B30") }).showToast();
-            } else alert(msg);
+            if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, gravity: "top", position: "right", backgroundColor: type === "success" ? "#34C759" : (type === "info" ? "#007AFF" : "#FF3B30") }).showToast();
+            else alert(msg);
         }
-
         function switchView(v) {
             ['view-login','view-admin','view-user'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            const t = document.getElementById(`view-${v}`);
-            t.classList.remove('hidden');
-            if(v==='admin') t.classList.add('flex');
+            const t = document.getElementById(`view-${v}`); t.classList.remove('hidden'); if(v==='admin') t.classList.add('flex');
         }
 
-        // User View Logic
+        // --- SEQUENTIAL TASK LOGIC ---
         let done=0, req=0, finalUrl='';
+        let tasksList = []; // Store tasks array for sequential access
+
         function renderUserView(data) {
             document.getElementById('u_title').innerText = data.title;
             document.getElementById('u_subtitle').innerText = data.subtitle;
             finalUrl = data.destUrl;
             const list = document.getElementById('u_tasks');
             list.innerHTML = '';
-            done = 0; req = 0;
+            done = 0; req = 0; tasksList = [];
 
             if(data.tasks) {
-                Object.entries(data.tasks).forEach(([key, taskData], idx) => {
+                // Convert to array to manage index
+                const entries = Object.entries(data.tasks);
+                req = entries.length;
+
+                entries.forEach(([key, taskData], idx) => {
                     const meta = window.TASK_MAP[key] || { label: 'Nhiệm vụ', icon: 'fa-link', color: 'text-gray-600' };
                     const url = typeof taskData === 'string' ? taskData : taskData.url;
                     const label = (typeof taskData === 'object' && taskData.label) ? taskData.label : meta.label;
-                    req++;
+                    
+                    // Task State
+                    const isFirst = idx === 0;
+                    const isDisabled = !isFirst;
 
                     const div = document.createElement('div');
-                    div.className = "bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-50 transition transform active:scale-95";
+                    div.id = `task-card-${idx}`;
+                    div.className = `bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer transition transform active:scale-95 ${isDisabled ? 'task-disabled' : 'hover:bg-gray-50'}`;
+                    
                     div.innerHTML = `
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center ${meta.color} text-xl shadow-inner">
+                            <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center ${meta.color} text-xl shadow-inner relative">
                                 <i class="fa-brands ${meta.icon} ${meta.icon.includes('fa-solid')?'fa-solid':''}"></i>
+                                ${isDisabled ? '<div class="absolute inset-0 bg-white/50 rounded-full flex items-center justify-center"><i class="fa-solid fa-lock text-gray-400 text-xs"></i></div>' : ''}
                             </div>
                             <div>
                                 <h4 class="font-bold text-gray-800 text-sm">${label}</h4>
-                                <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wide">Nhấn để thực hiện</p>
+                                <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wide status-text">${isDisabled ? 'Bị khóa' : 'Nhấn để thực hiện'}</p>
                             </div>
                         </div>
-                        <div id="status-${idx}" class="text-gray-300 pr-2"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div id="status-${idx}" class="text-gray-300 pr-2">
+                            ${isDisabled ? '<i class="fa-solid fa-lock"></i>' : '<i class="fa-solid fa-chevron-right"></i>'}
+                        </div>
                     `;
-                    div.onclick = () => doTask(div, url, idx);
+                    
+                    div.onclick = () => doTask(idx, url);
                     list.appendChild(div);
+                    tasksList.push({ id: idx, url: url, done: false });
                 });
             }
             resetLockBtn(data.destName);
         }
 
-        function doTask(el, url, idx) {
-            if(el.getAttribute('done')) return;
+        function doTask(idx, url) {
+            const card = document.getElementById(`task-card-${idx}`);
+            if(tasksList[idx].done || card.classList.contains('task-disabled') || card.classList.contains('task-waiting')) return;
+
+            // 1. Open Link
             window.open(url, '_blank');
+
+            // 2. Set Waiting State (Spinner)
+            card.classList.add('task-waiting');
             const icon = document.getElementById(`status-${idx}`);
+            const text = card.querySelector('.status-text');
+            
             icon.innerHTML = '<div class="loader" style="width:20px;height:20px;"></div>';
+            text.innerText = "Đang kiểm tra...";
+            text.className = "text-[10px] text-blue-500 font-bold uppercase tracking-wide status-text animate-pulse";
+
+            // 3. Timer 5s
             setTimeout(() => {
-                el.setAttribute('done', 'true');
-                el.className = "bg-green-50 border border-green-200 p-4 rounded-2xl shadow-none flex items-center justify-between cursor-default";
-                icon.innerHTML = '<i class="fa-solid fa-check-circle text-green-500 text-2xl"></i>';
+                // Mark Done
+                tasksList[idx].done = true;
                 done++;
+                
+                // Visual Update
+                card.classList.remove('task-waiting');
+                card.classList.add('border-green-200', 'bg-green-50');
+                // Remove pointer events so user can't click again
+                card.style.pointerEvents = 'none';
+                
+                icon.innerHTML = '<i class="fa-solid fa-check-circle text-green-500 text-2xl"></i>';
+                text.innerText = "Hoàn thành";
+                text.className = "text-[10px] text-green-600 font-bold uppercase tracking-wide status-text";
+
+                // Unlock Next Task
+                if (idx + 1 < tasksList.length) {
+                    const nextCard = document.getElementById(`task-card-${idx+1}`);
+                    const nextIcon = document.getElementById(`status-${idx+1}`);
+                    const nextText = nextCard.querySelector('.status-text');
+                    const nextIconWrap = nextCard.querySelector('.w-12');
+
+                    nextCard.classList.remove('task-disabled');
+                    nextCard.classList.add('hover:bg-gray-50');
+                    nextIcon.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+                    nextText.innerText = "Nhấn để thực hiện";
+                    // Remove lock overlay icon
+                    if(nextIconWrap.lastElementChild.tagName === 'DIV') nextIconWrap.lastElementChild.remove();
+                }
+
                 checkUnlock();
-            }, 4000);
+            }, 5000); // 5 seconds spin
         }
 
         function resetLockBtn(name) {
