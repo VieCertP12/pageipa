@@ -4,480 +4,217 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Link4Sub Pro - System</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow: hidden; }
-
-        /* --- UI COMPONENTS --- */
-        .pc-input {
-            background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
-            padding: 10px 14px; font-size: 14px; width: 100%; transition: all 0.2s; color: #334155;
-        }
+        .pc-input { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 14px; width: 100%; transition: all 0.2s; color: #334155; }
         .pc-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        
-        .pc-btn {
-            background-color: #3b82f6; color: white; border-radius: 8px; font-weight: 600;
-            padding: 10px 20px; transition: all 0.2s; border: none; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-        }
+        .pc-btn { background-color: #3b82f6; color: white; border-radius: 8px; font-weight: 600; padding: 10px 20px; transition: all 0.2s; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .pc-btn:hover { background-color: #2563eb; transform: translateY(-1px); }
-        .pc-btn:active { transform: translateY(0); }
-        
-        .pc-btn-secondary { 
-            background: #fff; border: 1px solid #e2e8f0; color: #64748b; 
-        }
+        .pc-btn-secondary { background: #fff; border: 1px solid #e2e8f0; color: #64748b; }
         .pc-btn-secondary:hover { background: #f8fafc; color: #334155; border-color: #cbd5e1; }
-
-        /* Sidebar Navigation */
-        .nav-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; border-radius: 8px;
-            color: #64748b; font-weight: 500; font-size: 14px;
-            transition: all 0.2s; cursor: pointer; margin-bottom: 4px;
-        }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; color: #64748b; font-weight: 500; font-size: 14px; transition: all 0.2s; cursor: pointer; margin-bottom: 4px; }
         .nav-item:hover { background: #f1f5f9; color: #1e293b; }
         .nav-item.active { background: #eff6ff; color: #3b82f6; font-weight: 600; }
         .nav-item i { width: 20px; text-align: center; }
-
-        /* Switches */
         .ios-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .ios-switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
         input:checked + .slider { background-color: #10b981; }
         input:checked + .slider:before { transform: translateX(18px); }
-
-        /* Platform Icons */
-        .stu_b_ftr { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 80px; height: 80px; border-radius: 12px; background: #fff; 
-            color: #94a3b8; border: 1px solid #e2e8f0; font-size: 11px; gap: 6px; cursor: pointer;
-            transition: all 0.2s;
-        }
+        .stu_b_ftr { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 12px; background: #fff; color: #94a3b8; border: 1px solid #e2e8f0; font-size: 11px; gap: 6px; cursor: pointer; transition: all 0.2s; }
         .stu_b_ftr:hover { border-color: #cbd5e1; transform: translateY(-2px); }
         .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); background: #fff; box-shadow: 0 4px 12px -2px rgba(0,0,0,0.1); }
         .stu_b_ftr i { font-size: 28px; }
-
-        .btn_iftr { 
-            display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; 
-            border-radius: 8px; background: #fff; color: #475569; font-size: 13px; font-weight: 500;
-            border: 1px solid #e2e8f0; margin: 4px; cursor: pointer; transition: all 0.2s;
-        }
+        .btn_iftr { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; background: #fff; color: #475569; font-size: 13px; font-weight: 500; border: 1px solid #e2e8f0; margin: 4px; cursor: pointer; transition: all 0.2s; }
         .btn_iftr:hover { background: #f8fafc; border-color: #cbd5e1; }
         .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); }
         .btn_iftr.active i { color: white; }
         .btn_add { border: 1px dashed #3b82f6; color: #3b82f6; background: #f0f9ff; }
-        .btn_add:hover { background: #dbeafe; border-color: #2563eb; }
-
-        .grp { display: none; }
-        .grp.active { display: block; animation: fadeIn 0.3s; }
+        .grp { display: none; } .grp.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Loading Spinner */
         .loader { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* User View Styles - UPDATED */
-        .user-view-container {
-            background-color: #F1F5F9; /* Distinct background */
-            position: absolute; inset: 0; z-index: 50;
-            display: flex; flex-direction: column; overflow-y: auto;
-        }
-        
-        .user-card-wrapper { 
-            max-width: 480px; margin: 0 auto; min-height: 100%; 
-            display: flex; flex-direction: column; 
-            background: white; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.08); 
-        }
-        @media(min-width: 768px) {
-            .user-card-wrapper { 
-                min-height: auto; 
-                margin-top: 5vh; margin-bottom: 5vh; 
-                border-radius: 24px; 
-                overflow: hidden;
-                border: 1px solid #e2e8f0;
-            }
-        }
-        
-        .task-row {
-            background: white; padding: 16px; border-radius: 16px;
-            display: flex; align-items: center; margin-bottom: 12px;
-            border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
+        .user-view-container { background-color: #F1F5F9; position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow-y: auto; }
+        .user-card-wrapper { max-width: 480px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; background: white; box-shadow: 0 0 50px rgba(0,0,0,0.08); }
+        @media(min-width: 768px) { .user-card-wrapper { min-height: auto; margin-top: 5vh; margin-bottom: 5vh; border-radius: 24px; overflow: hidden; border: 1px solid #e2e8f0; } }
+        .task-row { background: white; padding: 16px; border-radius: 16px; display: flex; align-items: center; margin-bottom: 12px; border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .task-row:hover { border-color: #e2e8f0; transform: translateY(-2px); box-shadow: 0 8px 12px rgba(0,0,0,0.04); }
         .task-row.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(1); background: #f8fafc; border-style: dashed; }
-        
-        /* Premium Icon Box */
-        .task-icon-box {
-            width: 48px; height: 48px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; flex-shrink: 0;
-            margin-right: 16px;
-        }
-
+        .task-icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; margin-right: 16px; }
         .mini-loader { width: 20px; height: 20px; border: 2px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
-
-    <!-- APP CONTAINER -->
     <div id="app" class="w-full h-full flex relative">
+        <div id="global-loader" class="absolute inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hidden"><div class="loader mb-3"></div><div class="text-sm text-slate-500 font-medium">Đang tải dữ liệu...</div></div>
         
-        <!-- Loading Screen -->
-        <div id="global-loader" class="absolute inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hidden">
-            <div class="loader mb-3"></div>
-            <div class="text-sm text-slate-500 font-medium">Đang tải dữ liệu...</div>
-        </div>
-
-        <!-- === VIEW: LOGIN (Centered) === -->
+        <!-- LOGIN -->
         <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center bg-slate-100 hidden">
             <div class="bg-white p-10 rounded-2xl shadow-xl w-full max-w-sm border border-slate-200">
                 <div class="text-center mb-8">
-                    <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-white text-2xl shadow-lg shadow-blue-500/30">
-                        <i class="fa-solid fa-link"></i>
-                    </div>
+                    <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-white text-2xl shadow-lg shadow-blue-500/30"><i class="fa-solid fa-link"></i></div>
                     <h1 class="text-2xl font-bold text-slate-800">Admin Login</h1>
-                    <p class="text-sm text-slate-500">Hệ thống quản lý Link4Sub</p>
                 </div>
-                
                 <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email</label>
-                        <input type="email" id="adminEmail" class="pc-input" placeholder="admin@example.com">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Mật khẩu</label>
-                        <input type="password" id="adminPass" class="pc-input" placeholder="••••••">
-                    </div>
-                    <button onclick="authLogin()" class="pc-btn w-full justify-center mt-2 py-3 shadow-lg shadow-blue-500/20">
-                        Đăng nhập
-                    </button>
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email</label><input type="email" id="adminEmail" class="pc-input" placeholder="admin@example.com"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1">Mật khẩu</label><input type="password" id="adminPass" class="pc-input" placeholder="••••••"></div>
+                    <button onclick="authLogin()" class="pc-btn w-full justify-center mt-2 py-3 shadow-lg shadow-blue-500/20">Đăng nhập</button>
                 </div>
             </div>
         </div>
 
-        <!-- === VIEW: ADMIN (PC DASHBOARD) === -->
+        <!-- ADMIN -->
         <div id="view-admin" class="w-full h-full flex hidden bg-slate-50">
-            
-            <!-- Sidebar -->
             <div class="w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0">
                 <div class="h-16 flex items-center px-6 border-b border-slate-100">
-                    <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center mr-3 font-bold"><i class="fa-solid fa-bolt"></i></div>
-                    <span class="font-bold text-slate-800 text-lg">Link4Sub Pro</span>
+                    <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center mr-3 font-bold"><i class="fa-solid fa-bolt"></i></div><span class="font-bold text-slate-800 text-lg">Link4Sub Pro</span>
                 </div>
-                
                 <div class="p-4 flex-1 overflow-y-auto">
                     <div class="text-xs font-bold text-slate-400 uppercase mb-3 px-2">Menu</div>
-                    <div class="nav-item active" onclick="switchTab('stu')" id="btn-tab-stu">
-                        <i class="fa-solid fa-plus-circle"></i> Tạo Link Mới
-                    </div>
-                    <div class="nav-item" onclick="switchTab('manage')" id="btn-tab-manage">
-                        <i class="fa-solid fa-list-ul"></i> Quản Lý Link
-                    </div>
+                    <div class="nav-item active" onclick="switchTab('stu')" id="btn-tab-stu"><i class="fa-solid fa-plus-circle"></i> Tạo Link Mới</div>
+                    <div class="nav-item" onclick="switchTab('manage')" id="btn-tab-manage"><i class="fa-solid fa-list-ul"></i> Quản Lý Link</div>
                 </div>
-
-                <div class="p-4 border-t border-slate-100">
-                    <button onclick="logout()" class="nav-item w-full text-red-500 hover:bg-red-50 hover:text-red-600">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
-                    </button>
-                </div>
+                <div class="p-4 border-t border-slate-100"><button onclick="logout()" class="nav-item w-full text-red-500 hover:bg-red-50 hover:text-red-600"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</button></div>
             </div>
 
-            <!-- Main Content -->
             <div class="flex-1 flex flex-col overflow-hidden relative">
-                <!-- Topbar -->
                 <div class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
                     <h2 class="text-lg font-bold text-slate-800" id="page-title">Tạo Liên Kết Mới</h2>
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm text-slate-500">Xin chào, <b>Admin</b></span>
-                        <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user"></i></div>
-                    </div>
+                    <div class="flex items-center gap-3"><span class="text-sm text-slate-500">Xin chào, <b>Admin</b></span><div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user"></i></div></div>
                 </div>
-
-                <!-- Scrollable Content -->
                 <div class="flex-1 overflow-y-auto p-8">
-                    
-                    <!-- TAB 1: CREATE -->
                     <div id="tab_create_stu" class="max-w-5xl mx-auto">
                         <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
                             <input type="hidden" id="edit_doc_id" value="">
-
-                            <!-- Card: Basic Info -->
                             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
                                 <h3 class="text-sm font-bold text-slate-800 uppercase mb-4 flex justify-between items-center">
-                                    <span><i class="fa-regular fa-file-lines mr-2"></i> Thông tin cơ bản</span>
-                                    <span id="editModeBadge" class="hidden text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Chế độ sửa</span>
+                                    <span><i class="fa-regular fa-file-lines mr-2"></i> Thông tin cơ bản</span><span id="editModeBadge" class="hidden text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Chế độ sửa</span>
                                 </h3>
-                                
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-600 mb-1">Tiêu đề chính</label>
-                                        <input type="text" id="i_ttl" class="pc-input" placeholder="Nhập tiêu đề nhiệm vụ...">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-600 mb-1">Mô tả phụ</label>
-                                        <input type="text" id="i_sttl" class="pc-input" placeholder="Hướng dẫn người dùng...">
-                                    </div>
+                                    <div><label class="block text-sm font-medium text-slate-600 mb-1">Tiêu đề chính</label><input type="text" id="i_ttl" class="pc-input" placeholder="Nhập tiêu đề nhiệm vụ..."></div>
+                                    <div><label class="block text-sm font-medium text-slate-600 mb-1">Mô tả phụ</label><input type="text" id="i_sttl" class="pc-input" placeholder="Hướng dẫn người dùng..."></div>
                                 </div>
-                                
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-600 mb-1">Ghi chú (Nội bộ)</label>
-                                        <input type="text" id="i_note" class="pc-input" placeholder="Ghi chú riêng cho Admin...">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-blue-600 mb-1">Lời nhắn cho User</label>
-                                        <input type="text" id="i_user_note" class="pc-input bg-blue-50/50 border-blue-100" placeholder="Hiển thị thông báo màu vàng cho user...">
-                                    </div>
+                                    <div><label class="block text-sm font-medium text-slate-600 mb-1">Ghi chú (Nội bộ)</label><input type="text" id="i_note" class="pc-input" placeholder="Ghi chú riêng cho Admin..."></div>
+                                    <div><label class="block text-sm font-medium text-blue-600 mb-1">Lời nhắn cho User</label><input type="text" id="i_user_note" class="pc-input bg-blue-50/50 border-blue-100" placeholder="Hiển thị thông báo màu vàng cho user..."></div>
                                 </div>
                             </div>
 
-                            <!-- Card: Destination -->
                             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
                                 <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-bullseye mr-2"></i> Cấu hình Đích đến</h3>
-                                
                                 <div class="flex gap-6 mb-4">
-                                    <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="radio" name="destType" value="link" checked onchange="toggleDestType()" class="w-4 h-4 text-blue-600">
-                                        <span class="text-sm font-medium text-slate-700">Link Đích (URL)</span>
-                                    </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="radio" name="destType" value="note" onchange="toggleDestType()" class="w-4 h-4 text-blue-600">
-                                        <span class="text-sm font-medium text-slate-700">Ghi Chú (Key/Code)</span>
-                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="destType" value="link" checked onchange="toggleDestType()" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-slate-700">Link Đích (URL)</span></label>
+                                    <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="destType" value="note" onchange="toggleDestType()" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-slate-700">Ghi Chú (Key/Code)</span></label>
                                 </div>
-
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-600 mb-1">Tên nút Mở khóa</label>
-                                        <input type="text" id="i_dest_name" class="pc-input" placeholder="Ví dụ: Lấy Link Ngay">
-                                    </div>
-                                    
-                                    <div id="dest_container_link">
-                                        <label class="block text-sm font-medium text-slate-600 mb-1">Link gốc (URL)</label>
-                                        <input type="url" id="i_dest_url" class="pc-input" placeholder="https://...">
-                                    </div>
-
-                                    <div id="dest_container_note" class="hidden">
-                                        <label class="block text-sm font-medium text-slate-600 mb-1">Nội dung Ghi chú</label>
-                                        <textarea id="i_dest_note" class="pc-input h-24 font-mono" placeholder="Nhập Key, Code hoặc nội dung cần ẩn..."></textarea>
-                                    </div>
+                                    <div><label class="block text-sm font-medium text-slate-600 mb-1">Tên nút Mở khóa</label><input type="text" id="i_dest_name" class="pc-input" placeholder="Ví dụ: Lấy Link Ngay"></div>
+                                    <div id="dest_container_link"><label class="block text-sm font-medium text-slate-600 mb-1">Link gốc (URL)</label><input type="url" id="i_dest_url" class="pc-input" placeholder="https://..."></div>
+                                    <div id="dest_container_note" class="hidden"><label class="block text-sm font-medium text-slate-600 mb-1">Nội dung Ghi chú</label><textarea id="i_dest_note" class="pc-input h-24 font-mono" placeholder="Nhập Key, Code..."></textarea></div>
                                 </div>
                             </div>
 
-                            <!-- Card: Tasks -->
                             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
                                 <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-list-check mr-2"></i> Thiết lập Nhiệm vụ</h3>
-                                
-                                <!-- Platform Selector -->
                                 <div class="flex gap-4 mb-6">
                                     <button type="button" class="stu_b_ftr active" onclick="selectPlatform('yt', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i><span>YouTube</span></button>
                                     <button type="button" class="stu_b_ftr" onclick="selectPlatform('tg', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i><span>Telegram</span></button>
                                     <button type="button" class="stu_b_ftr" onclick="selectPlatform('tk', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i><span>TikTok</span></button>
                                     <button type="button" class="stu_b_ftr" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i><span>Facebook</span></button>
                                 </div>
-
-                                <!-- Quick Add Buttons -->
                                 <div class="p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300 mb-6 flex flex-wrap gap-2">
-                                    <!-- YT -->
                                     <div id="ftr_yt" class="w-full">
                                         <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Đăng ký Kênh</button>
                                         <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like Video</button>
                                         <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
                                         <button type="button" class="btn_iftr btn_add" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Thêm Khác</button>
                                     </div>
-                                    <!-- TG -->
                                     <div id="ftr_tg" class="w-full hidden">
                                         <button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Join Group</button>
                                         <button type="button" class="btn_iftr btn_add" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Thêm Khác</button>
                                     </div>
-                                    <!-- TK -->
                                     <div id="ftr_tk" class="w-full hidden">
                                         <button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button>
                                         <button type="button" class="btn_iftr btn_add" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Thêm Khác</button>
                                     </div>
-                                    <!-- FB -->
                                     <div id="ftr_fb" class="w-full hidden">
                                         <button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button>
                                         <button type="button" class="btn_iftr btn_add" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Thêm Khác</button>
                                     </div>
                                 </div>
-
-                                <!-- Dynamic Inputs Grid -->
                                 <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    <!-- Default YouTube -->
-                                    <div class="grp" id="grp_yt1">
-                                        <div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition">
-                                            <input type="text" id="lbl_yt1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Đăng ký kênh YouTube">
-                                            <input class="pc-input bg-slate-50" id="i_yt1" type="url" placeholder="Link kênh...">
-                                        </div>
-                                    </div>
-                                    <div class="grp" id="grp_ytl1">
-                                        <div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition">
-                                            <input type="text" id="lbl_ytl1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Like Video">
-                                            <input class="pc-input bg-slate-50" id="i_ytl1" type="url" placeholder="Link video...">
-                                        </div>
-                                    </div>
-                                    <div class="grp" id="grp_ytc1">
-                                        <div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition">
-                                            <input type="text" id="lbl_ytc1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Comment Video">
-                                            <input class="pc-input bg-slate-50" id="i_ytc1" type="url" placeholder="Link video...">
-                                        </div>
-                                    </div>
-                                    <!-- Default Others -->
+                                    <div class="grp" id="grp_yt1"><div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition"><input type="text" id="lbl_yt1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Đăng ký kênh YouTube"><input class="pc-input bg-slate-50" id="i_yt1" type="url" placeholder="Link kênh..."></div></div>
+                                    <div class="grp" id="grp_ytl1"><div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition"><input type="text" id="lbl_ytl1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Like Video"><input class="pc-input bg-slate-50" id="i_ytl1" type="url" placeholder="Link video..."></div></div>
+                                    <div class="grp" id="grp_ytc1"><div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition"><input type="text" id="lbl_ytc1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Comment Video"><input class="pc-input bg-slate-50" id="i_ytc1" type="url" placeholder="Link video..."></div></div>
                                     <div class="grp" id="grp_tg1"><div class="bg-white border border-slate-200 p-3 rounded-lg"><input type="text" id="lbl_tg1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Join Telegram"><input class="pc-input bg-slate-50" id="i_tg1" type="url" placeholder="Link Group..."></div></div>
                                     <div class="grp" id="grp_tk1"><div class="bg-white border border-slate-200 p-3 rounded-lg"><input type="text" id="lbl_tk1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Tiktok"><input class="pc-input bg-slate-50" id="i_tk1" type="url" placeholder="Link Profile..."></div></div>
                                     <div class="grp" id="grp_fb1"><div class="bg-white border border-slate-200 p-3 rounded-lg"><input type="text" id="lbl_fb1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Facebook"><input class="pc-input bg-slate-50" id="i_fb1" type="url" placeholder="Link Fanpage..."></div></div>
                                 </div>
                             </div>
-
-                            <!-- Footer Actions -->
                             <div class="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200 sticky bottom-0 z-10">
                                 <button type="button" onclick="resetForm()" class="pc-btn pc-btn-secondary px-6">Làm mới</button>
-                                <button type="submit" id="btnAction" class="pc-btn flex-1 py-3 text-lg shadow-lg shadow-blue-500/20">
-                                    <i class="fa-solid fa-rocket"></i> Tạo Liên Kết
-                                </button>
+                                <button type="submit" id="btnAction" class="pc-btn flex-1 py-3 text-lg shadow-lg shadow-blue-500/20"><i class="fa-solid fa-rocket"></i> Tạo Liên Kết</button>
                             </div>
-
-                            <!-- Result Box -->
                             <div id="resultArea" class="hidden mt-6 bg-green-50 border border-green-200 p-6 rounded-xl text-center">
                                 <h3 class="text-green-700 font-bold text-lg mb-2"><i class="fa-solid fa-check-circle mr-2"></i>Thành công!</h3>
-                                <div class="flex gap-2 max-w-2xl mx-auto">
-                                    <input id="resultLink" type="text" readonly class="pc-input bg-white text-center font-medium">
-                                    <button type="button" onclick="copyResult()" class="pc-btn bg-green-600 hover:bg-green-700">Copy</button>
-                                    <a href="#" id="previewLink" target="_blank" class="pc-btn pc-btn-secondary">Xem</a>
-                                </div>
+                                <div class="flex gap-2 max-w-2xl mx-auto"><input id="resultLink" type="text" readonly class="pc-input bg-white text-center font-medium"><button type="button" onclick="copyResult()" class="pc-btn bg-green-600 hover:bg-green-700">Copy</button><a href="#" id="previewLink" target="_blank" class="pc-btn pc-btn-secondary">Xem</a></div>
                             </div>
                         </form>
                     </div>
 
-                    <!-- TAB 2: MANAGE -->
                     <div id="tab_manage_links" class="hidden max-w-6xl mx-auto">
                         <div class="flex justify-between items-center mb-6">
-                            <div class="relative w-64">
-                                <input type="text" placeholder="Tìm kiếm link..." class="pc-input pl-10">
-                                <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400"></i>
-                            </div>
+                            <div class="relative w-64"><input type="text" placeholder="Tìm kiếm link..." class="pc-input pl-10"><i class="fa-solid fa-search absolute left-3 top-3 text-slate-400"></i></div>
                             <button onclick="fetchLinks()" class="pc-btn pc-btn-secondary"><i class="fa-solid fa-rotate mr-2"></i> Làm mới dữ liệu</button>
                         </div>
-
                         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                             <table class="w-full text-left">
-                                <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase">
-                                    <tr>
-                                        <th class="py-4 px-6">Tiêu đề / Link</th>
-                                        <th class="py-4 px-6">Ghi chú</th>
-                                        <th class="py-4 px-6">Loại</th>
-                                        <th class="py-4 px-6 text-center">Trạng thái</th>
-                                        <th class="py-4 px-6 text-right">Hành động</th>
-                                    </tr>
-                                </thead>
+                                <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase"><tr><th class="py-4 px-6">Tiêu đề / Link</th><th class="py-4 px-6">Ghi chú</th><th class="py-4 px-6">Loại</th><th class="py-4 px-6 text-center">Trạng thái</th><th class="py-4 px-6 text-right">Hành động</th></tr></thead>
                                 <tbody id="links-table-body" class="text-sm text-slate-600 divide-y divide-slate-100"></tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <!-- === VIEW: USER (Updated User UI) === -->
+        <!-- USER -->
         <div id="view-user" class="hidden user-view-container">
             <div class="user-card-wrapper">
-                <!-- Header -->
                 <div class="relative bg-white pt-10 pb-6 px-6 text-center border-b border-slate-100">
-                    <!-- REMOVED THE GIFT ICON BOX HERE -->
-                    <h1 id="u_title" class="text-xl font-bold text-slate-900 mb-1">Đang tải...</h1>
-                    <p id="u_subtitle" class="text-sm text-slate-500">Hoàn thành nhiệm vụ để tiếp tục</p>
-                    
-                    <!-- User Note -->
-                    <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm text-yellow-800 text-left flex gap-3">
-                        <i class="fa-solid fa-circle-info mt-1 text-yellow-600"></i>
-                        <span></span>
-                    </div>
+                    <h1 id="u_title" class="text-xl font-bold text-slate-900 mb-1">Đang tải...</h1><p id="u_subtitle" class="text-sm text-slate-500">Hoàn thành nhiệm vụ để tiếp tục</p>
+                    <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm text-yellow-800 text-left flex gap-3"><i class="fa-solid fa-circle-info mt-1 text-yellow-600"></i><span></span></div>
                 </div>
-
-                <!-- Banner -->
                 <div class="px-6 py-4">
                     <div class="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100 p-3 rounded-xl flex items-center gap-3">
-                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-orange-500 shadow-sm text-lg">
-                            <i class="fa-solid fa-crown"></i>
-                        </div>
-                        <div class="text-sm">
-                            <div class="font-bold text-slate-800">Nếu bạn cài không được?</div>
-                            <div class="text-slate-500 text-xs">Hãy truy cập <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold hover:underline">Muachungchi.com</a>, giá chỉ từ 150k/năm.</div>
-                        </div>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-orange-500 shadow-sm text-lg"><i class="fa-solid fa-crown"></i></div>
+                        <div class="text-sm"><div class="font-bold text-slate-800">Nếu bạn cài không được?</div><div class="text-slate-500 text-xs">Hãy truy cập <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold hover:underline">Muachungchi.com</a>, giá chỉ từ 150k/năm.</div></div>
                     </div>
                 </div>
-
-                <!-- Task List -->
-                <div id="u_tasks" class="px-6 flex-1 space-y-3 pb-6">
-                    <!-- Tasks injected here -->
-                </div>
-
-                <!-- Footer -->
+                <div id="u_tasks" class="px-6 flex-1 space-y-3 pb-6"></div>
                 <div class="p-6 bg-white border-t border-slate-100 mt-auto sticky bottom-0 z-10">
-                    <div id="progressArea" class="hidden mb-3">
-                        <div class="flex justify-between text-xs text-slate-400 font-bold mb-1 uppercase"><span>Tiến độ</span> <span id="progressText">0%</span></div>
-                        <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                            <div id="progressBar" class="h-full bg-green-500 w-0 transition-all duration-300"></div>
-                        </div>
-                    </div>
-                    
-                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-slate-100 text-slate-400 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all">
-                        <i class="fa-solid fa-lock"></i> <span>Hoàn thành nhiệm vụ</span>
-                    </button>
-
-                    <!-- Note Result -->
-                    <div id="noteResult" class="hidden mt-4">
-                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-1">
-                            <div class="flex justify-between items-center px-3 py-2 border-b border-slate-200">
-                                <span class="text-xs font-bold text-slate-400 uppercase">Nội dung</span>
-                                <button onclick="copyNote()" class="text-xs bg-white border border-slate-200 px-2 py-1 rounded text-blue-600 font-bold shadow-sm">COPY</button>
-                            </div>
-                            <textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-3 text-sm font-mono text-slate-700 outline-none resize-none h-20"></textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4 text-center">
-                        <a href="#" onclick="window.location.href=window.location.pathname" class="text-[10px] font-bold text-slate-300 uppercase tracking-widest hover:text-slate-500">Create your link</a>
-                    </div>
+                    <div id="progressArea" class="hidden mb-3"><div class="flex justify-between text-xs text-slate-400 font-bold mb-1 uppercase"><span>Tiến độ</span> <span id="progressText">0%</span></div><div class="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div id="progressBar" class="h-full bg-green-500 w-0 transition-all duration-300"></div></div></div>
+                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-slate-100 text-slate-400 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all"><i class="fa-solid fa-lock"></i> <span>Hoàn thành nhiệm vụ</span></button>
+                    <div id="noteResult" class="hidden mt-4"><div class="bg-slate-50 border border-slate-200 rounded-xl p-1"><div class="flex justify-between items-center px-3 py-2 border-b border-slate-200"><span class="text-xs font-bold text-slate-400 uppercase">Nội dung</span><button onclick="copyNote()" class="text-xs bg-white border border-slate-200 px-2 py-1 rounded text-blue-600 font-bold shadow-sm">COPY</button></div><textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-3 text-sm font-mono text-slate-700 outline-none resize-none h-20"></textarea></div></div>
+                    <div class="mt-4 text-center"><a href="#" onclick="window.location.href=window.location.pathname" class="text-[10px] font-bold text-slate-300 uppercase tracking-widest hover:text-slate-500">Create your link</a></div>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- FIREBASE SDK & APP LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         let firebaseConfig;
-        if (typeof __firebase_config !== 'undefined') {
-            firebaseConfig = JSON.parse(__firebase_config);
-        } else {
-            firebaseConfig = {
-                apiKey: "AIzaSyB8znFxA8oyK1Idl9Lc0CkH_BLwIvbxJfI",
-                authDomain: "link4sub-web.firebaseapp.com",
-                projectId: "link4sub-web",
-                storageBucket: "link4sub-web.firebasestorage.app",
-                messagingSenderId: "897376055886",
-                appId: "1:897376055886:web:0a515c3ac86ced9352c91f"
-            };
-        }
+        if (typeof __firebase_config !== 'undefined') firebaseConfig = JSON.parse(__firebase_config);
+        else firebaseConfig = { apiKey: "AIzaSyB8znFxA8oyK1Idl9Lc0CkH_BLwIvbxJfI", authDomain: "link4sub-web.firebaseapp.com", projectId: "link4sub-web", storageBucket: "link4sub-web.firebasestorage.app", messagingSenderId: "897376055886", appId: "1:897376055886:web:0a515c3ac86ced9352c91f" };
 
         let app, auth, db;
         try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); } catch (e) {}
@@ -492,7 +229,6 @@
         window.initApp = async () => {
             const linkId = getLinkId();
             if (linkId) {
-                // Show user view immediately
                 document.getElementById('view-login').classList.add('hidden');
                 document.getElementById('view-admin').classList.add('hidden');
                 document.getElementById('view-user').classList.remove('hidden');
@@ -505,297 +241,163 @@
             onAuthStateChanged(auth, (user) => {
                 currentUser = user;
                 const linkId = getLinkId();
-                if (linkId) {
-                    switchView('user'); loadUserLink(linkId);
-                    document.getElementById('global-loader').classList.add('hidden');
-                } else if (user && !user.isAnonymous) {
-                    switchView('admin'); fetchLinks();
-                } else {
-                    if(!linkId) switchView('login');
-                }
+                if (linkId) { switchView('user'); loadUserLink(linkId); document.getElementById('global-loader').classList.add('hidden'); } 
+                else if (user && !user.isAnonymous) { switchView('admin'); fetchLinks(); } 
+                else if(!linkId) switchView('login');
             });
         }
 
-        // --- EXPORT TO WINDOW (GLOBAL) ---
-        window.db = db;
-        window.collection = collection;
-        window.addDoc = addDoc;
-        window.getDocs = getDocs;
-        window.doc = doc;
-        window.deleteDoc = deleteDoc;
-        window.updateDoc = updateDoc;
-        window.getDoc = getDoc;
-        window.appId = appId;
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-        window.auth = auth;
-        window.signOut = signOut;
-        window.currentUser = () => currentUser;
-
+        window.db = db; window.collection = collection; window.addDoc = addDoc; window.getDocs = getDocs; window.doc = doc; window.deleteDoc = deleteDoc; window.updateDoc = updateDoc; window.getDoc = getDoc;
+        window.appId = appId; window.signInWithEmailAndPassword = signInWithEmailAndPassword; window.auth = auth; window.signOut = signOut; window.currentUser = () => currentUser;
         initApp();
     </script>
 
-    <!-- UI Logic -->
     <script>
-        // CONFIG
-        window.TASK_MAP = {
-            'yt1': { label: 'Đăng ký YouTube', icon: 'fa-youtube', color: 'text-red-600' },
-            'ytl1': { label: 'Like Video', icon: 'fa-thumbs-up', color: 'text-red-600' },
-            'ytc1': { label: 'Comment Video', icon: 'fa-comment', color: 'text-red-600' },
-            'tg1': { label: 'Join Group', icon: 'fa-telegram', color: 'text-blue-500' },
-            'tk1': { label: 'Follow Tiktok', icon: 'fa-tiktok', color: 'text-black' },
-            'fb1': { label: 'Follow Facebook', icon: 'fa-facebook', color: 'text-blue-700' }
-        };
-
-        // UI Helpers
         function switchView(v) {
             ['view-login','view-admin','view-user'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            const t = document.getElementById(`view-${v}`); 
-            t.classList.remove('hidden'); 
-            if(v==='admin') {
-                t.classList.add('flex'); // Enable Flexbox for Admin Layout
-                document.getElementById('page-title').innerText = "Tạo Liên Kết Mới"; // Default title
-            }
+            const t = document.getElementById(`view-${v}`); t.classList.remove('hidden'); 
+            if(v==='admin') { t.classList.add('flex'); document.getElementById('page-title').innerText = "Tạo Liên Kết Mới"; }
         }
-        
         function switchTab(t) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`btn-tab-${t}`).classList.add('active');
-
             document.getElementById('tab_create_stu').className = t==='stu'?'block max-w-5xl mx-auto':'hidden';
             document.getElementById('tab_manage_links').className = t==='manage'?'block max-w-6xl mx-auto':'hidden';
-            
             document.getElementById('page-title').innerText = t==='stu' ? 'Tạo Liên Kết Mới' : 'Quản Lý Liên Kết';
-            
             if(t==='manage') fetchLinks();
         }
-
         function selectPlatform(pf, btn) {
-            document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             ['yt','tg','tk','fb'].forEach(id => document.getElementById(`ftr_${id}`).classList.add('hidden'));
             document.getElementById(`ftr_${pf}`).classList.remove('hidden');
         }
-
         function toggleInput(id, btn) {
             const grp = document.getElementById(`grp_${id}`); if(!grp) return;
             if(btn.classList.contains('active')) { btn.classList.remove('active'); grp.classList.remove('active'); }
-            else { btn.classList.add('active'); grp.classList.add('active'); const inp = grp.querySelector('.pc-input'); if(inp) setTimeout(() => inp.focus(), 100); }
+            else { btn.classList.add('active'); grp.classList.add('active'); setTimeout(() => grp.querySelector('.pc-input')?.focus(), 100); }
         }
-        
         function toggleDestType() {
             const type = document.querySelector('input[name="destType"]:checked').value;
-            const linkCon = document.getElementById('dest_container_link');
-            const noteCon = document.getElementById('dest_container_note');
-            
-            if(type === 'link') {
-                linkCon.classList.remove('hidden');
-                noteCon.classList.add('hidden');
-            } else {
-                linkCon.classList.add('hidden');
-                noteCon.classList.remove('hidden');
-            }
+            document.getElementById('dest_container_link').classList.toggle('hidden', type !== 'link');
+            document.getElementById('dest_container_note').classList.toggle('hidden', type === 'link');
         }
-
         function addTask(platform, existingId = null, existingLabel = null, existingUrl = "") {
             const id = existingId || `${platform}_custom_${Date.now()}`;
-            const container = document.getElementById('dynamic_inputs');
-            
             let label = "Nhiệm vụ mới", color = "text-slate-600";
             if(platform === 'yt') { label = "Nhiệm vụ YouTube"; color = "text-red-600"; }
-            if(platform === 'tg') { label = "Nhiệm vụ Telegram"; color = "text-blue-500"; }
-            if(platform === 'tk') { label = "Nhiệm vụ Tiktok"; color = "text-slate-900"; }
-            if(platform === 'fb') { label = "Nhiệm vụ Facebook"; color = "text-blue-700"; }
+            else if(platform === 'tg') { label = "Nhiệm vụ Telegram"; color = "text-blue-500"; }
+            else if(platform === 'tk') { label = "Nhiệm vụ Tiktok"; color = "text-slate-900"; }
+            else if(platform === 'fb') { label = "Nhiệm vụ Facebook"; color = "text-blue-700"; }
             if(existingLabel) label = existingLabel;
 
-            const div = document.createElement('div');
-            div.id = `grp_${id}`;
-            div.className = "grp active"; 
-            div.innerHTML = `
-                <div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition relative">
-                    <input type="text" id="lbl_${id}" class="text-xs font-bold ${color} uppercase mb-2 w-full bg-transparent outline-none" value="${label}">
-                    <input class="pc-input bg-slate-50" id="i_${id}" type="url" placeholder="Dán link vào đây..." value="${existingUrl}">
-                    <button type="button" onclick="this.closest('.grp').remove()" class="absolute top-2 right-2 text-slate-300 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-            `;
-            container.appendChild(div);
+            const div = document.createElement('div'); div.id = `grp_${id}`; div.className = "grp active"; 
+            div.innerHTML = `<div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition relative"><input type="text" id="lbl_${id}" class="text-xs font-bold ${color} uppercase mb-2 w-full bg-transparent outline-none" value="${label}"><input class="pc-input bg-slate-50" id="i_${id}" type="url" placeholder="Dán link vào đây..." value="${existingUrl}"><button type="button" onclick="this.closest('.grp').remove()" class="absolute top-2 right-2 text-slate-300 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button></div>`;
+            document.getElementById('dynamic_inputs').appendChild(div);
             if(!existingId) setTimeout(() => document.getElementById(`i_${id}`).focus(), 100);
         }
-
         function resetForm() {
             if(!confirm("Xóa trắng form?")) return;
-            document.getElementById('fgSTU').reset();
-            document.getElementById('edit_doc_id').value = "";
+            document.getElementById('fgSTU').reset(); document.getElementById('edit_doc_id').value = "";
             document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Tạo Liên Kết';
-            document.getElementById('formTitle').innerText = "Thông tin cơ bản";
-            document.getElementById('editModeBadge').classList.add('hidden');
-            
-            // Remove custom tasks
+            document.getElementById('formTitle').innerText = "Thông tin cơ bản"; document.getElementById('editModeBadge').classList.add('hidden');
             document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
-            // Hide default tasks
             document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
             document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
-            
             document.querySelector('input[name="destType"][value="link"]').click();
             document.getElementById('resultArea').classList.add('hidden');
         }
-
         function copyResult() { document.getElementById('resultLink').select(); document.execCommand('copy'); showToast("Đã copy!", "success"); }
         function copyNote() { document.getElementById('noteContentDisplay').select(); document.execCommand('copy'); showToast("Đã copy nội dung!", "success"); }
-        
         window.copyToClip = (text) => {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => showToast("Đã copy!", "success"));
-            } else {
-                let textArea = document.createElement("textarea");
-                textArea.value = text;
-                textArea.style.position = "fixed"; textArea.style.left = "-9999px";
-                document.body.appendChild(textArea); textArea.focus(); textArea.select();
-                try { document.execCommand('copy'); showToast("Đã copy!", "success"); } catch (err) { showToast("Lỗi copy", "error"); }
-                document.body.removeChild(textArea);
+            if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => showToast("Đã copy!", "success"));
+            else {
+                let ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
+                document.body.appendChild(ta); ta.focus(); ta.select();
+                try { document.execCommand('copy'); showToast("Đã copy!", "success"); } catch (e) { showToast("Lỗi copy", "error"); }
+                document.body.removeChild(ta);
             }
         }
-
         function showToast(msg, type) { 
             if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, gravity: "top", position: "right", backgroundColor: type === "success" ? "#10b981" : "#ef4444" }).showToast();
             else alert(msg); 
         }
 
-        // --- AUTH ---
         window.authLogin = () => {
-            const email = document.getElementById('adminEmail').value;
-            const pass = document.getElementById('adminPass').value;
-            if(!email || !pass) return showToast("Nhập thiếu thông tin", "error");
+            const e = document.getElementById('adminEmail').value, p = document.getElementById('adminPass').value;
+            if(!e || !p) return showToast("Nhập thiếu thông tin", "error");
             document.getElementById('global-loader').classList.remove('hidden');
-            window.signInWithEmailAndPassword(window.auth, email, pass).catch(e => {
-                document.getElementById('global-loader').classList.add('hidden');
-                showToast("Lỗi đăng nhập", "error");
-            });
+            window.signInWithEmailAndPassword(window.auth, e, p).catch(() => { document.getElementById('global-loader').classList.add('hidden'); showToast("Lỗi đăng nhập", "error"); });
         };
         window.logout = () => window.signOut(window.auth).then(() => window.location.href = window.location.pathname);
 
-        // --- DATABASE ---
+        function getTaskStyle(id, lblText) {
+            let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
+            if(id.includes('yt')) { 
+                icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; 
+                if(lblText && (lblText.includes('Like') || lblText.includes('Thích'))) icon = 'fa-thumbs-up';
+                if(lblText && (lblText.includes('Comment') || lblText.includes('Bình luận'))) icon = 'fa-comment';
+            }
+            else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
+            else if(id.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; if(lblText && (lblText.includes('Like') || lblText.includes('Tim'))) { icon = 'fa-heart'; color = 'text-pink-500'; } }
+            else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; }
+            return { icon, color, bg };
+        }
+
         window.handleSubmitCreate = async () => {
             if (!window.currentUser()) return showToast("Phiên đăng nhập hết hạn", "error");
             const docId = document.getElementById('edit_doc_id').value;
-            const title = document.getElementById('i_ttl').value || 'Tiêu đề mặc định';
-            const subtitle = document.getElementById('i_sttl').value || 'Hoàn thành các bước...';
-            const note = document.getElementById('i_note').value || '';
-            const userNote = document.getElementById('i_user_note').value || '';
-            const destName = document.getElementById('i_dest_name').value || 'Mở khóa';
-            
+            const title = document.getElementById('i_ttl').value || 'Tiêu đề mặc định', subtitle = document.getElementById('i_sttl').value || 'Hoàn thành các bước...', note = document.getElementById('i_note').value || '', userNote = document.getElementById('i_user_note').value || '', destName = document.getElementById('i_dest_name').value || 'Mở khóa';
             const type = document.querySelector('input[name="destType"]:checked').value;
             let destUrl = "", noteContent = "";
-
-            if(type === 'link') {
-                destUrl = document.getElementById('i_dest_url').value;
-                if (!destUrl) return showToast("Thiếu link đích!", "error");
-            } else {
-                noteContent = document.getElementById('i_dest_note').value;
-                if (!noteContent) return showToast("Thiếu nội dung ghi chú!", "error");
-            }
+            if(type === 'link') { destUrl = document.getElementById('i_dest_url').value; if (!destUrl) return showToast("Thiếu link đích!", "error"); } 
+            else { noteContent = document.getElementById('i_dest_note').value; if (!noteContent) return showToast("Thiếu nội dung ghi chú!", "error"); }
 
             const tasks = {};
             document.querySelectorAll('#dynamic_inputs .grp').forEach(grp => {
-                if(!grp.classList.contains('active') && !grp.id.includes('_custom_')) return; // Skip inactive default tasks
-                
-                const id = grp.id.replace('grp_', '');
-                const inp = grp.querySelector('input[type="url"]');
-                const lbl = grp.querySelector('input[type="text"]');
-                
+                if(!grp.classList.contains('active') && !grp.id.includes('_custom_')) return;
+                const id = grp.id.replace('grp_', ''), inp = grp.querySelector('input[type="url"]'), lbl = grp.querySelector('input[type="text"]');
                 if(inp && inp.value) {
-                    let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
-                    // Improved Icon Detection for User View
-                    if(id.includes('yt')) { 
-                        icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; 
-                        if(lbl && (lbl.value.includes('Like') || lbl.value.includes('Thích'))) icon = 'fa-thumbs-up';
-                        if(lbl && (lbl.value.includes('Comment') || lbl.value.includes('Bình luận'))) icon = 'fa-comment';
-                    }
-                    else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
-                    else if(id.includes('tk')) { 
-                        icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; 
-                        if(lbl && (lbl.value.includes('Like') || lbl.value.includes('Tim'))) { icon = 'fa-heart'; color = 'text-pink-500'; }
-                    }
-                    else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; }
-                    
-                    tasks[id] = { url: inp.value, label: lbl ? lbl.value : 'Nhiệm vụ', icon, color, bg };
+                    const style = getTaskStyle(id, lbl ? lbl.value : '');
+                    tasks[id] = { url: inp.value, label: lbl ? lbl.value : 'Nhiệm vụ', ...style };
                 }
             });
-
             if (Object.keys(tasks).length === 0) return showToast("Thêm ít nhất 1 nhiệm vụ", "error");
 
             document.getElementById('global-loader').classList.remove('hidden');
             try {
                 const payload = { title, subtitle, note, userNote, destName, type, destUrl, noteContent, tasks, active: true, createdAt: new Date().toISOString() };
                 let resultId = docId;
-                
-                if (docId) {
-                    await window.updateDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', docId), payload);
-                    showToast("Đã cập nhật!", "success");
-                } else {
-                    const docRef = await window.addDoc(window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'links'), payload);
-                    resultId = docRef.id;
-                    showToast("Tạo thành công!", "success");
-                }
+                if (docId) { await window.updateDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', docId), payload); showToast("Đã cập nhật!", "success"); } 
+                else { const docRef = await window.addDoc(window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'links'), payload); resultId = docRef.id; showToast("Tạo thành công!", "success"); }
                 
                 const finalLink = window.location.origin + window.location.pathname + "?id=" + resultId;
-                document.getElementById('resultLink').value = finalLink;
-                document.getElementById('previewLink').href = finalLink;
-                document.getElementById('resultArea').classList.remove('hidden');
-                document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
-                
-                if(docId) { // Reset Edit Mode UI
-                    document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Tạo Link';
-                    document.getElementById('edit_doc_id').value = "";
-                    document.getElementById('formTitle').innerText = "Thông tin cơ bản";
-                    document.getElementById('editModeBadge').classList.add('hidden');
-                }
-            } catch (e) { console.error(e); showToast("Lỗi hệ thống", "error"); } 
-            finally { document.getElementById('global-loader').classList.add('hidden'); }
+                document.getElementById('resultLink').value = finalLink; document.getElementById('previewLink').href = finalLink;
+                document.getElementById('resultArea').classList.remove('hidden'); document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
+                if(docId) { document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Tạo Link'; document.getElementById('edit_doc_id').value = ""; document.getElementById('formTitle').innerText = "Thông tin cơ bản"; document.getElementById('editModeBadge').classList.add('hidden'); }
+            } catch (e) { showToast("Lỗi hệ thống", "error"); } finally { document.getElementById('global-loader').classList.add('hidden'); }
         };
 
         window.fetchLinks = async () => {
             const list = document.getElementById('links-table-body');
             list.innerHTML = '<tr><td colspan="5" class="py-8 text-center"><div class="loader inline-block border-slate-300 border-t-blue-500"></div></td></tr>';
-            
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'links'));
-                let links = [];
-                querySnapshot.forEach((doc) => links.push({ id: doc.id, ...doc.data() }));
+                let links = []; querySnapshot.forEach((doc) => links.push({ id: doc.id, ...doc.data() }));
                 links.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                
                 list.innerHTML = '';
                 if(links.length === 0) { list.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-400">Chưa có link nào</td></tr>'; return; }
-
                 links.forEach(link => {
                     const isActive = link.active !== false;
                     const typeBadge = link.type === 'note' ? '<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold">NOTE</span>' : '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">LINK</span>';
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-50 transition border-b border-slate-50";
-                    tr.innerHTML = `
-                        <td class="py-4 px-6">
-                            <div class="font-bold text-slate-800 truncate max-w-[200px]">${link.title}</div>
-                            <div class="text-xs text-slate-400">${new Date(link.createdAt).toLocaleDateString('vi-VN')}</div>
-                        </td>
-                        <td class="py-4 px-6 text-sm text-slate-500">${link.note || '-'}</td>
-                        <td class="py-4 px-6 text-center">${typeBadge}</td>
-                        <td class="py-4 px-6 text-center">
-                            <label class="ios-switch scale-90">
-                                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)">
-                                <span class="slider"></span>
-                            </label>
-                        </td>
-                        <td class="py-4 px-6 text-right">
-                            <button onclick="editLink('${link.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded transition mr-1"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-slate-500 hover:bg-slate-100 p-2 rounded transition mr-1"><i class="fa-regular fa-copy"></i></button>
-                            <button onclick="deleteLink('${link.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded transition"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    `;
+                    const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 transition border-b border-slate-50";
+                    tr.innerHTML = `<td class="py-4 px-6"><div class="font-bold text-slate-800 truncate max-w-[200px]">${link.title}</div><div class="text-xs text-slate-400">${new Date(link.createdAt).toLocaleDateString('vi-VN')}</div></td><td class="py-4 px-6 text-sm text-slate-500">${link.note || '-'}</td><td class="py-4 px-6 text-center">${typeBadge}</td><td class="py-4 px-6 text-center"><label class="ios-switch scale-90"><input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)"><span class="slider"></span></label></td><td class="py-4 px-6 text-right"><button onclick="editLink('${link.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded transition mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-slate-500 hover:bg-slate-100 p-2 rounded transition mr-1"><i class="fa-regular fa-copy"></i></button><button onclick="deleteLink('${link.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded transition"><i class="fa-solid fa-trash"></i></button></td>`;
                     list.appendChild(tr);
                 });
             } catch (e) { list.innerHTML = '<tr><td colspan="5" class="text-red-500 text-center py-4">Lỗi tải dữ liệu</td></tr>'; }
         };
 
         window.toggleStatus = async (id, status) => { try { await window.updateDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id), { active: status }); } catch (e) {} };
+        window.deleteLink = async (id) => { if(confirm("Xóa vĩnh viễn?")) { await window.deleteDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id)); showToast("Đã xóa", "success"); fetchLinks(); } };
 
         window.editLink = async (id) => {
             document.getElementById('global-loader').classList.remove('hidden');
@@ -804,27 +406,13 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     switchTab('stu');
-                    
-                    document.getElementById('edit_doc_id').value = id;
-                    document.getElementById('formTitle').innerText = "Đang chỉnh sửa";
-                    document.getElementById('editModeBadge').classList.remove('hidden');
-                    document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi';
-                    
-                    document.getElementById('i_ttl').value = data.title;
-                    document.getElementById('i_sttl').value = data.subtitle;
-                    document.getElementById('i_note').value = data.note || '';
-                    document.getElementById('i_user_note').value = data.userNote || '';
-                    document.getElementById('i_dest_name').value = data.destName;
+                    document.getElementById('edit_doc_id').value = id; document.getElementById('formTitle').innerText = "Đang chỉnh sửa"; document.getElementById('editModeBadge').classList.remove('hidden'); document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi';
+                    document.getElementById('i_ttl').value = data.title; document.getElementById('i_sttl').value = data.subtitle; document.getElementById('i_note').value = data.note || ''; document.getElementById('i_user_note').value = data.userNote || ''; document.getElementById('i_dest_name').value = data.destName;
                     
                     const type = data.type || 'link';
-                    // Switch UI
                     document.querySelector(`input[name="destType"][value="${type}"]`).click();
-                    
-                    // FIXED: Set values for BOTH inputs explicitly regardless of current UI state
-                    document.getElementById('i_dest_url').value = data.destUrl || '';
-                    document.getElementById('i_dest_note').value = data.noteContent || '';
+                    document.getElementById('i_dest_url').value = data.destUrl || ''; document.getElementById('i_dest_note').value = data.noteContent || '';
 
-                    // Reset Inputs
                     document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
                     document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
                     document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
@@ -832,107 +420,49 @@
                     if(data.tasks) {
                         for (const [key, taskData] of Object.entries(data.tasks)) {
                             let grp = document.getElementById(`grp_${key}`);
-                            if(!grp) { 
-                                const platform = key.split('_')[0]; 
-                                addTask(platform, key, taskData.label, taskData.url); 
-                                continue; 
-                            }
-                            const inp = grp.querySelector('input[type="url"]');
-                            const lbl = grp.querySelector('input[type="text"]');
-                            
+                            if(!grp) { const platform = key.split('_')[0]; addTask(platform, key, taskData.label, taskData.url); continue; }
+                            const inp = grp.querySelector('input[type="url"]'), lbl = grp.querySelector('input[type="text"]');
                             if (grp && inp) {
-                                grp.classList.add('active');
-                                inp.value = typeof taskData === 'string' ? taskData : taskData.url;
+                                grp.classList.add('active'); inp.value = typeof taskData === 'string' ? taskData : taskData.url;
                                 if(lbl && typeof taskData === 'object') lbl.value = taskData.label;
-                                
-                                const btn = document.querySelector(`button[onclick*="'${key}'"]`);
-                                if(btn) btn.classList.add('active');
+                                const btn = document.querySelector(`button[onclick*="'${key}'"]`); if(btn) btn.classList.add('active');
                             }
                         }
                     }
                 }
-            } catch(e) { console.log(e); } finally { document.getElementById('global-loader').classList.add('hidden'); }
+            } catch(e) {} finally { document.getElementById('global-loader').classList.add('hidden'); }
         };
 
-        window.deleteLink = async (id) => { 
-            if(confirm("Xóa vĩnh viễn?")) { 
-                await window.deleteDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id)); 
-                showToast("Đã xóa", "success"); 
-                fetchLinks(); 
-            } 
-        };
-
-        // --- USER LOGIC ---
+        // USER VIEW
         let done=0, req=0, finalData=null, tasksList=[];
-
         window.loadUserLink = async (id) => {
             try {
                 const docSnap = await window.getDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id));
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    if(data.active === false) {
-                        document.getElementById('u_title').innerText = "Link tạm khóa";
-                        document.getElementById('u_subtitle').innerText = "Liên kết bị tắt bởi Admin.";
-                    } else renderUserView(data);
-                } else {
-                    document.getElementById('u_title').innerText = "Không tìm thấy";
-                    document.getElementById('u_subtitle').innerText = "Link không tồn tại.";
-                }
+                    if(data.active === false) { document.getElementById('u_title').innerText = "Link tạm khóa"; document.getElementById('u_subtitle').innerText = "Liên kết bị tắt bởi Admin."; } 
+                    else renderUserView(data);
+                } else { document.getElementById('u_title').innerText = "Không tìm thấy"; document.getElementById('u_subtitle').innerText = "Link không tồn tại."; }
             } catch (e) { document.getElementById('u_title').innerText = "Lỗi kết nối"; }
         };
 
         function renderUserView(data) {
-            document.getElementById('u_title').innerText = data.title;
-            document.getElementById('u_subtitle').innerText = data.subtitle;
-            finalData = data; 
-            
+            document.getElementById('u_title').innerText = data.title; document.getElementById('u_subtitle').innerText = data.subtitle; finalData = data;
             const noteArea = document.getElementById('u_note_area');
-            if(data.userNote) {
-                noteArea.innerHTML = `<span class="flex-1">${data.userNote}</span>`;
-                noteArea.classList.remove('hidden');
-            } else { noteArea.classList.add('hidden'); }
+            if(data.userNote) { noteArea.innerHTML = `<span class="flex-1">${data.userNote}</span>`; noteArea.classList.remove('hidden'); } else noteArea.classList.add('hidden');
 
-            const list = document.getElementById('u_tasks');
-            list.innerHTML = '';
-            done = 0; req = 0; tasksList = [];
-
+            const list = document.getElementById('u_tasks'); list.innerHTML = ''; done = 0; req = 0; tasksList = [];
             if(data.tasks) {
-                const entries = Object.entries(data.tasks);
-                req = entries.length;
-
+                const entries = Object.entries(data.tasks); req = entries.length;
                 entries.forEach(([key, taskData], idx) => {
-                    const label = taskData.label || "Nhiệm vụ";
-                    const url = taskData.url;
-                    let icon = taskData.icon || 'fa-link', color = taskData.color || 'text-slate-600', bg = taskData.bg || 'bg-slate-100';
-                    if(!taskData.icon) {
-                        if(key.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; }
-                        else if(key.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
-                        else if(key.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; }
-                        else if(key.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; }
-                    }
+                    const label = taskData.label || "Nhiệm vụ", url = taskData.url;
+                    let { icon, color, bg } = taskData;
+                    if(!icon) { const style = getTaskStyle(key); icon = style.icon; color = style.color; bg = style.bg; }
 
-                    const isFirst = idx === 0;
-                    const isDisabled = !isFirst;
-
-                    const div = document.createElement('div');
-                    div.id = `task-card-${idx}`;
-                    div.className = `task-row ${isDisabled ? 'disabled' : 'cursor-pointer'}`;
-                    
-                    div.innerHTML = `
-                        <div class="task-icon-box ${bg} ${color}">
-                            <i class="fa-brands ${icon} ${icon.includes('fa-solid')?'fa-solid':''}"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-slate-800 text-sm leading-tight mb-0.5">${label}</h4>
-                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wide status-text">${isDisabled ? 'Đang khóa' : 'Nhấn để mở'}</p>
-                        </div>
-                        <div id="status-${idx}" class="text-slate-300">
-                            ${isDisabled ? '<i class="fa-solid fa-lock text-sm"></i>' : '<i class="fa-solid fa-chevron-right text-lg"></i>'}
-                        </div>
-                    `;
-                    div.onclick = () => doTask(idx, url);
-                    list.appendChild(div);
-                    tasksList.push({ id: idx, url: url, done: false });
+                    const isDisabled = idx !== 0, div = document.createElement('div');
+                    div.id = `task-card-${idx}`; div.className = `task-row ${isDisabled ? 'disabled' : 'cursor-pointer'}`;
+                    div.innerHTML = `<div class="task-icon-box ${bg} ${color}"><i class="fa-brands ${icon} ${icon.includes('fa-solid')?'fa-solid':''}"></i></div><div class="flex-1"><h4 class="font-bold text-slate-800 text-sm leading-tight mb-0.5">${label}</h4><p class="text-[11px] text-slate-400 font-bold uppercase tracking-wide status-text">${isDisabled ? 'Đang khóa' : 'Nhấn để mở'}</p></div><div id="status-${idx}" class="text-slate-300">${isDisabled ? '<i class="fa-solid fa-lock text-sm"></i>' : '<i class="fa-solid fa-chevron-right text-lg"></i>'}</div>`;
+                    div.onclick = () => doTask(idx, url); list.appendChild(div); tasksList.push({ id: idx, url: url, done: false });
                 });
             }
             resetLockBtn(data.destName);
@@ -941,63 +471,35 @@
         function doTask(idx, url) {
             const card = document.getElementById(`task-card-${idx}`);
             if(tasksList[idx].done || card.classList.contains('disabled') || card.classList.contains('active')) return;
-
             window.open(url, '_blank');
-
-            card.classList.add('active'); // Loading state style
-            const icon = document.getElementById(`status-${idx}`);
-            const text = card.querySelector('.status-text');
-            
-            icon.innerHTML = '<div class="mini-loader"></div>';
-            text.innerText = "Đang kiểm tra...";
-            text.className = "text-[11px] text-blue-600 font-bold uppercase tracking-wide status-text";
+            card.classList.add('active'); const icon = document.getElementById(`status-${idx}`), text = card.querySelector('.status-text');
+            icon.innerHTML = '<div class="mini-loader"></div>'; text.innerText = "Đang kiểm tra..."; text.className = "text-[11px] text-blue-600 font-bold uppercase tracking-wide status-text";
 
             setTimeout(() => {
-                tasksList[idx].done = true;
-                done++;
-                
-                card.classList.remove('active');
-                card.style.opacity = "1";
-                card.style.backgroundColor = "#F0FDF4"; 
-                card.style.borderColor = "#DCFCE7";
-                
-                icon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500 text-xl"></i>';
-                text.innerText = "Hoàn thành";
-                text.className = "text-[11px] text-green-600 font-bold uppercase tracking-wide status-text";
-
+                tasksList[idx].done = true; done++;
+                card.classList.remove('active'); card.style.opacity = "1"; card.style.backgroundColor = "#F0FDF4"; card.style.borderColor = "#DCFCE7";
+                icon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500 text-xl"></i>'; text.innerText = "Hoàn thành"; text.className = "text-[11px] text-green-600 font-bold uppercase tracking-wide status-text";
                 if (idx + 1 < tasksList.length) {
-                    const nextCard = document.getElementById(`task-card-${idx+1}`);
-                    const nextIcon = document.getElementById(`status-${idx+1}`);
-                    const nextText = nextCard.querySelector('.status-text');
-
-                    nextCard.classList.remove('disabled');
-                    nextIcon.innerHTML = '<i class="fa-solid fa-chevron-right text-slate-400"></i>';
-                    nextText.innerText = "Nhấn để mở";
+                    const nextCard = document.getElementById(`task-card-${idx+1}`), nextIcon = document.getElementById(`status-${idx+1}`), nextText = nextCard.querySelector('.status-text');
+                    nextCard.classList.remove('disabled'); nextIcon.innerHTML = '<i class="fa-solid fa-chevron-right text-slate-400"></i>'; nextText.innerText = "Nhấn để mở";
                 }
-
                 checkUnlock();
             }, 5000); 
         }
 
         function resetLockBtn(name) {
             const btn = document.getElementById('unlockBtn');
-            btn.disabled = true;
-            btn.className = "w-full bg-slate-100 text-slate-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all shadow-none border border-transparent";
+            btn.disabled = true; btn.className = "w-full bg-slate-100 text-slate-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all shadow-none border border-transparent";
             btn.innerHTML = `<i class="fa-solid fa-lock"></i><span>${name || 'Đang khóa'}</span>`;
-            document.getElementById('progressArea').classList.add('hidden');
-            document.getElementById('noteResult').classList.add('hidden');
+            document.getElementById('progressArea').classList.add('hidden'); document.getElementById('noteResult').classList.add('hidden');
         }
 
         function checkUnlock() {
             const pct = req===0?100:Math.round((done/req)*100);
-            document.getElementById('progressArea').classList.remove('hidden');
-            document.getElementById('progressBar').style.width = `${pct}%`;
-            document.getElementById('progressText').innerText = `${pct}%`;
-            
+            document.getElementById('progressArea').classList.remove('hidden'); document.getElementById('progressBar').style.width = `${pct}%`; document.getElementById('progressText').innerText = `${pct}%`;
             if(done >= req) {
                 const btn = document.getElementById('unlockBtn');
-                btn.disabled = false;
-                btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 animate-bounce cursor-pointer transform transition-transform";
+                btn.disabled = false; btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 animate-bounce cursor-pointer transform transition-transform";
                 btn.innerHTML = `<i class="fa-solid fa-unlock-keyhole"></i><span>Mở Khóa Ngay</span>`;
                 if(navigator.vibrate) navigator.vibrate(200);
             }
@@ -1005,24 +507,13 @@
 
         window.doUnlock = () => {
             if(!finalData) return;
-            const btn = document.getElementById('unlockBtn');
-            btn.classList.remove('animate-bounce');
-            
+            const btn = document.getElementById('unlockBtn'); btn.classList.remove('animate-bounce');
             if(finalData.type === 'note') {
-                const noteArea = document.getElementById('noteResult');
-                const noteContent = document.getElementById('noteContentDisplay');
-                noteContent.value = finalData.noteContent;
-                noteArea.classList.remove('hidden');
-                noteArea.scrollIntoView({ behavior: 'smooth' });
-                
-                btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Đã Mở Ghi Chú</span>`;
-                btn.disabled = true; 
-                btn.className = "w-full bg-slate-800 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-default";
-            } else {
-                if(finalData.destUrl) window.location.href = finalData.destUrl;
-            }
+                const noteArea = document.getElementById('noteResult'); document.getElementById('noteContentDisplay').value = finalData.noteContent;
+                noteArea.classList.remove('hidden'); noteArea.scrollIntoView({ behavior: 'smooth' });
+                btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Đã Mở Ghi Chú</span>`; btn.disabled = true; btn.className = "w-full bg-slate-800 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-default";
+            } else if(finalData.destUrl) window.location.href = finalData.destUrl;
         }
-        
         window.goToDest = window.doUnlock;
     </script>
 </body>
