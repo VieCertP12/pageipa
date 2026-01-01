@@ -1,54 +1,36 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="vi">
 <head>
-    <title>Link Unlocker Premium - Secure Version</title>
+    <title>Link4Sub Premium - Super Secure</title>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://link4sub.com/home/css/style.css?v=22025">
-    
     <style>
         body { font-family: 'Inter', sans-serif !important; -webkit-user-select: none; user-select: none; }
-        .card-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        .btn-hover-up { transition: all 0.2s; }
         .btn-hover-up:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(237, 20, 61, 0.3); }
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .my-loader { border-top-color: #ed143d; animation: spinner 1s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { min-width: 250px; padding: 12px 20px; border-radius: 8px; color: white; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease-out forwards; }
-        .toast.success { background-color: #10b981; }
-        .toast.error { background-color: #ef4444; }
-        .toast.info { background-color: #3b82f6; }
+        .toast { min-width: 250px; padding: 12px 20px; border-radius: 8px; color: white; font-size: 14px; animation: slideIn 0.3s forwards; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
     </style>
 </head>
-
 <body class="bg-[#f7f7fc]">
     <div id="toast-container"></div>
 
     <div class="fixed top-0 left-0 w-full bg-white shadow-sm z-50 h-16 flex items-center justify-between px-6">
         <div class="flex items-center gap-2">
             <div class="bg-red-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold"><i class="fa-solid fa-link"></i></div>
-            <span class="font-bold text-gray-800 text-lg">Link4Sub</span>
+            <span class="font-bold text-gray-800 text-lg">Link4Sub Admin</span>
         </div>
-        <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-moon"></i></button>
     </div>
 
     <div class="min-h-screen pt-24 pb-10 px-4 flex flex-col items-center">
-        <div id="mainContainer" class="w-full max-w-4xl">
-            <div class="flex flex-col items-center justify-center py-20">
-                <div class="my-loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-                <p class="text-gray-500 font-medium">Đang khởi tạo hệ thống bảo mật...</p>
-            </div>
-        </div>
-        <div class="mt-8 text-center text-xs text-gray-400">
-            &copy; 2025 - LINK4SUB PREMIUM SECURITY <br>
-            <a href="?admin=true" class="opacity-0 hover:opacity-100 transition">Admin Panel</a>
+        <div id="mainContainer" class="w-full max-w-5xl">
+            <div class="flex justify-center py-20"><div class="my-loader rounded-full border-4 h-12 w-12"></div></div>
         </div>
     </div>
 
@@ -72,188 +54,185 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        let currentTasks = []; 
-        let editModeId = null;
         const urlParams = new URLSearchParams(window.location.search);
         const linkId = urlParams.get('id');
         const container = document.getElementById('mainContainer');
-
-        window.showToast = (msg, type = 'info') => {
-            const tc = document.getElementById('toast-container');
-            const t = document.createElement('div');
-            t.className = `toast ${type}`;
-            t.innerHTML = `<span>${msg}</span>`;
-            tc.appendChild(t);
-            setTimeout(() => { t.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => t.remove(), 300); }, 3000);
-        }
-
-        const platformConfig = {
-            youtube: { color: 'bg-[#ff0000]', icon: 'fa-youtube', actions: [{ label: 'Sub', defaultText: 'Subscribe on YouTube' }] },
-            facebook: { color: 'bg-[#1877f2]', icon: 'fa-facebook', actions: [{ label: 'Follow', defaultText: 'Follow Facebook' }] },
-            tiktok: { color: 'bg-black', icon: 'fa-tiktok', actions: [{ label: 'Follow', defaultText: 'Follow TikTok' }] }
-        };
-
-        async function init() {
-            if (linkId) renderIntermediatePage();
-            else renderAuthCheck();
-        }
-        init();
-
-        function renderIntermediatePage() {
-            container.innerHTML = `<div class="bg-white rounded-2xl shadow-sm p-10 text-center max-w-lg mx-auto fade-in">
-                <h2 class="text-3xl font-bold mb-8 text-gray-900">Link Bảo Mật Sẵn Sàng</h2>
-                <button onclick="window.goToTasks()" class="bg-[#ed143d] text-white py-3 px-8 rounded-lg font-bold w-full btn-hover-up">Tiếp tục mở khóa</button>
-            </div>`;
-            window.goToTasks = () => loadAndRenderTaskPage(linkId);
-        }
-
+        let currentTasks = [];
         let completedSet = new Set();
         let currentLinkData = null;
 
-        async function loadAndRenderTaskPage(id) {
-            container.innerHTML = `<div class="flex justify-center py-20"><div class="my-loader rounded-full border-4 h-10 w-10"></div></div>`;
-            try {
-                const snap = await getDoc(doc(db, "links", id));
-                if (!snap.exists()) { container.innerHTML = "Link không tồn tại"; return; }
-                currentLinkData = snap.data();
-                updateDoc(doc(db, "links", id), { views: increment(1) });
-                renderUserTasks();
-            } catch (e) { showToast("Lỗi kết nối database", "error"); }
+        window.showToast = (msg, type='info') => {
+            const t = document.createElement('div');
+            t.className = `toast p-4 ${type === 'success' ? 'bg-green-500' : 'bg-blue-500'}`;
+            t.innerText = msg;
+            document.getElementById('toast-container').appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        };
+
+        const platformConfig = {
+            youtube: { color: 'bg-red-600', icon: 'fa-youtube' },
+            facebook: { color: 'bg-blue-600', icon: 'fa-facebook' }
+        };
+
+        // --- 1. XỬ LÝ VÉ TRUY CẬP (TOKEN) KHI TẢI TRANG ---
+        async function checkToken() {
+            const token = urlParams.get('token');
+            if (token) {
+                try {
+                    const tokenSnap = await getDoc(doc(db, "link_gioi_han", token));
+                    if (tokenSnap.exists()) {
+                        const data = tokenSnap.data();
+                        if (!data.used && Date.now() < data.expireAt) {
+                            await updateDoc(doc(db, "link_gioi_han", token), { used: true });
+                            window.location.href = data.destUrl;
+                            return true;
+                        }
+                    }
+                    alert("Link hết hạn hoặc không hợp lệ!");
+                    window.location.href = window.location.pathname + `?id=${linkId}`;
+                } catch(e) { console.error(e); }
+            }
+            return false;
         }
 
-        function renderUserTasks() {
+        async function init() {
+            const hasToken = await checkToken();
+            if (hasToken) return;
+
+            if (linkId) loadUserPage();
+            else onAuthStateChanged(auth, u => u ? renderAdmin() : renderLogin());
+        }
+        init();
+
+        // --- 2. GIAO DIỆN NGƯỜI DÙNG ---
+        async function loadUserPage() {
+            const snap = await getDoc(doc(db, "links", linkId));
+            if (!snap.exists() || snap.data().isActive === false) {
+                container.innerHTML = `<div class="bg-white p-10 rounded-xl shadow text-center">Link không tồn tại hoặc đã bị tắt.</div>`;
+                return;
+            }
+            currentLinkData = snap.data();
+            updateDoc(doc(db, "links", linkId), { views: increment(1) });
+            renderTasks();
+        }
+
+        function renderTasks() {
             const tasks = currentLinkData.tasks || [];
-            let tasksHtml = tasks.map((t, i) => {
-                const conf = platformConfig[t.platform] || { color: 'bg-gray-500', icon: 'fa-link' };
+            let html = tasks.map((t, i) => {
                 const isDone = completedSet.has(i);
                 const isLocked = i > 0 && !completedSet.has(i - 1);
-                return `<div onclick="${!isDone && !isLocked ? `window.doTask(${i}, '${t.url}')` : ''}" class="p-4 rounded-lg mb-3 flex justify-between items-center text-white ${isDone ? 'bg-green-500' : isLocked ? 'bg-gray-300 opacity-50 grayscale' : conf.color + ' btn-hover-up cursor-pointer'}">
-                    <div class="flex items-center gap-3"><i class="fa-brands ${conf.icon}"></i><b>${t.label}</b></div>
-                    <div id="loader-${i}" class="hidden"><i class="fa-solid fa-spinner fa-spin"></i></div>
-                    <i class="fa-solid ${isDone ? 'fa-check-circle' : isLocked ? 'fa-lock' : 'fa-arrow-right'}"></i>
+                const conf = platformConfig[t.platform] || { color: 'bg-gray-600', icon: 'fa-link' };
+                return `<div onclick="${!isDone && !isLocked ? `doTask(${i},'${t.url}')` : ''}" class="p-4 rounded-lg mb-3 flex justify-between text-white ${isDone ? 'bg-green-500' : isLocked ? 'bg-gray-300 opacity-50' : conf.color + ' cursor-pointer'}">
+                    <span><i class="fa-brands ${conf.icon} mr-2"></i>${t.label}</span>
+                    <i class="fa-solid ${isDone ? 'fa-check' : isLocked ? 'fa-lock' : 'fa-arrow-right'}"></i>
                 </div>`;
             }).join('');
 
-            container.innerHTML = `<div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg fade-in">
-                <h1 class="text-xl font-bold mb-6 text-center text-gray-800">${currentLinkData.title}</h1>
-                <div class="mb-6">${tasksHtml}</div>
-                <button id="unlock-btn" class="w-full py-4 rounded-lg font-bold text-white bg-gray-400 cursor-not-allowed opacity-70">LINK ĐANG KHÓA</button>
+            container.innerHTML = `<div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                <h1 class="text-xl font-bold mb-6 text-center">${currentLinkData.title}</h1>
+                ${html}
+                <button id="unlock-btn" class="w-full py-4 mt-4 rounded-lg font-bold text-white bg-gray-400 opacity-50">ĐANG KHÓA</button>
             </div>`;
-            checkUnlockState();
-        }
-
-        window.doTask = (idx, url) => {
-            window.open(url, '_blank');
-            setTimeout(() => { completedSet.add(idx); renderUserTasks(); }, 7000);
-        };
-
-        function checkUnlockState() {
-            const done = completedSet.size;
-            const total = currentLinkData.tasks.length;
-            if (done >= total) {
+            
+            if (completedSet.size >= tasks.length) {
                 const btn = document.getElementById('unlock-btn');
-                btn.className = "w-full py-4 rounded-lg font-bold text-white bg-green-500 hover:bg-green-600 btn-hover-up cursor-pointer animate-pulse";
-                btn.innerText = "NHẬN LINK NGAY";
+                btn.className = "w-full py-4 mt-4 rounded-lg font-bold text-white bg-green-500 animate-pulse cursor-pointer";
+                btn.innerText = "NHẬN LINK";
                 btn.onclick = async () => {
-                    showToast("Đang lấy link từ kho bí mật...", "info");
-                    try {
-                        // TRUY CẬP KHO BÍ MẬT LINKS_PRIVATE
-                        const secretSnap = await getDoc(doc(db, "links_private", linkId));
-                        if (secretSnap.exists()) {
-                            window.open(secretSnap.data().destUrl, '_blank');
-                        } else { showToast("Không tìm thấy link trong kho!", "error"); }
-                    } catch (e) { showToast("Bảo mật chặn truy cập!", "error"); }
+                    showToast("Đang tạo vé truy cập...");
+                    const secret = await getDoc(doc(db, "an_link", linkId));
+                    const tokenId = Math.random().toString(36).substring(2, 15);
+                    await setDoc(doc(db, "link_gioi_han", tokenId), {
+                        destUrl: secret.data().destUrl,
+                        expireAt: Date.now() + 30000,
+                        used: false
+                    });
+                    window.location.href = window.location.pathname + `?id=${linkId}&token=${tokenId}`;
                 };
             }
         }
+        window.doTask = (i, url) => { window.open(url, '_blank'); setTimeout(() => { completedSet.add(i); renderTasks(); }, 7000); };
 
-        // --- ADMIN MODE ---
-        function renderAuthCheck() { onAuthStateChanged(auth, user => { if(user) renderBuilder(); else renderLogin(); }); }
+        // --- 3. GIAO DIỆN ADMIN ---
         function renderLogin() {
-            container.innerHTML = `<div class="w-full max-w-sm mx-auto bg-white p-8 rounded-xl shadow-lg">
-                <h2 class="text-2xl font-bold mb-6 text-center">Admin Access</h2>
-                <input type="email" id="email" placeholder="Email" class="w-full p-3 border rounded mb-3">
-                <input type="password" id="pass" placeholder="Password" class="w-full p-3 border rounded mb-6">
-                <button id="btnLogin" class="w-full bg-red-600 text-white p-3 rounded font-bold">LOGIN</button>
+            container.innerHTML = `<div class="max-w-sm mx-auto bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-xl font-bold mb-4">Admin Login</h2>
+                <input id="email" type="email" placeholder="Email" class="w-full p-2 border mb-2 rounded">
+                <input id="pass" type="password" placeholder="Pass" class="w-full p-2 border mb-4 rounded">
+                <button onclick="login()" class="w-full bg-red-600 text-white p-2 rounded font-bold">VÀO HỆ THỐNG</button>
             </div>`;
-            document.getElementById('btnLogin').onclick = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value);
+            window.login = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value);
         }
 
-        function renderBuilder() {
+        async function renderAdmin() {
             container.innerHTML = `<div class="bg-white p-6 rounded-xl shadow-lg">
-                <div class="flex justify-between mb-4"><h2 class="font-bold">Link Builder Premium</h2><button onclick="signOut(auth)" class="text-xs underline text-gray-400">Đăng xuất</button></div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                        <input type="text" id="bTitle" class="w-full p-3 border rounded mb-3" placeholder="Tiêu đề link hiển thị">
-                        <input type="text" id="bDest" class="w-full p-3 border border-green-500 bg-green-50 rounded mb-4" placeholder="Link đích bí mật (itms-services, Drive...)">
+                <div class="flex justify-between mb-6"><b>Quản lý Link</b> <button onclick="signOut(auth)" class="text-xs text-red-500 underline">Đăng xuất</button></div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1 border-r pr-6">
+                        <input id="bTitle" type="text" placeholder="Tiêu đề" class="w-full p-2 border mb-2 rounded text-sm">
+                        <input id="bDest" type="text" placeholder="Link đích bí mật" class="w-full p-2 border border-green-400 mb-2 rounded text-sm bg-green-50">
                         <div class="flex gap-2 mb-4">
-                            <button onclick="window.addT('youtube')" class="bg-red-500 text-white p-2 rounded text-xs">+ YouTube</button>
-                            <button onclick="window.addT('facebook')" class="bg-blue-600 text-white p-2 rounded text-xs">+ Facebook</button>
+                            <button onclick="addT('youtube')" class="bg-red-500 text-white p-2 rounded text-xs">+ YouTube</button>
                         </div>
                         <div id="bTaskList" class="space-y-2 mb-4"></div>
-                        <button id="btnSave" class="w-full bg-red-600 text-white py-3 rounded font-bold shadow-lg">LƯU LINK BẢO MẬT</button>
+                        <button onclick="saveL()" class="w-full bg-red-600 text-white py-3 rounded font-bold">LƯU LINK</button>
                     </div>
-                    <div class="border-l pl-4">
-                        <h3 class="font-bold mb-2">Lịch sử Link</h3>
-                        <div id="historyBody" class="text-sm"></div>
+                    <div class="lg:col-span-2">
+                        <h3 class="font-bold mb-4 text-sm">Danh sách link (Admin có thể xem link gốc)</h3>
+                        <div id="history" class="space-y-3 max-h-[500px] overflow-y-auto pr-2"></div>
                     </div>
                 </div>
             </div>`;
-            document.getElementById('btnSave').onclick = saveLink;
             loadHistory();
         }
 
-        window.addT = (p) => { currentTasks.push({platform: p, label: platformConfig[p].actions[0].defaultText, url: ''}); renderTaskItems(); };
-        window.removeT = (i) => { currentTasks.splice(i, 1); renderTaskItems(); };
-        function renderTaskItems() {
+        window.addT = (p) => { currentTasks.push({platform: p, label: 'Subscribe channel', url: ''}); renderAdminTasks(); };
+        function renderAdminTasks() {
             document.getElementById('bTaskList').innerHTML = currentTasks.map((t, i) => `
-                <div class="p-2 border rounded bg-gray-50 flex flex-col gap-1">
-                    <div class="flex justify-between"><span class="text-[10px] font-bold uppercase">${t.platform}</span><button onclick="window.removeT(${i})" class="text-red-500">×</button></div>
-                    <input type="text" value="${t.label}" onchange="currentTasks[${i}].label=this.value" class="w-full p-1 border rounded text-xs">
-                    <input type="text" value="${t.url}" onchange="currentTasks[${i}].url=this.value" placeholder="Link nhiệm vụ" class="w-full p-1 border rounded text-xs">
+                <div class="p-2 border rounded bg-gray-50 text-xs">
+                    <input value="${t.label}" onchange="currentTasks[${i}].label=this.value" class="w-full mb-1 border-b">
+                    <input value="${t.url}" onchange="currentTasks[${i}].url=this.value" placeholder="Link nhiệm vụ" class="w-full bg-transparent">
                 </div>`).join('');
         }
 
-        async function saveLink() {
+        async function saveL() {
             const title = document.getElementById('bTitle').value;
             const dest = document.getElementById('bDest').value;
-            if(!title || !dest || currentTasks.length === 0) return showToast("Vui lòng điền đủ thông tin!", "error");
-            
-            try {
-                let finalId = editModeId;
-                if (!editModeId) {
-                    // TẠO MỚI
-                    const newDoc = await addDoc(collection(db, "links"), { title, tasks: currentTasks, createdAt: serverTimestamp(), views: 0 });
-                    finalId = newDoc.id;
-                } else {
-                    // CẬP NHẬT
-                    await updateDoc(doc(db, "links", editModeId), { title, tasks: currentTasks });
-                }
-
-                // CẤT LINK VÀO KHO BÍ MẬT LINKS_PRIVATE
-                await setDoc(doc(db, "links_private", finalId), { destUrl: dest });
-                
-                showToast("Đã lưu vào kho bảo mật!", "success");
-                editModeId = null; currentTasks = []; renderBuilder();
-            } catch(e) { showToast("Lỗi: " + e.message, "error"); }
+            const newDoc = await addDoc(collection(db, "links"), { title, tasks: currentTasks, createdAt: serverTimestamp(), views: 0, isActive: true });
+            await setDoc(doc(db, "an_link", newDoc.id), { destUrl: dest });
+            showToast("Đã lưu!", "success");
+            currentTasks = []; renderAdmin();
         }
 
         async function loadHistory() {
-            const snap = await getDocs(query(collection(db, "links"), orderBy("createdAt", "desc")));
-            document.getElementById('historyBody').innerHTML = '';
-            snap.forEach(d => {
+            const q = query(collection(db, "links"), orderBy("createdAt", "desc"));
+            const snap = await getDocs(q);
+            const list = document.getElementById('history');
+            list.innerHTML = '';
+            
+            for (const d of snap.docs) {
                 const data = d.data();
+                // Admin lấy link gốc từ kho an_link để hiển thị
+                const secret = await getDoc(doc(db, "an_link", d.id));
+                const dest = secret.exists() ? secret.data().destUrl : "N/A";
                 const shareUrl = `${window.location.origin}${window.location.pathname}?id=${d.id}`;
-                document.getElementById('historyBody').innerHTML += `<div class="p-2 border-b flex justify-between items-center">
-                    <div><b>${data.title}</b><br><span class="text-[10px] text-gray-400">${d.id}</span></div>
+                
+                list.innerHTML += `<div class="p-4 border rounded-lg bg-gray-50 flex justify-between items-center text-xs">
+                    <div class="flex-1 truncate mr-4">
+                        <b class="text-sm">${data.title}</b> <span class="text-blue-500">(${data.views} views)</span><br>
+                        <span class="text-gray-400">ID: ${d.id}</span><br>
+                        <span class="text-green-600 font-medium">Link đích: ${dest}</span>
+                    </div>
                     <div class="flex gap-2">
-                        <button onclick="navigator.clipboard.writeText('${shareUrl}'); showToast('Đã copy', 'success')" class="text-blue-500"><i class="fa-regular fa-copy"></i></button>
-                        <button onclick="window.delL('${d.id}')" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="toggleL('${d.id}', ${data.isActive})" class="${data.isActive ? 'text-green-500' : 'text-gray-400'}"><i class="fa-solid fa-power-off"></i></button>
+                        <button onclick="navigator.clipboard.writeText('${shareUrl}'); showToast('Đã copy!')" class="text-blue-500"><i class="fa-copy fa-solid"></i></button>
+                        <button onclick="delL('${d.id}')" class="text-red-500"><i class="fa-trash fa-solid"></i></button>
                     </div>
                 </div>`;
-            });
+            }
         }
-        window.delL = async (id) => { if(confirm("Xoá link?")) { await deleteDoc(doc(db, "links", id)); await deleteDoc(doc(db, "links_private", id)); loadHistory(); } };
+        window.toggleL = async (id, cur) => { await updateDoc(doc(db, "links", id), { isActive: !cur }); loadHistory(); };
+        window.delL = async (id) => { if(confirm("Xóa?")) { await deleteDoc(doc(db, "links", id)); await deleteDoc(doc(db, "an_link", id)); loadHistory(); } };
     </script>
 </body>
 </html>
