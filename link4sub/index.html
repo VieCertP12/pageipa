@@ -15,7 +15,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; color: #1e293b; overflow: hidden; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow: hidden; }
 
         /* --- UI COMPONENTS --- */
         .pc-input {
@@ -86,21 +86,46 @@
         .loader { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* User View Styles */
-        .user-card-wrapper { max-width: 480px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; background: white; box-shadow: 0 0 40px rgba(0,0,0,0.05); }
+        /* User View Styles - UPDATED */
+        .user-view-container {
+            background-color: #F1F5F9; /* Distinct background */
+            position: absolute; inset: 0; z-index: 50;
+            display: flex; flex-direction: column; overflow-y: auto;
+        }
+        
+        .user-card-wrapper { 
+            max-width: 480px; margin: 0 auto; min-height: 100%; 
+            display: flex; flex-direction: column; 
+            background: white; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.08); 
+        }
         @media(min-width: 768px) {
-            .user-card-wrapper { height: auto; min-height: 80vh; border-radius: 24px; margin-top: 4vh; margin-bottom: 4vh; border: 1px solid #e2e8f0; }
+            .user-card-wrapper { 
+                min-height: auto; 
+                margin-top: 5vh; margin-bottom: 5vh; 
+                border-radius: 24px; 
+                overflow: hidden;
+                border: 1px solid #e2e8f0;
+            }
         }
         
         .task-row {
-            background: white; padding: 16px; border-radius: 12px;
+            background: white; padding: 16px; border-radius: 16px;
             display: flex; align-items: center; margin-bottom: 12px;
-            border: 1px solid #f1f5f9; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-            transition: all 0.2s;
+            border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-        .task-row:hover { border-color: #e2e8f0; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .task-row.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(1); background: #f8fafc; }
+        .task-row:hover { border-color: #e2e8f0; transform: translateY(-2px); box-shadow: 0 8px 12px rgba(0,0,0,0.04); }
+        .task-row.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(1); background: #f8fafc; border-style: dashed; }
         
+        /* Premium Icon Box */
+        .task-icon-box {
+            width: 48px; height: 48px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; flex-shrink: 0;
+            margin-right: 16px;
+        }
+
         .mini-loader { width: 20px; height: 20px; border: 2px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
     </style>
 </head>
@@ -367,9 +392,9 @@
             </div>
         </div>
 
-        <!-- === VIEW: USER (Centered Card) === -->
-        <div id="view-user" class="hidden absolute inset-0 z-50 overflow-y-auto bg-white flex flex-col">
-            <div class="user-card-wrapper w-full flex-1">
+        <!-- === VIEW: USER (Updated User UI) === -->
+        <div id="view-user" class="hidden user-view-container">
+            <div class="user-card-wrapper">
                 <!-- Header -->
                 <div class="relative bg-white pt-10 pb-6 px-6 text-center border-b border-slate-100">
                     <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white text-3xl shadow-lg shadow-blue-500/30">
@@ -392,8 +417,8 @@
                             <i class="fa-solid fa-crown"></i>
                         </div>
                         <div class="text-sm">
-                            <div class="font-bold text-slate-800">Mua Chứng Chỉ iOS VIP?</div>
-                            <div class="text-slate-500 text-xs">Giá rẻ từ 150k tại <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold hover:underline">Muachungchi.com</a></div>
+                            <div class="font-bold text-slate-800">Nếu bạn cài không được?</div>
+                            <div class="text-slate-500 text-xs">Hãy truy cập <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold hover:underline">Muachungchi.com</a>, giá chỉ từ 150k/năm.</div>
                         </div>
                     </div>
                 </div>
@@ -681,9 +706,17 @@
                 
                 if(inp && inp.value) {
                     let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
-                    if(id.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; }
+                    // Improved Icon Detection for User View
+                    if(id.includes('yt')) { 
+                        icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; 
+                        if(lbl && (lbl.value.includes('Like') || lbl.value.includes('Thích'))) icon = 'fa-thumbs-up';
+                        if(lbl && (lbl.value.includes('Comment') || lbl.value.includes('Bình luận'))) icon = 'fa-comment';
+                    }
                     else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
-                    else if(id.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; }
+                    else if(id.includes('tk')) { 
+                        icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; 
+                        if(lbl && (lbl.value.includes('Like') || lbl.value.includes('Tim'))) { icon = 'fa-heart'; color = 'text-pink-500'; }
+                    }
                     else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; }
                     
                     tasks[id] = { url: inp.value, label: lbl ? lbl.value : 'Nhiệm vụ', icon, color, bg };
@@ -886,7 +919,7 @@
                     div.className = `task-row ${isDisabled ? 'disabled' : 'cursor-pointer'}`;
                     
                     div.innerHTML = `
-                        <div class="task-icon ${bg} ${color}">
+                        <div class="task-icon-box ${bg} ${color}">
                             <i class="fa-brands ${icon} ${icon.includes('fa-solid')?'fa-solid':''}"></i>
                         </div>
                         <div class="flex-1">
