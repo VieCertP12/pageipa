@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link4Sub</title>
+    <title>Link4Sub Pro</title>
     
     <!-- Fonts: Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -911,9 +911,18 @@
                     const isDisabled = idx !== 0, div = document.createElement('div');
                     div.id = `task-card-${idx}`; div.className = `task-card ${isDisabled ? 'disabled' : 'cursor-pointer'}`;
                     
+                    // FIX ICON PREFIX
+                    let iconClass = icon;
+                    if (!iconClass.includes('fa-')) iconClass = `fa-${iconClass}`; 
+                    let prefix = 'fa-brands';
+                    // List of icons that should be solid
+                    if (['thumbs-up', 'comment', 'share', 'heart', 'link', 'lock', 'check', 'pen', 'trash', 'circle-info', 'user', 'key', 'clock'].some(x => iconClass.includes(x))) {
+                        prefix = 'fa-solid';
+                    }
+
                     div.innerHTML = `
                         <div class="task-icon-wrapper ${bg} ${color}">
-                            <i class="fa-brands ${icon} ${icon.includes('fa-solid')?'fa-solid':''}"></i>
+                            <i class="${prefix} ${iconClass} ${icon.includes('fa-solid')?'fa-solid':''}"></i>
                         </div>
                         <div class="flex-1 min-w-0">
                             <h4 class="font-bold text-slate-800 text-base leading-tight mb-1 truncate">${label}</h4>
