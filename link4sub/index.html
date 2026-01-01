@@ -8,8 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; color: #1e293b; }
         .hidden { display: none !important; }
         .tab-active { background: #fff !important; color: #2563eb !important; font-weight: 900 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         
@@ -22,74 +24,92 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- STYLES FOR NEW FORM (fgSTU) --- */
+        /* --- FORM STYLES (fgSTU) --- */
         .fgSTU { padding: 20px; }
         
-        /* Platform Buttons (Top) */
-        .stu_l_btn { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 20px; scrollbar-width: none; }
+        /* Platform Buttons (Top Scrollable) */
+        .stu_l_btn { display: flex; gap: 12px; overflow-x: auto; padding: 5px 5px 20px 5px; scrollbar-width: none; }
         .stu_l_btn::-webkit-scrollbar { display: none; }
         .stu_b_ftr {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-width: 80px; height: 80px; border-radius: 16px; background: #fff; border: 2px solid #f1f5f9;
-            color: #64748b; font-weight: 700; font-size: 10px; transition: all 0.2s; cursor: pointer;
+            min-width: 85px; height: 85px; border-radius: 20px; background: #fff; border: 2px solid #e2e8f0;
+            color: #64748b; font-weight: 700; font-size: 10px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
-        .stu_b_ftr svg { width: 24px; height: 24px; margin-top: 5px; fill: currentColor; }
-        .stu_b_ftr:hover, .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); background: #f8fafc; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .stu_b_ftr svg { width: 28px; height: 28px; margin-top: 6px; fill: currentColor; transition: transform 0.2s; }
+        .stu_b_ftr:hover { transform: translateY(-3px); border-color: var(--clr); color: var(--clr); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .stu_b_ftr.active { border-color: var(--clr); color: #fff; background: var(--clr); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .stu_b_ftr.active svg { fill: #fff; }
 
         /* Sub Buttons (Actions) */
-        .stu_ftr_cnt { margin-bottom: 20px; min-height: 10px; }
+        .stu_ftr_cnt { margin-bottom: 25px; min-height: 10px; }
         .stu_ftr { display: none; animation: fadeIn 0.3s ease; }
         .stu_ftr.active { display: block; }
         .stu_iftr { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
         .btn_iftr {
-            display: flex; align-items: center; gap: 8px; padding: 10px 16px;
-            background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
-            font-size: 11px; font-weight: 700; color: #475569; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 8px; padding: 12px 20px;
+            background: #fff; border: 2px solid #e2e8f0; border-radius: 16px;
+            font-size: 12px; font-weight: 700; color: #475569; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .btn_iftr svg { width: 14px; height: 14px; fill: currentColor; opacity: 0.7; }
-        .btn_iftr:hover { background: #f1f5f9; }
-        .btn_iftr.active { background: var(--clr); color: #fff; border-color: var(--clr); }
+        .btn_iftr svg { width: 16px; height: 16px; fill: currentColor; opacity: 0.6; }
+        .btn_iftr:hover { background: #f8fafc; transform: translateY(-1px); }
+        .btn_iftr.active { background: var(--clr); color: #fff; border-color: var(--clr); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn_iftr.active svg { opacity: 1; fill: #fff; }
 
         /* Inputs */
-        .stu_ftr_inp { display: flex; flex-direction: column; gap: 15px; }
+        .stu_ftr_inp { display: flex; flex-direction: column; gap: 16px; }
         .grp { display: none; width: 100%; animation: fadeIn 0.3s ease; }
-        .grp.active, .grp.a { display: block; } /* .grp.a is always visible (title, etc) */
+        .grp.active, .grp.a { display: block; } 
         
         .grp__item { width: 100%; }
-        .grp__label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 6px; }
+        .grp__label { display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 8px; margin-left: 4px; }
         .grp__input-wrapper { position: relative; }
         .grp__input {
-            width: 100%; padding: 12px 12px 12px 45px;
-            background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
-            font-size: 13px; font-weight: 600; outline: none; transition: all 0.2s;
+            width: 100%; padding: 16px 16px 16px 50px;
+            background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px;
+            font-size: 14px; font-weight: 600; outline: none; transition: all 0.2s; color: #1e293b;
         }
-        .grp__input:focus { border-color: #3b82f6; background: #fff; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        .grp__icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
-        .grp__icon svg { width: 18px; height: 18px; }
+        .grp__input:focus { border-color: #3b82f6; background: #fff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+        .grp__icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; display: flex; }
+        .grp__icon svg, .grp__icon i { width: 20px; height: 20px; font-size: 18px; }
 
         /* Submit Area */
-        .stu_ftr_btn { display: flex; gap: 10px; margin-top: 30px; }
+        .stu_ftr_btn { display: flex; gap: 12px; margin-top: 30px; }
         .stu_ftr_btn button[type="submit"] {
-            flex: 1; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white;
-            padding: 14px; border-radius: 14px; font-weight: 800; text-transform: uppercase; font-size: 12px;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: transform 0.2s;
+            flex: 2; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white;
+            padding: 16px; border-radius: 16px; font-weight: 800; text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25); transition: transform 0.2s;
         }
         .stu_ftr_btn button[type="submit"]:hover { transform: scale(1.02); }
         .stu_ftr_btn button[type="button"] {
-            padding: 14px 24px; background: #f1f5f9; color: #64748b; border-radius: 14px; font-weight: 800; font-size: 12px;
+            flex: 1; padding: 16px; background: #f1f5f9; color: #64748b; border-radius: 16px; font-weight: 800; font-size: 13px; transition: background 0.2s;
         }
+        .stu_ftr_btn button[type="button"]:hover { background: #e2e8f0; color: #334155; }
 
-        /* Result Box */
-        .stu_rst { margin-top: 20px; display: none; }
+        /* Result Box - Tinh chỉnh để đẹp hơn */
+        .stu_rst { margin-top: 30px; display: none; animation: fadeIn 0.5s ease; }
         .stu_rst.active { display: block; }
-        .stu_rst div { position: relative; }
+        .stu_rst > div { position: relative; }
         .stu_rst input {
-            width: 100%; padding: 15px 50px 15px 20px; background: #ecfdf5; border: 2px dashed #10b981;
-            border-radius: 12px; font-weight: 700; color: #059669; font-size: 13px;
+            width: 100%; padding: 20px 60px 20px 24px; background: #ecfdf5; border: 2px dashed #10b981;
+            border-radius: 18px; font-weight: 700; color: #059669; font-size: 14px; outline: none;
         }
-        .stu_rst span { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #10b981; }
-        .stu_rst span svg { width: 20px; height: 20px; }
+        .stu_rst span { 
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+            cursor: pointer; color: #fff; background: #10b981;
+            width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); transition: transform 0.2s;
+        }
+        .stu_rst span:hover { transform: translateY(-50%) scale(1.1); }
+        .stu_rst span svg { width: 20px; height: 20px; fill: currentColor; }
+        .stu_rst i { display: none; } /* Hide the text label 'Copy' */
+
+        /* User View Styles */
+        .user-task-card {
+            background: white; border: 1px solid #f1f5f9; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .user-task-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border-color: #e2e8f0; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -98,48 +118,49 @@
     <div id="admin-view" class="hidden">
         <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b z-50 px-6 py-4 flex justify-between items-center shadow-sm">
             <div class="flex items-center gap-2">
-                <div class="bg-blue-600 text-white p-2 rounded-lg font-black text-xl">L4S</div>
-                <span class="font-bold text-slate-700">Creator Studio</span>
+                <div class="bg-blue-600 text-white p-2 rounded-xl font-black text-xl shadow-lg shadow-blue-500/30">L4S</div>
+                <span class="font-bold text-slate-700 tracking-tight">Creator Studio</span>
             </div>
-            <button onclick="window.logout()" class="text-xs font-bold text-red-500 uppercase hover:bg-red-50 px-3 py-2 rounded-lg transition">Đăng xuất</button>
+            <button onclick="window.logout()" class="text-xs font-bold text-red-500 uppercase hover:bg-red-50 px-4 py-2.5 rounded-xl transition">Đăng xuất</button>
         </header>
 
-        <div class="container mx-auto pt-24 pb-10 px-4">
+        <div class="container mx-auto pt-28 pb-10 px-4">
             <div class="flex justify-center mb-10">
-                <div class="bg-gray-200 p-1 rounded-2xl flex gap-1">
+                <div class="bg-white p-1.5 rounded-2xl flex gap-1 shadow-sm border border-slate-100">
                     <button onclick="window.switchTab('create')" id="btn-create" class="px-8 sm:px-12 py-3 rounded-xl text-xs font-black uppercase tab-active transition-all">THIẾT KẾ LINK</button>
                     <button onclick="window.switchTab('manage')" id="btn-manage" class="px-8 sm:px-12 py-3 rounded-xl text-xs font-black uppercase text-gray-400 transition-all">QUẢN LÝ</button>
                 </div>
             </div>
 
             <!-- Create Section (NEW FORM) -->
-            <div id="section-create" class="box max-w-3xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
-                <h2 class="text-center font-black text-xl pt-8 uppercase tracking-tighter text-slate-800" id="form-title">Tạo liên kết mới</h2>
+            <div id="section-create" class="box max-w-3xl mx-auto bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 overflow-hidden border border-white">
+                <h2 class="text-center font-black text-2xl pt-10 pb-2 uppercase tracking-tighter text-slate-800" id="form-title">Tạo liên kết mới</h2>
+                <p class="text-center text-slate-400 text-xs font-bold mb-8 uppercase tracking-widest">Setup in seconds</p>
                 
                 <!-- NEW FORM CODE START -->
                 <form class="fgSTU" id="fgSTU" onsubmit="event.preventDefault(); window.saveL();">
                     <div class="stu_ftr_inp">
                         <div data-cgroup="g_ttl" class="grp a">
                             <div class="grp__item" data-group="g_ttl">
-                                <label class="grp__label" for="i_ttl">Tiêu đề</label>
+                                <label class="grp__label" for="i_ttl">Tiêu đề chính</label>
                                 <div class="grp__input-wrapper">
-                                    <input class="grp__input d stu_fi" id="i_ttl" type="text" name="ttl" placeholder="Nhập tiêu đề.. (tuỳ chọn)" data-in="oth" minlength="4" maxlength="50">
+                                    <input class="grp__input d stu_fi" id="i_ttl" type="text" name="ttl" placeholder="Ví dụ: Hack Game Full Tiền 2025" data-in="oth" minlength="4" maxlength="50">
                                     <span class="grp__icon grp__icon--left"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M5,4V7H10.5V19H13.5V7H19V4H5Z"></path></svg></span>
                                 </div>
                             </div>
                         </div>
                         <div data-cgroup="g_ttl" class="grp a">
                             <div class="grp__item" data-group="g_ttl">
-                                <label class="grp__label" for="i_sttl">Tiêu đề phụ</label>
+                                <label class="grp__label" for="i_sttl">Mô tả phụ</label>
                                 <div class="grp__input-wrapper">
-                                    <input class="grp__input d stu_fi" id="i_sttl" type="text" name="sttl" placeholder="Nhập tiêu đề phụ.. (tuỳ chọn)" data-in="oth" minlength="4" maxlength="400">
+                                    <input class="grp__input d stu_fi" id="i_sttl" type="text" name="sttl" placeholder="Ví dụ: Hoàn thành các bước để mở khóa link..." data-in="oth" minlength="4" maxlength="400">
                                     <span class="grp__icon grp__icon--left"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M5,4V7H10.5V19H13.5V7H19V4H5Z"></path></svg></span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="stu_l_btn">
+                    <div class="stu_l_btn mt-6">
                         <button type="button" class="stu_b_ftr" data-id="yt" style="--clr:#ff0000"><span>YouTube</span><svg fill="currentColor" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
                         <button type="button" class="stu_b_ftr" data-id="tg" style="--clr:#0088cc"><span>Telegram</span><svg fill="currentColor" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
                         <button type="button" class="stu_b_ftr" data-id="tk" style="--clr:#000000"><span>Tiktok</span><svg fill="currentColor" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
@@ -152,77 +173,85 @@
                         <!-- YOUTUBE SECTION -->
                         <div class="stu_ftr" data-ftr="yt">
                             <div class="stu_iftr">
-                                <button type="button" class="btn_iftr" data-id="g_yt1" style="--clr:#ff0000"><span>Đăng ký</span></button>
-                                <button type="button" class="btn_iftr" data-id="g_ytl1" style="--clr:#ff0000"><span>Thích Video</span></button>
-                                <button type="button" class="btn_iftr" data-id="g_ytc1" style="--clr:#ff0000"><span>Bình luận</span></button>
+                                <button type="button" class="btn_iftr" data-id="g_yt1" style="--clr:#ff0000"><span>Đăng ký</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
+                                <button type="button" class="btn_iftr" data-id="g_ytl1" style="--clr:#ff0000"><span>Thích Video</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
+                                <button type="button" class="btn_iftr" data-id="g_ytc1" style="--clr:#ff0000"><span>Bình luận</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
                             </div>
                         </div>
                         <!-- TELEGRAM SECTION -->
                         <div class="stu_ftr" data-ftr="tg">
                             <div class="stu_iftr">
-                                <button type="button" class="btn_iftr" data-id="g_tg1" style="--clr:#0088cc"><span>Tham gia Group</span></button>
-                                <button type="button" class="btn_iftr" data-id="g_tg2" style="--clr:#0088cc"><span>Tham gia Group #2</span></button>
+                                <button type="button" class="btn_iftr" data-id="g_tg1" style="--clr:#0088cc"><span>Tham gia Group</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
+                                <button type="button" class="btn_iftr" data-id="g_tg2" style="--clr:#0088cc"><span>Tham gia Group #2</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
                             </div>
                         </div>
                         <!-- TIKTOK SECTION -->
                         <div class="stu_ftr" data-ftr="tk">
                             <div class="stu_iftr">
-                                <button type="button" class="btn_iftr" data-id="g_tk1" style="--clr:#000000"><span>Theo dõi</span></button>
-                                <button type="button" class="btn_iftr" data-id="g_tkl1" style="--clr:#000000"><span>Thích Video</span></button>
+                                <button type="button" class="btn_iftr" data-id="g_tk1" style="--clr:#000000"><span>Theo dõi</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
+                                <button type="button" class="btn_iftr" data-id="g_tkl1" style="--clr:#000000"><span>Thích Video</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
                             </div>
                         </div>
                         <!-- FACEBOOK SECTION -->
                         <div class="stu_ftr" data-ftr="fb">
                             <div class="stu_iftr">
-                                <button type="button" class="btn_iftr" data-id="g_fb1" style="--clr:#395693"><span>Theo dõi</span></button>
-                                <button type="button" class="btn_iftr" data-id="g_fbl1" style="--clr:#395693"><span>Thích Post</span></button>
+                                <button type="button" class="btn_iftr" data-id="g_fb1" style="--clr:#395693"><span>Theo dõi</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
+                                <button type="button" class="btn_iftr" data-id="g_fbl1" style="--clr:#395693"><span>Thích Post</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
                             </div>
                         </div>
                         <!-- INSTAGRAM SECTION -->
                         <div class="stu_ftr" data-ftr="ig">
                             <div class="stu_iftr">
-                                <button type="button" class="btn_iftr" data-id="g_ig1" style="--clr:#5851DB"><span>Theo dõi</span></button>
-                                <button type="button" class="btn_iftr" data-id="g_igl1" style="--clr:#5851DB"><span>Thích Post</span></button>
+                                <button type="button" class="btn_iftr" data-id="g_ig1" style="--clr:#5851DB"><span>Theo dõi</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
+                                <button type="button" class="btn_iftr" data-id="g_igl1" style="--clr:#5851DB"><span>Thích Post</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
                             </div>
                         </div>
                         <!-- DESTINATION SECTION -->
                         <div class="stu_ftr" data-ftr="dest">
                             <div class="stu_iftr">
-                                <button type="button" class="btn_iftr" data-id="g_lnk1" style="--clr:#00cd4d"><span>Link Đích #1</span></button>
-                                <button type="button" class="btn_iftr" data-id="g_lnk2" style="--clr:#00cd4d"><span>Link Đích #2</span></button>
+                                <button type="button" class="btn_iftr" data-id="g_lnk1" style="--clr:#00cd4d"><span>Link Đích #1</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
+                                <button type="button" class="btn_iftr" data-id="g_lnk2" style="--clr:#00cd4d"><span>Link Đích #2</span><svg viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"></path></svg></button>
                             </div>
                         </div>
                     </div>
 
                     <div class="stu_ftr_inp" id="stuInp">
                         <!-- YouTube Inputs -->
-                        <div data-cgroup="g_yt1" class="grp"><div class="grp__item"><label class="grp__label">Link Kênh YouTube</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_yt1" type="url" name="yt1" placeholder="https://youtube.com/..." data-in="yt" data-label="Đăng Ký Kênh"><span class="grp__icon"><i class="bi bi-youtube"></i></span></div></div></div>
-                        <div data-cgroup="g_ytl1" class="grp"><div class="grp__item"><label class="grp__label">Link Video (Like)</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_ytl1" type="url" name="ytl1" placeholder="https://youtube.com/watch..." data-in="yt" data-label="Like Video"><span class="grp__icon"><i class="bi bi-hand-thumbs-up"></i></span></div></div></div>
-                        <div data-cgroup="g_ytc1" class="grp"><div class="grp__item"><label class="grp__label">Link Video (Comment)</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_ytc1" type="url" name="ytc1" placeholder="https://youtube.com/watch..." data-in="yt" data-label="Comment Video"><span class="grp__icon"><i class="bi bi-chat-dots"></i></span></div></div></div>
+                        <div data-cgroup="g_yt1" class="grp"><div class="grp__item"><label class="grp__label">Link Kênh YouTube</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_yt1" type="url" name="yt1" placeholder="https://youtube.com/channel/..." data-in="yt" data-label="Đăng Ký Kênh"><span class="grp__icon"><i class="bi bi-youtube text-red-600"></i></span></div></div></div>
+                        <div data-cgroup="g_ytl1" class="grp"><div class="grp__item"><label class="grp__label">Link Video (Like)</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_ytl1" type="url" name="ytl1" placeholder="https://youtube.com/watch?v=..." data-in="yt" data-label="Like Video"><span class="grp__icon"><i class="bi bi-hand-thumbs-up-fill text-red-600"></i></span></div></div></div>
+                        <div data-cgroup="g_ytc1" class="grp"><div class="grp__item"><label class="grp__label">Link Video (Comment)</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_ytc1" type="url" name="ytc1" placeholder="https://youtube.com/watch?v=..." data-in="yt" data-label="Comment Video"><span class="grp__icon"><i class="bi bi-chat-text-fill text-red-600"></i></span></div></div></div>
                         
                         <!-- Telegram Inputs -->
-                        <div data-cgroup="g_tg1" class="grp"><div class="grp__item"><label class="grp__label">Link Telegram Group</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_tg1" type="url" name="tg1" placeholder="https://t.me/..." data-in="tg" data-label="Join Telegram"><span class="grp__icon"><i class="bi bi-telegram"></i></span></div></div></div>
-                        <div data-cgroup="g_tg2" class="grp"><div class="grp__item"><label class="grp__label">Link Telegram Group #2</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_tg2" type="url" name="tg2" placeholder="https://t.me/..." data-in="tg" data-label="Join Telegram #2"><span class="grp__icon"><i class="bi bi-telegram"></i></span></div></div></div>
+                        <div data-cgroup="g_tg1" class="grp"><div class="grp__item"><label class="grp__label">Link Telegram Group</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_tg1" type="url" name="tg1" placeholder="https://t.me/..." data-in="tg" data-label="Join Telegram"><span class="grp__icon"><i class="bi bi-telegram text-blue-500"></i></span></div></div></div>
+                        <div data-cgroup="g_tg2" class="grp"><div class="grp__item"><label class="grp__label">Link Telegram Group #2</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_tg2" type="url" name="tg2" placeholder="https://t.me/..." data-in="tg" data-label="Join Telegram #2"><span class="grp__icon"><i class="bi bi-telegram text-blue-500"></i></span></div></div></div>
 
                         <!-- TikTok Inputs -->
-                        <div data-cgroup="g_tk1" class="grp"><div class="grp__item"><label class="grp__label">Link Profile TikTok</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_tk1" type="url" name="tk1" placeholder="https://tiktok.com/@..." data-in="tk" data-label="Follow TikTok"><span class="grp__icon"><i class="bi bi-tiktok"></i></span></div></div></div>
-                        <div data-cgroup="g_tkl1" class="grp"><div class="grp__item"><label class="grp__label">Link Video TikTok</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_tkl1" type="url" name="tkl1" placeholder="https://tiktok.com/..." data-in="tk" data-label="Like TikTok"><span class="grp__icon"><i class="bi bi-heart"></i></span></div></div></div>
+                        <div data-cgroup="g_tk1" class="grp"><div class="grp__item"><label class="grp__label">Link Profile TikTok</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_tk1" type="url" name="tk1" placeholder="https://tiktok.com/@..." data-in="tk" data-label="Follow TikTok"><span class="grp__icon"><i class="bi bi-tiktok text-black"></i></span></div></div></div>
+                        <div data-cgroup="g_tkl1" class="grp"><div class="grp__item"><label class="grp__label">Link Video TikTok</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_tkl1" type="url" name="tkl1" placeholder="https://tiktok.com/video/..." data-in="tk" data-label="Like TikTok"><span class="grp__icon"><i class="bi bi-heart-fill text-black"></i></span></div></div></div>
 
                         <!-- Facebook Inputs -->
-                        <div data-cgroup="g_fb1" class="grp"><div class="grp__item"><label class="grp__label">Link Facebook Profile/Page</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_fb1" type="url" name="fb1" placeholder="https://facebook.com/..." data-in="fb" data-label="Follow Facebook"><span class="grp__icon"><i class="bi bi-facebook"></i></span></div></div></div>
-                        <div data-cgroup="g_fbl1" class="grp"><div class="grp__item"><label class="grp__label">Link Facebook Post</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_fbl1" type="url" name="fbl1" placeholder="https://facebook.com/..." data-in="fb" data-label="Like Post"><span class="grp__icon"><i class="bi bi-hand-thumbs-up"></i></span></div></div></div>
+                        <div data-cgroup="g_fb1" class="grp"><div class="grp__item"><label class="grp__label">Link Facebook Profile/Page</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_fb1" type="url" name="fb1" placeholder="https://facebook.com/..." data-in="fb" data-label="Follow Facebook"><span class="grp__icon"><i class="bi bi-facebook text-blue-700"></i></span></div></div></div>
+                        <div data-cgroup="g_fbl1" class="grp"><div class="grp__item"><label class="grp__label">Link Facebook Post</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_fbl1" type="url" name="fbl1" placeholder="https://facebook.com/posts/..." data-in="fb" data-label="Like Post"><span class="grp__icon"><i class="bi bi-hand-thumbs-up-fill text-blue-700"></i></span></div></div></div>
 
                         <!-- Instagram Inputs -->
-                        <div data-cgroup="g_ig1" class="grp"><div class="grp__item"><label class="grp__label">Link Instagram Profile</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_ig1" type="url" name="ig1" placeholder="https://instagram.com/..." data-in="ig" data-label="Follow Instagram"><span class="grp__icon"><i class="bi bi-instagram"></i></span></div></div></div>
+                        <div data-cgroup="g_ig1" class="grp"><div class="grp__item"><label class="grp__label">Link Instagram Profile</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_ig1" type="url" name="ig1" placeholder="https://instagram.com/..." data-in="ig" data-label="Follow Instagram"><span class="grp__icon"><i class="bi bi-instagram text-pink-600"></i></span></div></div></div>
                         
                         <!-- Destinations -->
-                        <div data-cgroup="g_lnk1" class="grp a"><div class="grp__item"><label class="grp__label">Link Đích Chính</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_lnk1" type="url" name="lnk1" placeholder="Link gốc (Google Drive...)" data-in="dest"><span class="grp__icon"><i class="bi bi-link-45deg"></i></span></div></div></div>
-                        <div data-cgroup="g_lnk2" class="grp"><div class="grp__item"><label class="grp__label">Link Đích Dự Phòng</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_lnk2" type="url" name="lnk2" placeholder="Link dự phòng..." data-in="dest"><span class="grp__icon"><i class="bi bi-link-45deg"></i></span></div></div></div>
+                        <div data-cgroup="g_lnk1" class="grp a"><div class="grp__item"><label class="grp__label">Link Đích Chính (Bắt buộc)</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_lnk1" type="url" name="lnk1" placeholder="https://drive.google.com/..." data-in="dest"><span class="grp__icon"><i class="bi bi-link-45deg text-emerald-500"></i></span></div></div></div>
+                        <div data-cgroup="g_lnk2" class="grp"><div class="grp__item"><label class="grp__label">Link Đích Dự Phòng</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" id="i_lnk2" type="url" name="lnk2" placeholder="https://..." data-in="dest"><span class="grp__icon"><i class="bi bi-link-45deg text-emerald-500"></i></span></div></div></div>
                     </div>
 
                     <div class="stu_ftr_btn">
-                        <button type="submit" id="btnSave">Tạo liên kết</button>
-                        <button type="button" onclick="window.resetForm()">Đặt lại</button>
+                        <button type="submit" id="btnSave">Tạo liên kết ngay</button>
+                        <button type="button" onclick="window.resetForm()">Làm mới</button>
+                    </div>
+
+                    <!-- Result Box -->
+                    <div class="stu_rst">
+                        <div>
+                            <input id="i_rst" type="text" name="rst" readonly onclick="this.select();">
+                            <span onclick="navigator.clipboard.writeText(document.getElementById('i_rst').value); Swal.fire({icon: 'success', title: 'Đã sao chép!', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500});"><svg fill="currentColor" viewBox="0 0 640 512"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4-7.4-44.6s-34.4-6.9-44.6 7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"></path></svg></span>
+                        </div>
                     </div>
                 </form>
                 <!-- NEW FORM CODE END -->
@@ -231,18 +260,18 @@
 
             <!-- Manage Section -->
             <div id="section-manage" class="hidden max-w-5xl mx-auto">
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden p-6">
-                    <h3 class="uppercase font-black text-xs text-slate-400 mb-4 tracking-widest">Danh sách liên kết</h3>
+                <div class="bg-white rounded-[2rem] shadow-lg shadow-slate-100 overflow-hidden p-8 border border-white">
+                    <h3 class="uppercase font-black text-xs text-slate-400 mb-6 tracking-widest pl-2">Thư viện liên kết</h3>
                     <div class="overflow-x-auto">
                         <table class="table w-full text-left">
-                            <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-bold">
+                            <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-bold tracking-wider">
                                 <tr>
-                                    <th class="p-4 rounded-l-xl">Tiêu đề</th>
-                                    <th class="p-4">Views</th>
-                                    <th class="p-4 text-right rounded-r-xl">Hành động</th>
+                                    <th class="p-5 rounded-l-2xl">Tiêu đề</th>
+                                    <th class="p-5">Views</th>
+                                    <th class="p-5 text-right rounded-r-2xl">Hành động</th>
                                 </tr>
                             </thead>
-                            <tbody id="history-body" class="text-sm"></tbody>
+                            <tbody id="history-body" class="text-sm font-medium text-slate-600"></tbody>
                         </table>
                     </div>
                 </div>
@@ -252,39 +281,43 @@
 
     <!-- === LOGIN VIEW === -->
     <div id="login-view" class="hidden min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md border border-slate-100">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-black text-slate-800">Đăng Nhập</h1>
-                <p class="text-slate-400 text-sm font-medium mt-2">Dành cho người tạo link</p>
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl shadow-blue-900/10 w-full max-w-md border border-white relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-black text-slate-800 tracking-tighter">Chào mừng trở lại</h1>
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">Hệ thống quản lý Link4Sub</p>
             </div>
-            <div class="space-y-4">
-                <input id="email" type="email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold text-sm focus:ring-2 focus:ring-blue-500">
-                <input id="password" type="password" placeholder="Mật khẩu" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold text-sm focus:ring-2 focus:ring-blue-500">
-                <button onclick="window.doLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase text-xs shadow-lg shadow-blue-200">Truy cập Dashboard</button>
+            <div class="space-y-5">
+                <input id="email" type="email" placeholder="Email" class="w-full p-5 bg-slate-50 rounded-2xl outline-none font-bold text-sm focus:ring-4 focus:ring-blue-100 focus:bg-white transition">
+                <input id="password" type="password" placeholder="Mật khẩu" class="w-full p-5 bg-slate-50 rounded-2xl outline-none font-bold text-sm focus:ring-4 focus:ring-blue-100 focus:bg-white transition">
+                <button onclick="window.doLogin()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-xl shadow-slate-200 hover:scale-[1.02] transition-transform">Đăng nhập</button>
             </div>
         </div>
     </div>
 
     <!-- === USER VIEW (TASKS) === -->
-    <div id="user-view" class="hidden min-h-screen bg-[#f0f2f5] py-10 px-4">
+    <div id="user-view" class="hidden min-h-screen bg-slate-50 py-10 px-4">
         <div id="user-container" class="max-w-xl mx-auto fade-in">
             <!-- Content injected via JS -->
         </div>
     </div>
 
     <!-- === DESTINATION VIEW === -->
-    <div id="dest-view" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-indigo-900 to-blue-900 text-white text-center">
-        <div class="bg-white/10 backdrop-blur-lg p-10 rounded-[3rem] border border-white/20 shadow-2xl max-w-md w-full">
-            <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-lg shadow-green-500/50">
-                <i class="bi bi-check-lg text-white"></i>
+    <div id="dest-view" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-indigo-900 to-blue-900 text-white text-center relative overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 30px 30px;"></div>
+        
+        <div class="bg-white/10 backdrop-blur-xl p-12 rounded-[3rem] border border-white/20 shadow-2xl max-w-md w-full relative z-10">
+            <div class="w-24 h-24 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 text-4xl shadow-xl shadow-emerald-500/40 animate-pulse">
+                <i class="bi bi-unlock-fill text-white"></i>
             </div>
-            <h1 class="text-2xl font-black uppercase mb-2">Thành Công!</h1>
-            <p class="text-blue-200 text-sm mb-8">Cảm ơn bạn đã hoàn thành các bước.</p>
+            <h1 class="text-3xl font-black uppercase mb-3 tracking-tighter">Đã Mở Khóa!</h1>
+            <p class="text-blue-100 text-sm font-medium mb-10 opacity-80">Liên kết của bạn đã sẵn sàng truy cập.</p>
             
-            <a id="final-link-btn" href="#" class="block w-full bg-white text-blue-900 py-5 rounded-2xl font-black uppercase text-sm hover:bg-blue-50 transition transform hover:scale-105 shadow-xl">
-                Truy cập liên kết
+            <a id="final-link-btn" href="#" class="block w-full bg-white text-blue-900 py-6 rounded-2xl font-black uppercase text-sm hover:bg-blue-50 transition transform hover:scale-[1.03] shadow-xl hover:shadow-2xl">
+                Truy cập ngay
             </a>
-            <p id="countdown" class="mt-4 text-xs font-mono text-blue-300">Link hết hạn sau: --</p>
+            <p id="countdown" class="mt-6 text-[10px] font-mono text-blue-300 uppercase tracking-widest bg-black/20 inline-block px-3 py-1 rounded-full">Hết hạn sau: --</p>
         </div>
     </div>
 
@@ -415,19 +448,17 @@
             const subTitle = document.getElementById('i_sttl').value;
             
             // 1. Get Destination
-            // We search for the first active link input
             const destInput = document.querySelector('input[data-in="dest"]:not([value=""])');
             const dest = destInput ? destInput.value : '';
             
             if(!dest) return Swal.fire('Thiếu thông tin', 'Vui lòng nhập Link Đích!', 'warning');
 
-            // 2. Gather Tasks from visible/filled inputs
+            // 2. Gather Tasks
             const tasks = [];
             const taskInputs = document.querySelectorAll('input.stu_fi[data-in]:not([data-in="dest"]):not([data-in="oth"])');
             
             taskInputs.forEach(inp => {
                 if(inp.value.trim() !== '') {
-                    // Check if parent group is active (visible)
                     const parentGroup = inp.closest('.grp');
                     if (parentGroup && (parentGroup.classList.contains('active') || parentGroup.classList.contains('a'))) {
                         let platformName = inp.getAttribute('data-in');
@@ -448,7 +479,7 @@
 
             if(tasks.length === 0) return Swal.fire('Thiếu thông tin', 'Vui lòng chọn và nhập ít nhất 1 nhiệm vụ!', 'warning');
 
-            const btn = document.getElementById('btnSave'); btn.disabled = true; btn.innerText = "ĐANG LƯU...";
+            const btn = document.getElementById('btnSave'); btn.disabled = true; btn.innerText = "ĐANG TẠO...";
             try {
                 let finalId = editId;
                 const data = { title, subTitle, tasks: tasks, createdAt: serverTimestamp(), views: 0, isActive: true };
@@ -460,31 +491,38 @@
                     await updateDoc(doc(db, "links", editId), { title, subTitle, tasks: tasks });
                 }
                 
-                // Save Secret Link
                 await setDoc(doc(db, "an_link", finalId), { destUrl: dest, destName: 'NHẬN LINK NGAY' });
                 
-                Swal.fire('Thành công', 'Đã tạo liên kết!', 'success');
-                window.resetForm();
-                window.switchTab('manage');
+                // Show Result in Input Box instead of Alert
+                const shareUrl = `${window.location.origin}${window.location.pathname}?id=${finalId}`;
+                document.getElementById('i_rst').value = shareUrl;
+                document.querySelector('.stu_rst').classList.add('active');
+                
+                // Scroll to result
+                document.querySelector('.stu_rst').scrollIntoView({behavior: 'smooth'});
+                
+                // Refresh list if needed but stay on create tab to see link
+                // loadHistory(); 
+                
             } catch (e) {
                 Swal.fire('Lỗi', e.message, 'error');
             } finally {
-                btn.disabled = false; btn.innerText = "Tạo liên kết";
+                btn.disabled = false; btn.innerText = "Tạo liên kết ngay";
             }
         };
 
         window.resetForm = () => { 
             editId = null; 
             document.getElementById('fgSTU').reset();
-            // Reset UI states
             document.querySelectorAll('.stu_b_ftr, .btn_iftr, .grp').forEach(el => el.classList.remove('active'));
-            // Keep required groups active if any (like g_lnk1 in class 'a')
+            document.querySelector('.stu_rst').classList.remove('active');
             document.getElementById('form-title').innerText = "Tạo liên kết mới"; 
+            document.getElementById('btnSave').innerText = "Tạo liên kết ngay";
         };
 
         // --- MANAGE TABLE ---
         async function loadHistory() {
-            const body = document.getElementById('history-body'); body.innerHTML = '<tr><td colspan="3" class="text-center p-4"><div class="loader"></div></td></tr>';
+            const body = document.getElementById('history-body'); body.innerHTML = '<tr><td colspan="3" class="text-center p-8"><div class="loader"></div></td></tr>';
             try {
                 const snap = await getDocs(query(collection(db, "links"), orderBy("createdAt", "desc")));
                 body.innerHTML = '';
@@ -492,14 +530,13 @@
                     const data = d.data();
                     const shareUrl = `${window.location.origin}${window.location.pathname}?id=${d.id}`;
                     body.innerHTML += `
-                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-all">
-                            <td class="p-4 font-black text-slate-700">${data.title}</td>
-                            <td class="p-4 text-xs font-bold text-blue-600 bg-blue-50 rounded-lg">${data.views || 0}</td>
-                            <td class="p-4 flex justify-end gap-3">
-                                <button class="p-2 bg-orange-50 text-orange-500 rounded-lg hover:bg-orange-100" onclick="window.loadEdit('${d.id}')"><i class="bi bi-pencil-square"></i></button>
-                                <button class="p-2 ${data.isActive ? 'bg-green-50 text-green-500' : 'bg-gray-100 text-gray-400'} rounded-lg" onclick="window.toggleL('${d.id}', ${data.isActive})"><i class="bi bi-power"></i></button>
-                                <button class="p-2 bg-blue-50 text-blue-500 rounded-lg hover:bg-blue-100" onclick="navigator.clipboard.writeText('${shareUrl}'); Swal.fire('Copied','Đã chép link!','success')"><i class="bi bi-clipboard"></i></button>
-                                <button class="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-100" onclick="window.deleteL('${d.id}')"><i class="bi bi-trash"></i></button>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-all group">
+                            <td class="p-5 font-bold text-slate-700 group-hover:text-blue-600 transition-colors">${data.title}</td>
+                            <td class="p-5 text-xs font-black text-blue-500"><span class="bg-blue-50 px-3 py-1 rounded-lg">${data.views || 0}</span></td>
+                            <td class="p-5 flex justify-end gap-2">
+                                <button class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-400 rounded-xl hover:bg-blue-50 hover:text-blue-500 hover:border-blue-200 transition-all" onclick="window.loadEdit('${d.id}')"><i class="bi bi-pencil-fill text-xs"></i></button>
+                                <button class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-400 rounded-xl hover:bg-green-50 hover:text-green-500 hover:border-green-200 transition-all" onclick="navigator.clipboard.writeText('${shareUrl}'); Swal.fire({icon:'success',title:'Đã sao chép!',toast:true,position:'top-end',showConfirmButton:false,timer:1500})"><i class="bi bi-clipboard-fill text-xs"></i></button>
+                                <button class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-all" onclick="window.deleteL('${d.id}')"><i class="bi bi-trash-fill text-xs"></i></button>
                             </td>
                         </tr>`;
                 });
@@ -514,19 +551,18 @@
                 window.switchTab('create');
                 const d = snap.data();
                 
-                // Populate Basic Fields
+                // Basic Fields
                 document.getElementById('i_ttl').value = d.title;
                 document.getElementById('i_sttl').value = d.subTitle || '';
                 if(secret.exists()) {
                     document.getElementById('i_lnk1').value = secret.data().destUrl;
+                    document.querySelector('[data-cgroup="g_lnk1"]').classList.add('active'); // Ensure visible
                 }
 
-                // Populate Tasks (Complex Mapping back to UI)
-                // Note: This simple mapping just assumes standard slots for demo. 
-                // A full production mapping would need to map d.tasks back to specific IDs like i_yt1 etc.
-                
                 document.getElementById('form-title').innerText = "ĐANG CHỈNH SỬA";
                 document.getElementById('btnSave').innerText = "Cập nhật";
+                // Scroll top
+                document.getElementById('section-create').scrollIntoView();
             }
         };
 
@@ -536,23 +572,40 @@
         // --- USER TASK LOGIC (Standard) ---
         async function loadUserPage(id) {
             const container = document.getElementById('user-container');
-            container.innerHTML = '<div class="flex justify-center mt-20"><div class="loader"></div></div>';
+            container.innerHTML = '<div class="flex justify-center mt-32"><div class="loader"></div></div>';
             
             try {
                 const snap = await getDoc(doc(db, "links", id));
                 if (!snap.exists() || snap.data().isActive === false) { 
-                    container.innerHTML = "<div class='text-center mt-20 font-bold text-red-500'>Liên kết không tồn tại hoặc đã bị khóa.</div>"; return; 
+                    container.innerHTML = "<div class='text-center mt-20 font-bold text-red-500 bg-white p-10 rounded-3xl shadow-xl'>Liên kết không tồn tại hoặc đã bị khóa.</div>"; return; 
                 }
                 const data = snap.data();
                 updateDoc(doc(db, "links", id), { views: increment(1) });
                 
+                // Pro Layout for User
                 container.innerHTML = `
-                    <div class="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 text-center relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-                        <h1 class="text-2xl font-black text-slate-800 mb-2 uppercase tracking-tighter mt-4">${data.title}</h1>
-                        <p class="text-sm text-slate-400 font-bold mb-8">${data.subTitle || 'Hoàn thành các bước để mở khóa'}</p>
-                        <div id="taskListContent" class="space-y-4"></div>
-                        <button id="unlock-btn" class="w-full py-5 mt-10 rounded-2xl font-black text-slate-400 bg-slate-100 cursor-not-allowed uppercase text-xs border-b-4 border-slate-200 transition-all"><i class="bi bi-lock-fill mr-1"></i> Đang bị khóa</button>
+                    <div class="bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/60 border border-white text-center relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+                        
+                        <div class="mb-8">
+                            <h1 class="text-2xl sm:text-3xl font-black text-slate-800 mb-3 uppercase tracking-tighter leading-tight">${data.title}</h1>
+                            <p class="text-sm text-slate-500 font-medium px-4">${data.subTitle || 'Hoàn thành các bước bên dưới để mở khóa liên kết'}</p>
+                        </div>
+
+                        <div id="progress-container" class="mb-8 bg-slate-50 rounded-full h-2 w-full overflow-hidden flex justify-start">
+                            <div id="progress-bar" class="bg-blue-500 h-full w-0 transition-all duration-500 ease-out rounded-full"></div>
+                        </div>
+                        
+                        <div id="taskListContent" class="space-y-4 text-left"></div>
+                        
+                        <button id="unlock-btn" class="w-full py-5 mt-10 rounded-2xl font-black text-slate-400 bg-slate-100 cursor-not-allowed uppercase text-xs border-b-4 border-slate-200 transition-all flex items-center justify-center gap-2 group">
+                            <i class="bi bi-lock-fill group-hover:scale-110 transition-transform"></i> <span>Đang bị khóa</span>
+                        </button>
+                        
+                        <div class="mt-8 flex justify-center items-center gap-2 opacity-30 hover:opacity-100 transition-opacity">
+                            <i class="bi bi-shield-check text-slate-500"></i>
+                            <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Secure Link by Link4Sub</span>
+                        </div>
                     </div>`;
                 renderUserTasksUI(data.tasks, id);
             } catch(e) { container.innerHTML = `<div class='text-center mt-20'>Lỗi: ${e.message}</div>`; }
@@ -560,41 +613,59 @@
 
         function renderUserTasksUI(tasks, id) {
             const list = document.getElementById('taskListContent');
+            const progBar = document.getElementById('progress-bar');
             const completed = new Set();
+            
             const render = () => {
+                // Update progress
+                const percent = (completed.size / tasks.length) * 100;
+                if(progBar) progBar.style.width = `${percent}%`;
+
                 list.innerHTML = tasks.map((t, i) => {
                     const isDone = completed.has(i);
                     const isLocked = i > 0 && !completed.has(i - 1);
+                    
                     let iconClass = 'link-45deg';
-                    let bgClass = 'bg-blue-500';
-                    if(t.platform === 'youtube') { iconClass = 'youtube'; bgClass = 'bg-red-600'; }
-                    if(t.platform === 'telegram') { iconClass = 'telegram'; bgClass = 'bg-[#0088cc]'; }
-                    if(t.platform === 'facebook') { iconClass = 'facebook'; bgClass = 'bg-[#395693]'; }
-                    if(t.platform === 'tiktok') { iconClass = 'tiktok'; bgClass = 'bg-black'; }
-                    if(t.platform === 'instagram') { iconClass = 'instagram'; bgClass = 'bg-[#5851DB]'; }
+                    let colorClass = 'text-blue-500';
+                    let bgIconClass = 'bg-blue-50';
+                    
+                    if(t.platform === 'youtube') { iconClass = 'youtube'; colorClass = 'text-red-600'; bgIconClass = 'bg-red-50'; }
+                    if(t.platform === 'telegram') { iconClass = 'telegram'; colorClass = 'text-[#0088cc]'; bgIconClass = 'bg-[#e0f2fa]'; }
+                    if(t.platform === 'facebook') { iconClass = 'facebook'; colorClass = 'text-[#395693]'; bgIconClass = 'bg-[#e7f0ff]'; }
+                    if(t.platform === 'tiktok') { iconClass = 'tiktok'; colorClass = 'text-black'; bgIconClass = 'bg-slate-200'; }
+                    if(t.platform === 'instagram') { iconClass = 'instagram'; colorClass = 'text-[#E1306C]'; bgIconClass = 'bg-[#fcecef]'; }
 
                     return `
                     <div onclick="${!isDone && !isLocked ? `window.doTask(${i},'${t.url}')` : ''}" 
-                         class="p-4 rounded-2xl flex justify-between items-center transition-all ${isDone ? 'bg-emerald-50 border border-emerald-100' : isLocked ? 'bg-slate-50 opacity-50 grayscale cursor-not-allowed' : 'bg-white border border-slate-100 hover:shadow-lg cursor-pointer hover:border-blue-100'}">
+                         class="user-task-card p-4 rounded-2xl flex justify-between items-center cursor-pointer
+                         ${isDone ? 'bg-emerald-50 !border-emerald-100' : isLocked ? 'opacity-50 pointer-events-none grayscale' : ''}">
+                        
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-md transition-all ${isDone ? 'bg-emerald-500' : isLocked ? 'bg-slate-300' : bgClass}">
-                                <i class="bi bi-${isDone ? 'check-lg' : iconClass} text-xl"></i>
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl transition-all ${isDone ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200' : `${bgIconClass} ${colorClass}`}">
+                                <i class="bi bi-${isDone ? 'check-lg' : iconClass}"></i>
                             </div>
-                            <div class="text-left">
-                                <p class="text-[8px] font-black uppercase text-slate-400 tracking-widest mb-0.5">BƯỚC ${i+1}</p>
-                                <h4 class="font-black text-slate-800 text-xs sm:text-sm">${t.label}</h4>
+                            <div>
+                                <p class="text-[9px] font-black uppercase text-slate-400 tracking-widest mb-0.5">BƯỚC ${i+1}</p>
+                                <h4 class="font-bold text-slate-700 text-sm ${isDone ? 'line-through opacity-50' : ''}">${t.label}</h4>
                             </div>
                         </div>
-                        <div>${isLocked ? '<i class="bi bi-lock-fill text-slate-300"></i>' : isDone ? '' : '<i class="bi bi-chevron-right text-slate-400 text-xs"></i>'}</div>
+                        
+                        <div class="pr-2">
+                             ${isDone 
+                                ? '<div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center"><i class="bi bi-check text-emerald-600 text-lg"></i></div>' 
+                                : isLocked 
+                                    ? '<i class="bi bi-lock-fill text-slate-300"></i>' 
+                                    : '<i class="bi bi-chevron-right text-slate-300 text-xs"></i>'}
+                        </div>
                     </div>`;
                 }).join('');
 
                 if (completed.size >= tasks.length) {
                     const btn = document.getElementById('unlock-btn');
-                    btn.className = "w-full py-5 mt-10 rounded-2xl font-black text-white bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg shadow-emerald-200 cursor-pointer animate-pulse uppercase text-xs border-b-4 border-emerald-600 hover:transform hover:scale-[1.02] transition-all";
-                    btn.innerHTML = '<i class="bi bi-unlock-fill mr-1"></i> NHẬN LINK NGAY';
+                    btn.className = "w-full py-5 mt-10 rounded-2xl font-black text-white bg-gradient-to-r from-emerald-500 to-teal-500 shadow-xl shadow-emerald-200 cursor-pointer animate-pulse uppercase text-xs border-b-4 border-emerald-600 hover:scale-[1.02] transition-all flex items-center justify-center gap-2";
+                    btn.innerHTML = '<i class="bi bi-unlock-fill"></i> NHẬN LINK NGAY';
                     btn.onclick = async () => {
-                        btn.innerHTML = '<div class="loader" style="width:20px;height:20px;border-width:2px;"></div>';
+                        btn.innerHTML = '<div class="loader" style="width:20px;height:20px;border-width:2px;border-color:white;border-top-color:transparent"></div>';
                         try {
                             const secret = await getDoc(doc(db, "an_link", id));
                             const tokenId = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
@@ -604,11 +675,24 @@
                     };
                 }
             };
-            window.doTask = (i, url) => { window.open(url, '_blank'); Swal.fire({ title: 'Đang kiểm tra...', text: 'Vui lòng chờ...', timer: 5000, timerProgressBar: true, didOpen: () => { Swal.showLoading() } }).then(() => { completed.add(i); render(); }); };
+            window.doTask = (i, url) => { 
+                window.open(url, '_blank'); 
+                Swal.fire({ 
+                    title: 'Đang kiểm tra...', 
+                    text: 'Vui lòng thực hiện nhiệm vụ ở tab mới', 
+                    timer: 5000, 
+                    timerProgressBar: true, 
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading() } 
+                }).then(() => { 
+                    completed.add(i); 
+                    render(); 
+                }); 
+            };
             render();
         }
 
-        // --- DESTINATION ---
         async function verifyToken(tokenId) {
             const btn = document.getElementById('final-link-btn');
             const counter = document.getElementById('countdown');
@@ -616,7 +700,7 @@
                 const snap = await getDoc(doc(db, "link_gioi_han", tokenId));
                 if(snap.exists()) {
                     const d = snap.data();
-                    if(Date.now() > d.expireAt) { btn.href="#"; btn.innerText="LINK HẾT HẠN"; btn.classList.add('bg-gray-400','cursor-not-allowed'); return; }
+                    if(Date.now() > d.expireAt) { btn.href="#"; btn.innerText="LINK HẾT HẠN"; btn.classList.add('!bg-slate-400','cursor-not-allowed','!shadow-none'); return; }
                     btn.href = d.destUrl;
                     setInterval(() => {
                         const left = Math.max(0, Math.floor((d.expireAt - Date.now()) / 1000));
