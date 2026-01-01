@@ -3,290 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link4Sub Pro - Modern Link Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <title>Link4Sub Pro - Đơn giản & Hiệu quả</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #2563eb;
-            --primary-soft: rgba(37, 99, 235, 0.1);
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-        }
-
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: var(--bg); 
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
-
+        body { background-color: #f3f4f6; color: #1f2937; }
         .hidden { display: none !important; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
+        .active-tab { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: bold; }
+        .task-card { background: white; border: 1px solid #e5e7eb; transition: all 0.2s; }
+        .task-card:active { transform: scale(0.98); }
         .loader {
-            border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 0 auto;
+            border: 3px solid #f3f3f3; border-top: 3px solid #2563eb; border-radius: 50%;
+            width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Admin UI Polish */
-        .glass-header {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-        }
-
-        .tab-btn {
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        .tab-btn.active {
-            color: var(--primary);
-            background: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-
-        /* Platform Selection Styles */
-        .platform-grid {
-            display: flex; gap: 12px; overflow-x: auto; padding: 10px 5px; scrollbar-width: none;
-        }
-        .platform-card {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-width: 90px; height: 90px; border-radius: 24px; background: #fff; border: 1px solid #e2e8f0;
-            color: var(--text-muted); font-weight: 700; font-size: 11px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .platform-card svg { width: 28px; height: 28px; margin-bottom: 8px; fill: currentColor; }
-        .platform-card:hover { transform: translateY(-4px); border-color: var(--clr); color: var(--clr); box-shadow: 0 12px 20px -8px var(--clr-soft); }
-        .platform-card.active { border-color: var(--clr); color: #fff; background: var(--clr); box-shadow: 0 8px 16px -4px var(--clr-soft); }
-
-        /* Form Controls */
-        .input-group {
-            background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; transition: all 0.3s ease;
-        }
-        .input-group:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-soft); }
-        
-        /* User View Customization */
-        .ad-banner {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            position: relative; overflow: hidden;
-        }
-        .ad-banner::before {
-            content: ''; position: absolute; top: -50%; left: -20%; width: 100%; height: 200%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
-            transform: rotate(-15deg);
-        }
-
-        .task-card {
-            background: #fff; border: 1px solid #f1f5f9; border-radius: 24px;
-            transition: all 0.3s ease;
-        }
-        .task-card:hover:not(.locked) { transform: scale(1.015); border-color: #e2e8f0; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); }
-        .task-card.completed { background: #f0fdf4; border-color: #dcfce7; }
-        .task-card.locked { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
-
-        .btn-premium {
-            background: linear-gradient(135deg, #2563eb, #4f46e5);
-            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
-        }
     </style>
 </head>
-<body>
+<body class="min-h-screen">
 
     <!-- === ADMIN VIEW === -->
     <div id="admin-view" class="hidden">
-        <header class="fixed top-0 w-full glass-header z-50 px-8 py-5 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-600 text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-blue-500/30">L</div>
-                <span class="font-extrabold text-slate-800 tracking-tight text-lg">Studio Pro</span>
-            </div>
-            <button onclick="window.logout()" class="text-xs font-bold text-red-500 bg-red-50 px-5 py-2.5 rounded-2xl hover:bg-red-100 transition-colors uppercase tracking-wider">Đăng xuất</button>
+        <header class="bg-white shadow-sm px-4 py-4 flex justify-between items-center sticky top-0 z-50">
+            <h1 class="text-xl font-black text-blue-600">L4S ADMIN</h1>
+            <button onclick="window.logout()" class="text-sm font-bold text-red-600 border border-red-200 px-3 py-1 rounded">Đăng xuất</button>
         </header>
 
-        <main class="container mx-auto pt-32 pb-20 px-4">
-            <!-- Navigation Tabs -->
-            <div class="flex justify-center mb-12">
-                <div class="bg-slate-200/50 p-1.5 rounded-3xl flex gap-1 border border-white">
-                    <button onclick="window.switchTab('create')" id="btn-create" class="tab-btn active px-10 py-3.5 rounded-2xl text-[11px] font-extrabold uppercase tracking-widest transition-all">Thiết kế Link</button>
-                    <button onclick="window.switchTab('manage')" id="btn-manage" class="tab-btn px-10 py-3.5 rounded-2xl text-[11px] font-extrabold uppercase tracking-widest text-slate-500 transition-all">Quản lý Kho</button>
-                </div>
-            </div>
+        <nav class="bg-white border-b flex justify-around">
+            <button onclick="window.switchTab('create')" id="tab-create" class="py-4 px-6 text-sm active-tab">TẠO LINK</button>
+            <button onclick="window.switchTab('manage')" id="tab-manage" class="py-4 px-6 text-sm text-gray-500">QUẢN LÝ</button>
+        </nav>
 
-            <!-- Create Section -->
-            <div id="section-create" class="max-w-4xl mx-auto">
-                <div class="bg-white rounded-[3rem] p-10 shadow-2xl shadow-slate-200/60 border border-white">
-                    <form id="fgSTU" onsubmit="event.preventDefault(); window.saveL();">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                            <div>
-                                <label class="block text-xs font-black uppercase text-slate-400 mb-3 ml-2 tracking-widest">Tiêu đề chính</label>
-                                <div class="input-group flex items-center p-2 px-4">
-                                    <i class="bi bi-fonts text-slate-400 text-lg mr-3"></i>
-                                    <input id="i_ttl" type="text" placeholder="Ví dụ: Tải Hack Pubg Mobile" class="w-full py-3 bg-transparent outline-none font-bold text-slate-700" required>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-black uppercase text-slate-400 mb-3 ml-2 tracking-widest">Tiêu đề phụ</label>
-                                <div class="input-group flex items-center p-2 px-4">
-                                    <i class="bi bi-text-paragraph text-slate-400 text-lg mr-3"></i>
-                                    <input id="i_sttl" type="text" placeholder="Mô tả ngắn gọn về link..." class="w-full py-3 bg-transparent outline-none font-bold text-slate-700">
-                                </div>
-                            </div>
-                        </div>
-
-                        <label class="block text-xs font-black uppercase text-slate-400 mb-4 ml-2 tracking-widest text-center">Lựa chọn nền tảng nhiệm vụ</label>
-                        <div class="platform-grid mb-10">
-                            <button type="button" class="platform-card active" data-id="yt" style="--clr:#ef4444; --clr-soft:rgba(239, 68, 68, 0.2)">
-                                <svg viewBox="0 0 448 512"><path d="M186.8 202.1l95.2 54.1-95.2 54.1V202.1zM448 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h352c26.5 0 48 21.5 48 48zm-42 176.3s0-59.6-7.6-88.2c-4.2-15.8-16.5-28.2-32.2-32.4C337.9 128 224 128 224 128s-113.9 0-142.2 7.7c-15.7 4.2-28 16.6-32.2 32.4-7.6 28.5-7.6 88.2-7.6 88.2s0 59.6 7.6 88.2c4.2 15.8 16.5 27.7 32.2 31.9C110.1 384 224 384 224 384s113.9 0 142.2-7.7c15.7-4.2 28-16.1 32.2-31.9 7.6-28.5 7.6-88.1 7.6-88.1z"></path></svg>
-                                <span>YouTube</span>
-                            </button>
-                            <button type="button" class="platform-card" data-id="tg" style="--clr:#0ea5e9; --clr-soft:rgba(14, 165, 233, 0.2)">
-                                <svg viewBox="0 0 448 512"><path d="M446.7 98.6l-67.6 318.8c-5.1 22.5-18.4 28.1-37.3 17.5l-103-75.9-49.7 47.8c-5.5 5.5-10.1 10.1-20.7 10.1l7.4-104.9 190.9-172.5c8.3-7.4-1.8-11.5-12.9-4.1L117.8 284 16.2 252.2c-22.1-6.9-22.5-22.1 4.6-32.7L418.2 66.4c19.1-6.9 35.8 4.5 28.5 32.2z"></path></svg>
-                                <span>Telegram</span>
-                            </button>
-                            <button type="button" class="platform-card" data-id="fb" style="--clr:#3b82f6; --clr-soft:rgba(59, 130, 246, 0.2)">
-                                <svg viewBox="0 0 448 512"><path d="M400 32H48A48 48 0 0 0 0 80v352a48 48 0 0 0 48 48h137.25V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256a48 48 0 0 0-48-48z"></path></svg>
-                                <span>Facebook</span>
-                            </button>
-                            <button type="button" class="platform-card" data-id="tk" style="--clr:#000000; --clr-soft:rgba(0,0,0,0.1)">
-                                <svg viewBox="0 0 448 512"><path d="M448 209.91a210.06 210.06 0 0 1-122.77-39.25v178.72A162.55 162.55 0 1 1 185 188.31v89.89a74.62 74.62 0 1 0 52.23 71.18V0l88 0a121.18 121.18 0 0 0 1.86 22.17h0A122.18 122.18 0 0 0 381 102.39a121.43 121.43 0 0 0 67 20.14z"></path></svg>
-                                <span>TikTok</span>
-                            </button>
-                            <button type="button" class="platform-card" data-id="dest" style="--clr:#10b981; --clr-soft:rgba(16, 185, 129, 0.2)">
-                                <svg viewBox="0 0 448 512"><path d="M448 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h352c26.5 0 48 21.5 48 48zM315.4 182.2c1.2-1.2 1.2-3.1 0-4.3l-13.3-13.3c-1.2-1.2-3.1-1.2-4.3 0l-91.4 91.4-44.1-44.1c-1.2-1.2-3.1-1.2-4.3 0l-13.3 13.3c-1.2 1.2-1.2 3.1 0 4.3l60.5 60.5c1.2 1.2 3.1 1.2 4.3 0l106-106z"></path></svg>
-                                <span>Link Đích</span>
-                            </button>
-                        </div>
-
-                        <div class="stu_ftr_cnt" id="stuFtr">
-                            <!-- Youtube Actions -->
-                            <div class="stu_ftr active" data-ftr="yt">
-                                <div class="stu_iftr">
-                                    <button type="button" class="btn_iftr" data-id="g_yt1" style="--clr:#ef4444">Đăng ký kênh</button>
-                                    <button type="button" class="btn_iftr" data-id="g_ytl1" style="--clr:#ef4444">Like Video</button>
-                                    <button type="button" class="btn_iftr" data-id="g_ytc1" style="--clr:#ef4444">Comment Video</button>
-                                </div>
-                            </div>
-                            <!-- Telegram Actions -->
-                            <div class="stu_ftr" data-ftr="tg">
-                                <div class="stu_iftr">
-                                    <button type="button" class="btn_iftr" data-id="g_tg1" style="--clr:#0ea5e9">Tham gia Group</button>
-                                    <button type="button" class="btn_iftr" data-id="g_tg2" style="--clr:#0ea5e9">Tham gia Channel</button>
-                                </div>
-                            </div>
-                            <!-- Dest Actions -->
-                            <div class="stu_ftr" data-ftr="dest">
-                                <div class="stu_iftr">
-                                    <button type="button" class="btn_iftr active" data-id="g_lnk1" style="--clr:#10b981">Dán Link Thật</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="stu_ftr_inp space-y-4" id="stuInp">
-                            <!-- Input groups will toggle active class -->
-                            <div data-cgroup="g_yt1" class="grp"><label class="grp__label">URL Kênh YouTube</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" type="url" name="yt1" placeholder="https://youtube.com/@yourchannel" data-in="yt" data-label="Đăng ký kênh"><span class="grp__icon"><i class="bi bi-youtube"></i></span></div></div>
-                            <div data-cgroup="g_ytl1" class="grp"><label class="grp__label">URL Video (Like)</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" type="url" name="ytl1" placeholder="https://youtube.com/watch?v=..." data-in="yt" data-label="Like Video"><span class="grp__icon"><i class="bi bi-hand-thumbs-up-fill"></i></span></div></div>
-                            <div data-cgroup="g_ytc1" class="grp"><label class="grp__label">URL Video (Comment)</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" type="url" name="ytc1" placeholder="https://youtube.com/watch?v=..." data-in="yt" data-label="Comment Video"><span class="grp__icon"><i class="bi bi-chat-left-dots-fill"></i></span></div></div>
-                            
-                            <div data-cgroup="g_tg1" class="grp"><label class="grp__label">Link Telegram Group</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" type="url" name="tg1" placeholder="https://t.me/yourgroup" data-in="tg" data-label="Tham gia Group"><span class="grp__icon"><i class="bi bi-telegram"></i></span></div></div>
-                            <div data-cgroup="g_tg2" class="grp"><label class="grp__label">Link Telegram Channel</label><div class="grp__input-wrapper"><input class="grp__input stu_fi" type="url" name="tg2" placeholder="https://t.me/yourchannel" data-in="tg" data-label="Tham gia Channel"><span class="grp__icon"><i class="bi bi-telegram"></i></span></div></div>
-
-                            <div data-cgroup="g_lnk1" class="grp a"><label class="grp__label">Liên kết đích (Sau khi xong nhiệm vụ)</label><div class="grp__input-wrapper"><input id="i_lnk1" class="grp__input stu_fi" type="url" name="lnk1" placeholder="https://drive.google.com/..." data-in="dest" required><span class="grp__icon"><i class="bi bi-link-45deg"></i></span></div></div>
-                        </div>
-
-                        <div class="stu_ftr_btn">
-                            <button type="submit" id="btnSave" class="btn-premium">Lưu và tạo Link bảo mật</button>
-                            <button type="button" onclick="window.resetForm()">Xóa trắng</button>
-                        </div>
-
-                        <!-- Result Display -->
-                        <div class="stu_rst mt-8">
-                            <label class="block text-xs font-black uppercase text-emerald-500 mb-3 ml-2 tracking-widest">Link rút gọn đã sẵn sàng:</label>
-                            <div class="relative">
-                                <input id="i_rst" type="text" readonly class="w-full p-5 pr-16 bg-emerald-50 border-2 border-dashed border-emerald-200 rounded-3xl font-bold text-emerald-700 outline-none">
-                                <span onclick="window.copyRST()" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center cursor-pointer shadow-lg shadow-emerald-500/30 hover:scale-110 transition-transform">
-                                    <i class="bi bi-clipboard2-check-fill"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Manage Section -->
-            <div id="section-manage" class="hidden max-w-5xl mx-auto">
-                <div class="bg-white rounded-[3rem] p-8 shadow-xl border border-white">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead class="text-[10px] font-black uppercase text-slate-400 border-b border-slate-100">
-                                <tr>
-                                    <th class="px-6 py-4">Tên liên kết</th>
-                                    <th class="px-6 py-4">Lượt truy cập</th>
-                                    <th class="px-6 py-4 text-right">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="history-body" class="divide-y divide-slate-50 font-bold text-slate-600"></tbody>
-                        </table>
+        <main class="max-w-2xl mx-auto p-4 py-8">
+            <!-- Section Create -->
+            <div id="section-create" class="space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm border space-y-4">
+                    <h2 id="form-title" class="text-lg font-bold border-b pb-2">Thông tin cơ bản</h2>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1">Tiêu đề (Ví dụ: Link Tải Game)</label>
+                        <input id="i_ttl" type="text" class="w-full p-3 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
                     </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1">Mô tả phụ (Không bắt buộc)</label>
+                        <input id="i_sttl" type="text" class="w-full p-3 bg-gray-50 border rounded-lg outline-none">
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border space-y-4">
+                    <h2 class="text-lg font-bold border-b pb-2">Nhiệm vụ & Link Đích</h2>
+                    
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold text-gray-400">YOUTUBE</p>
+                        <input id="in_yt_sub" type="url" placeholder="Dán link Kênh để Đăng ký..." class="w-full p-3 bg-gray-50 border rounded-lg text-sm">
+                        <input id="in_yt_like" type="url" placeholder="Dán link Video để Like..." class="w-full p-3 bg-gray-50 border rounded-lg text-sm">
+                    </div>
+
+                    <div class="space-y-3 pt-2">
+                        <p class="text-xs font-bold text-gray-400">TELEGRAM</p>
+                        <input id="in_tg_join" type="url" placeholder="Dán link Nhóm/Kênh Telegram..." class="w-full p-3 bg-gray-50 border rounded-lg text-sm">
+                    </div>
+
+                    <div class="pt-4 border-t">
+                        <label class="block text-xs font-bold text-blue-600 mb-1">LINK ĐÍCH (Link thật để tải file/xem web)</label>
+                        <input id="i_lnk_dest" type="url" placeholder="https://..." class="w-full p-3 bg-blue-50 border border-blue-200 rounded-lg font-bold text-blue-700 outline-none">
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button id="btnSave" onclick="window.saveL()" class="flex-1 bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 active:scale-95 transition-transform">LƯU LIÊN KẾT</button>
+                    <button onclick="window.resetForm()" class="px-6 bg-gray-200 text-gray-600 font-bold rounded-xl">HỦY</button>
+                </div>
+
+                <!-- Result Area -->
+                <div id="result-area" class="hidden bg-green-100 p-4 rounded-lg border border-green-200 animate-bounce">
+                    <p class="text-xs font-bold text-green-700 mb-2 uppercase">Link của bạn đã tạo xong:</p>
+                    <div class="flex gap-2">
+                        <input id="i_rst" type="text" readonly class="flex-1 p-2 bg-white border border-green-300 rounded text-sm font-bold">
+                        <button onclick="window.copyRST()" class="bg-green-600 text-white px-4 py-2 rounded font-bold text-sm">COPY</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Manage -->
+            <div id="section-manage" class="hidden space-y-4">
+                <div id="history-list" class="space-y-3">
+                    <!-- History items injected here -->
                 </div>
             </div>
         </main>
     </div>
 
     <!-- === LOGIN VIEW === -->
-    <div id="login-view" class="hidden min-h-screen flex items-center justify-center p-6 bg-slate-50">
-        <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl shadow-blue-900/10 w-full max-w-md border border-white text-center">
-            <div class="w-20 h-20 bg-blue-600 text-white rounded-3xl flex items-center justify-center font-black text-4xl mx-auto mb-8 shadow-xl shadow-blue-600/30">L</div>
-            <h1 class="text-3xl font-black text-slate-800 tracking-tighter mb-2">Đăng nhập Admin</h1>
-            <p class="text-slate-400 text-sm font-medium mb-10 uppercase tracking-widest">Hệ thống Link4Sub Pro</p>
-            <div class="space-y-4">
-                <div class="input-group p-1 px-4 text-left">
-                    <input id="email" type="email" placeholder="Email admin" class="w-full py-4 bg-transparent outline-none font-bold text-slate-700">
-                </div>
-                <div class="input-group p-1 px-4 text-left">
-                    <input id="password" type="password" placeholder="Mật khẩu" class="w-full py-4 bg-transparent outline-none font-bold text-slate-700">
-                </div>
-                <button onclick="window.doLogin()" class="w-full btn-premium text-white py-5 rounded-[1.5rem] font-extrabold uppercase text-xs tracking-widest mt-4 transition-transform active:scale-95">Truy cập Dashboard</button>
+    <div id="login-view" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-xl border w-full max-w-sm text-center">
+            <h1 class="text-2xl font-black mb-6">ĐĂNG NHẬP ADMIN</h1>
+            <div class="space-y-4 text-left">
+                <input id="email" type="email" placeholder="Email" class="w-full p-4 bg-gray-50 border rounded-xl outline-none">
+                <input id="password" type="password" placeholder="Mật khẩu" class="w-full p-4 bg-gray-50 border rounded-xl outline-none">
+                <button onclick="window.doLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold uppercase shadow-lg shadow-blue-200 transition-all active:scale-95">Vào Dashboard</button>
             </div>
         </div>
     </div>
 
-    <!-- === USER VIEW (TASK PAGE) === -->
-    <div id="user-view" class="hidden min-h-screen bg-[#f1f5f9] py-12 px-4">
-        <div id="user-container" class="max-w-xl mx-auto space-y-6">
-            <!-- User Page Content -->
+    <!-- === USER VIEW === -->
+    <div id="user-view" class="hidden min-h-screen p-4 flex flex-col items-center">
+        <div class="w-full max-w-md space-y-6">
+            
+            <!-- QUẢNG CÁO CHỨNG CHỈ -->
+            <a href="https://t.me/your_contact" target="_blank" class="block bg-slate-900 text-white p-5 rounded-3xl shadow-xl relative overflow-hidden group">
+                <div class="relative z-10 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl"><i class="bi bi-apple text-white"></i></div>
+                        <div>
+                            <h4 class="font-black text-sm uppercase tracking-tight">Mua Chứng Chỉ iOS</h4>
+                            <p class="text-slate-400 text-[11px]">Cài app không bị thu hồi - Chỉ <span class="text-yellow-400 font-black">150k/Năm</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-blue-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest animate-pulse">MUA NGAY</div>
+                </div>
+            </a>
+
+            <!-- NỘI DUNG NHIỆM VỤ -->
+            <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-gray-100 text-center">
+                <div id="user-title-area" class="mb-8">
+                    <h1 id="u-title" class="text-2xl font-black text-gray-800 uppercase tracking-tighter">ĐANG TẢI...</h1>
+                    <p id="u-stitle" class="text-xs text-gray-400 font-bold mt-1">Vui lòng chờ trong giây lát</p>
+                </div>
+
+                <div id="progress-bar-bg" class="w-full h-1.5 bg-gray-100 rounded-full mb-8 overflow-hidden">
+                    <div id="progress-bar-fill" class="h-full bg-blue-600 w-0 transition-all duration-500"></div>
+                </div>
+
+                <div id="user-task-list" class="space-y-4">
+                    <!-- Tasks will be listed here -->
+                </div>
+
+                <button id="unlock-btn" class="w-full py-5 mt-10 rounded-2xl font-black text-gray-400 bg-gray-100 cursor-not-allowed uppercase text-xs border-b-4 border-gray-200 transition-all flex items-center justify-center gap-2">
+                    <i class="bi bi-lock-fill"></i> CHƯA HOÀN THÀNH
+                </button>
+            </div>
+
+            <p class="text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest">Link4Sub Pro - Bảo mật & Nhanh chóng</p>
         </div>
     </div>
 
     <!-- === DESTINATION VIEW === -->
-    <div id="dest-view" class="hidden min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center">
-        <div class="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-[2.5rem] flex items-center justify-center text-5xl mb-8 animate-bounce shadow-xl shadow-emerald-500/10">
-            <i class="bi bi-check-circle-fill"></i>
+    <div id="dest-view" class="hidden min-h-screen bg-blue-600 flex flex-col items-center justify-center p-6 text-white text-center">
+        <div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-5xl mb-6 shadow-2xl">
+            <i class="bi bi-check-lg"></i>
         </div>
-        <h1 class="text-4xl font-black text-slate-800 uppercase tracking-tighter mb-4">Mở khóa thành công!</h1>
-        <p class="text-slate-400 font-bold text-sm mb-12">Nội dung bạn yêu cầu đã sẵn sàng để truy cập.</p>
+        <h2 class="text-3xl font-black uppercase tracking-tighter mb-2">THÀNH CÔNG!</h2>
+        <p class="text-blue-100 text-sm mb-10">Link của bạn đã được mở khóa.</p>
         
-        <a id="final-link-btn" href="#" class="btn-premium text-white px-16 py-6 rounded-[2rem] font-black uppercase text-sm tracking-tighter shadow-2xl transition-all hover:scale-105 inline-block">
-            Tới nội dung ngay <i class="bi bi-arrow-right ml-2"></i>
+        <a id="final-link-btn" href="#" class="w-full max-w-xs bg-white text-blue-600 py-6 rounded-2xl font-black uppercase text-sm shadow-2xl hover:scale-105 transition-transform block">
+            TRUY CẬP LINK NGAY
         </a>
-        
-        <div class="mt-8">
-            <span id="countdown" class="text-[10px] font-mono text-slate-300 bg-slate-50 px-4 py-2 rounded-full uppercase tracking-widest border border-slate-100">
-                Phiên làm việc hết hạn sau: --
-            </span>
-        </div>
+        <p id="countdown" class="mt-6 text-[10px] font-mono opacity-50 uppercase tracking-widest">Hết hạn sau: --</p>
     </div>
 
     <script type="module">
@@ -296,7 +168,6 @@
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
             from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Config Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCMYvnDTyzfBIAFTuB9VLPYN-YiFtNov6c", 
             authDomain: "linksubproject.firebaseapp.com",
@@ -315,9 +186,8 @@
         const linkId = urlParams.get('id');
         const token = urlParams.get('token');
 
-        // --- INIT ---
+        // --- CORE LOGIC ---
         const init = async () => {
-            setupAdminUI();
             if (token && linkId) {
                 showView('dest-view');
                 await verifyToken(token);
@@ -325,7 +195,10 @@
                 showView('user-view');
                 await loadUserPage(linkId);
             } else {
-                checkAdminAuth();
+                onAuthStateChanged(auth, user => {
+                    if (user) { showView('admin-view'); loadHistory(); }
+                    else { showView('login-view'); }
+                });
             }
         };
 
@@ -336,150 +209,98 @@
             document.getElementById(viewId).classList.remove('hidden');
         }
 
-        // --- ADMIN UI LOGIC ---
-        function setupAdminUI() {
-            // Platform tabs logic
-            document.querySelectorAll('.platform-card').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.platform-card').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    document.querySelectorAll('.stu_ftr').forEach(el => el.classList.remove('active'));
-                    const targetId = btn.getAttribute('data-id');
-                    const targetEl = document.querySelector(`.stu_ftr[data-ftr="${targetId}"]`);
-                    if(targetEl) targetEl.classList.add('active');
-                });
-            });
-
-            // Action toggle logic
-            document.querySelectorAll('.btn_iftr').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const targetId = btn.getAttribute('data-id');
-                    const inputGroup = document.querySelector(`[data-cgroup="${targetId}"]`);
-                    btn.classList.toggle('active');
-                    if(inputGroup) inputGroup.classList.toggle('active');
-                });
-            });
-        }
-
-        function checkAdminAuth() {
-            onAuthStateChanged(auth, user => {
-                if (user) {
-                    showView('admin-view');
-                    loadHistory();
-                } else {
-                    showView('login-view');
-                }
-            });
-        }
-
-        window.doLogin = async () => {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (e) {
-                Swal.fire('Lỗi', 'Thông tin đăng nhập không chính xác!', 'error');
-            }
-        };
-        
-        window.logout = () => signOut(auth);
-
         window.switchTab = (tab) => {
             const isCreate = tab === 'create';
             document.getElementById('section-create').classList.toggle('hidden', !isCreate);
             document.getElementById('section-manage').classList.toggle('hidden', isCreate);
-            document.getElementById('btn-create').classList.add(isCreate ? 'active' : 'text-slate-500');
-            document.getElementById('btn-create').classList.remove(isCreate ? 'text-slate-500' : 'active');
-            document.getElementById('btn-manage').classList.add(!isCreate ? 'active' : 'text-slate-500');
-            document.getElementById('btn-manage').classList.remove(!isCreate ? 'text-slate-500' : 'active');
+            document.getElementById('tab-create').className = `py-4 px-6 text-sm ${isCreate ? 'active-tab' : 'text-gray-500'}`;
+            document.getElementById('tab-manage').className = `py-4 px-6 text-sm ${!isCreate ? 'active-tab' : 'text-gray-500'}`;
             if(!isCreate) loadHistory();
+        };
+
+        // --- ADMIN ACTIONS ---
+        window.doLogin = async () => {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+            try { await signInWithEmailAndPassword(auth, e, p); }
+            catch (err) { Swal.fire('Lỗi', 'Sai thông tin!', 'error'); }
+        };
+
+        window.logout = () => signOut(auth);
+
+        window.saveL = async () => {
+            const title = document.getElementById('i_ttl').value;
+            const subTitle = document.getElementById('i_sttl').value;
+            const dest = document.getElementById('i_lnk_dest').value;
+
+            if(!title || !dest) return Swal.fire('Thiếu dữ liệu', 'Vui lòng nhập Tiêu đề và Link Đích', 'warning');
+
+            const tasks = [];
+            const ytSub = document.getElementById('in_yt_sub').value;
+            const ytLike = document.getElementById('in_yt_like').value;
+            const tgJoin = document.getElementById('in_tg_join').value;
+
+            if(ytSub) tasks.push({ platform: 'youtube', label: 'Đăng ký Kênh', url: ytSub });
+            if(ytLike) tasks.push({ platform: 'youtube', label: 'Like Video', url: ytLike });
+            if(tgJoin) tasks.push({ platform: 'telegram', label: 'Tham gia Telegram', url: tgJoin });
+
+            if(tasks.length === 0) return Swal.fire('Cảnh báo', 'Thêm ít nhất 1 nhiệm vụ!', 'warning');
+
+            const btn = document.getElementById('btnSave');
+            btn.disabled = true; btn.innerText = "ĐANG LƯU...";
+
+            try {
+                let finalId = editId;
+                const data = { title, subTitle, tasks, createdAt: serverTimestamp(), views: 0, isActive: true };
+                
+                if(!editId) {
+                    const docRef = await addDoc(collection(db, "links"), data);
+                    finalId = docRef.id;
+                } else {
+                    await updateDoc(doc(db, "links", editId), { title, subTitle, tasks });
+                }
+                
+                await setDoc(doc(db, "an_link", finalId), { destUrl: dest });
+
+                const shareUrl = `${window.location.origin}${window.location.pathname}?id=${finalId}`;
+                document.getElementById('i_rst').value = shareUrl;
+                document.getElementById('result-area').classList.remove('hidden');
+                Swal.fire('Thành công', 'Link đã được lưu!', 'success');
+            } catch (e) {
+                Swal.fire('Lỗi', e.message, 'error');
+            } finally {
+                btn.disabled = false; btn.innerText = "LƯU LIÊN KẾT";
+            }
         };
 
         window.copyRST = () => {
             const el = document.getElementById('i_rst');
             el.select();
             document.execCommand('copy');
-            Swal.fire({icon: 'success', title: 'Đã copy link!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000});
-        };
-
-        window.saveL = async () => {
-            const title = document.getElementById('i_ttl').value;
-            const subTitle = document.getElementById('i_sttl').value;
-            const dest = document.getElementById('i_lnk1').value;
-            
-            if(!dest) return Swal.fire('Cảnh báo', 'Vui lòng nhập Link Đích!', 'warning');
-
-            const tasks = [];
-            document.querySelectorAll('input.stu_fi[data-in]:not([data-in="dest"])').forEach(inp => {
-                if(inp.value.trim() !== '') {
-                    const parentGroup = inp.closest('.grp');
-                    if (parentGroup && (parentGroup.classList.contains('active') || parentGroup.classList.contains('a'))) {
-                        tasks.push({
-                            platform: inp.getAttribute('data-in') === 'yt' ? 'youtube' : 'telegram',
-                            label: inp.getAttribute('data-label'),
-                            url: inp.value.trim()
-                        });
-                    }
-                }
-            });
-
-            if(tasks.length === 0) return Swal.fire('Cảnh báo', 'Vui lòng chọn ít nhất 1 nhiệm vụ!', 'warning');
-
-            const btn = document.getElementById('btnSave'); btn.disabled = true; btn.innerText = "Đang xử lý...";
-            try {
-                let finalId = editId;
-                const data = { title, subTitle, tasks: tasks, createdAt: serverTimestamp(), views: 0, isActive: true };
-                if(!editId) {
-                    const docRef = await addDoc(collection(db, "links"), data);
-                    finalId = docRef.id;
-                } else {
-                    await updateDoc(doc(db, "links", editId), { title, subTitle, tasks: tasks });
-                }
-                await setDoc(doc(db, "an_link", finalId), { destUrl: dest, destName: 'NHẬN LINK NGAY' });
-                
-                const shareUrl = `${window.location.origin}${window.location.pathname}?id=${finalId}`;
-                document.getElementById('i_rst').value = shareUrl;
-                document.querySelector('.stu_rst').classList.add('active');
-                document.querySelector('.stu_rst').scrollIntoView({behavior: 'smooth'});
-            } catch (e) {
-                Swal.fire('Lỗi', e.message, 'error');
-            } finally {
-                btn.disabled = false; btn.innerText = editId ? "Cập nhật Link" : "Lưu và tạo Link bảo mật";
-            }
-        };
-
-        window.resetForm = () => { 
-            editId = null; 
-            document.getElementById('fgSTU').reset();
-            document.querySelectorAll('.platform-card, .btn_iftr, .grp').forEach(el => el.classList.remove('active'));
-            document.querySelector('.platform-card[data-id="yt"]').classList.add('active');
-            document.querySelector('.stu_ftr[data-ftr="yt"]').classList.add('active');
-            document.querySelector('[data-cgroup="g_lnk1"]').classList.add('active');
-            document.querySelector('.stu_rst').classList.remove('active');
-            document.getElementById('form-title').innerText = "Tạo liên kết mới"; 
-            document.getElementById('btnSave').innerText = "Lưu và tạo Link bảo mật";
+            Swal.fire({icon:'success', title:'Đã copy!', toast:true, position:'top-end', showConfirmButton:false, timer:1500});
         };
 
         async function loadHistory() {
-            const body = document.getElementById('history-body'); body.innerHTML = '<tr><td colspan="3" class="text-center py-10"><div class="loader"></div></td></tr>';
-            try {
-                const snap = await getDocs(query(collection(db, "links"), orderBy("createdAt", "desc")));
-                body.innerHTML = '';
-                snap.forEach(d => {
-                    const data = d.data();
-                    const shareUrl = `${window.location.origin}${window.location.pathname}?id=${d.id}`;
-                    body.innerHTML += `
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="px-6 py-5 truncate max-w-[200px] text-slate-800">${data.title}</td>
-                            <td class="px-6 py-5"><span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-xs font-black uppercase">${data.views || 0} Views</span></td>
-                            <td class="px-6 py-5 text-right flex justify-end gap-3">
-                                <button class="w-9 h-9 bg-slate-100 text-slate-500 rounded-xl hover:bg-blue-600 hover:text-white transition-all" onclick="window.loadEdit('${d.id}')"><i class="bi bi-pencil-fill"></i></button>
-                                <button class="w-9 h-9 bg-slate-100 text-slate-500 rounded-xl hover:bg-emerald-500 hover:text-white transition-all" onclick="navigator.clipboard.writeText('${shareUrl}'); Swal.fire({icon:'success',title:'Copied!',toast:true,position:'top-end',showConfirmButton:false,timer:1500})"><i class="bi bi-share-fill"></i></button>
-                                <button class="w-9 h-9 bg-slate-100 text-slate-500 rounded-xl hover:bg-red-500 hover:text-white transition-all" onclick="window.deleteL('${d.id}')"><i class="bi bi-trash-fill"></i></button>
-                            </td>
-                        </tr>`;
-                });
-            } catch(e) { console.error(e); }
+            const body = document.getElementById('history-list');
+            body.innerHTML = '<div class="text-center p-10"><div class="loader"></div></div>';
+            const snap = await getDocs(query(collection(db, "links"), orderBy("createdAt", "desc")));
+            body.innerHTML = '';
+            snap.forEach(d => {
+                const data = d.data();
+                const shareUrl = `${window.location.origin}${window.location.pathname}?id=${d.id}`;
+                body.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl border flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-sm text-gray-800">${data.title}</h4>
+                            <p class="text-[10px] font-bold text-blue-500 uppercase">${data.views || 0} Views</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="window.loadEdit('${d.id}')" class="p-2 bg-gray-100 rounded-lg text-gray-500"><i class="bi bi-pencil-square"></i></button>
+                            <button onclick="navigator.clipboard.writeText('${shareUrl}'); Swal.fire('Đã copy','','success')" class="p-2 bg-blue-50 rounded-lg text-blue-600"><i class="bi bi-clipboard"></i></button>
+                            <button onclick="window.deleteL('${d.id}')" class="p-2 bg-red-50 rounded-lg text-red-500"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>`;
+            });
         }
 
         window.loadEdit = async (id) => {
@@ -491,142 +312,89 @@
                 const d = snap.data();
                 document.getElementById('i_ttl').value = d.title;
                 document.getElementById('i_sttl').value = d.subTitle || '';
-                if(secret.exists()) document.getElementById('i_lnk1').value = secret.data().destUrl;
-                document.getElementById('form-title').innerText = "Đang chỉnh sửa Link";
-                document.getElementById('btnSave').innerText = "Cập nhật Link";
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.getElementById('i_lnk_dest').value = secret.exists() ? secret.data().destUrl : '';
+                document.getElementById('form-title').innerText = "ĐANG CHỈNH SỬA";
+                window.scrollTo({top: 0});
             }
         };
 
-        window.deleteL = async (id) => { 
-            const res = await Swal.fire({title:'Xác nhận xóa?', text:'Hành động này không thể hoàn tác!', icon:'warning', showCancelButton:true, confirmButtonColor:'#ef4444', confirmButtonText:'Xóa ngay'});
-            if(res.isConfirmed) { await deleteDoc(doc(db, "links", id)); await deleteDoc(doc(db, "an_link", id)); loadHistory(); } 
+        window.deleteL = async (id) => {
+            if(confirm("Xóa liên kết này?")) {
+                await deleteDoc(doc(db, "links", id));
+                await deleteDoc(doc(db, "an_link", id));
+                loadHistory();
+            }
         };
 
-        // --- USER TASK PAGE LOGIC ---
+        window.resetForm = () => { editId = null; document.getElementById('fgSTU').reset(); document.getElementById('result-area').classList.add('hidden'); document.getElementById('form-title').innerText = "Thông tin cơ bản"; };
+
+        // --- USER ACTIONS ---
         async function loadUserPage(id) {
-            const container = document.getElementById('user-container');
-            container.innerHTML = '<div class="flex justify-center mt-32"><div class="loader"></div></div>';
-            
+            const container = document.getElementById('user-view');
             try {
                 const snap = await getDoc(doc(db, "links", id));
-                if (!snap.exists() || snap.data().isActive === false) { 
-                    container.innerHTML = "<div class='bg-white p-12 rounded-[3rem] shadow-xl text-center font-black text-red-500 uppercase tracking-tighter'>Liên kết đã hết hạn hoặc bị khóa!</div>"; return; 
+                if (!snap.exists() || snap.data().isActive === false) {
+                    document.getElementById('user-container').innerHTML = "<div class='bg-white p-10 rounded-2xl text-center font-bold text-red-500 shadow-xl'>Liên kết đã hết hạn hoặc bị khóa.</div>";
+                    return;
                 }
                 const data = snap.data();
                 updateDoc(doc(db, "links", id), { views: increment(1) });
+
+                document.getElementById('u-title').innerText = data.title;
+                document.getElementById('u-stitle').innerText = data.subTitle || 'Hoàn thành các bước để nhận link';
                 
-                container.innerHTML = `
-                    <!-- Ad Banner Section -->
-                    <a href="#" class="ad-banner block p-6 rounded-[2.5rem] shadow-xl shadow-blue-900/10 border border-slate-700/10 transition-transform active:scale-95 group">
-                        <div class="flex items-center justify-between relative z-10">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-white/10 text-white rounded-2xl flex items-center justify-center text-2xl"><i class="bi bi-apple"></i></div>
-                                <div>
-                                    <h4 class="text-white font-extrabold text-sm uppercase tracking-tight group-hover:text-blue-400 transition-colors">Mua chứng chỉ iOS Pro</h4>
-                                    <p class="text-slate-400 text-[10px] font-bold">Giá cực sốc chỉ <span class="text-emerald-400 font-black">150k/Năm</span> - BH Trọn đời</p>
-                                </div>
-                            </div>
-                            <div class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-blue-500/30">Mua Ngay</div>
-                        </div>
-                    </a>
-
-                    <!-- Main Task Card -->
-                    <div class="bg-white p-10 rounded-[3rem] shadow-xl shadow-slate-200/50 border border-white text-center fade-in">
-                        <h1 class="text-3xl font-black text-slate-800 mb-2 uppercase tracking-tighter leading-tight">${data.title}</h1>
-                        <p class="text-sm text-slate-400 font-bold mb-8 px-4">${data.subTitle || 'Hoàn thành các bước bên dưới để nhận liên kết.'}</p>
-                        
-                        <!-- Progress Area -->
-                        <div class="mb-10 px-4">
-                            <div class="flex justify-between text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">
-                                <span>Tiến độ</span>
-                                <span id="progress-text">0%</span>
-                            </div>
-                            <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                                <div id="progress-bar" class="h-full bg-blue-600 w-0 transition-all duration-700 ease-out rounded-full shadow-lg shadow-blue-500/30"></div>
-                            </div>
-                        </div>
-
-                        <div id="taskListContent" class="space-y-4 text-left"></div>
-                        
-                        <button id="unlock-btn" class="w-full py-6 mt-10 rounded-[2rem] font-black text-slate-300 bg-slate-50 cursor-not-allowed uppercase text-[11px] tracking-widest border border-slate-100 transition-all flex items-center justify-center gap-3">
-                            <i class="bi bi-lock-fill"></i> Đang bị khóa
-                        </button>
-
-                        <div class="mt-8 flex justify-center items-center gap-2 opacity-20">
-                            <i class="bi bi-shield-lock-fill text-slate-800"></i>
-                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-800">Verified by Link4Sub Pro</span>
-                        </div>
-                    </div>`;
-                renderUserTasksUI(data.tasks, id);
-            } catch(e) { container.innerHTML = `<div class='bg-white p-10 rounded-3xl text-center'>Lỗi tải dữ liệu: ${e.message}</div>`; }
+                renderUserTasks(data.tasks, id);
+            } catch (e) { alert(e.message); }
         }
 
-        function renderUserTasksUI(tasks, id) {
-            const list = document.getElementById('taskListContent');
-            const progBar = document.getElementById('progress-bar');
-            const progText = document.getElementById('progress-text');
+        function renderUserTasks(tasks, id) {
+            const list = document.getElementById('user-task-list');
+            const progBar = document.getElementById('progress-bar-fill');
             const completed = new Set();
-            
-            const render = () => {
-                const percent = Math.round((completed.size / tasks.length) * 100);
-                if(progBar) progBar.style.width = `${percent}%`;
-                if(progText) progText.innerText = `${percent}%`;
 
+            const render = () => {
+                progBar.style.width = `${(completed.size / tasks.length) * 100}%`;
                 list.innerHTML = tasks.map((t, i) => {
                     const isDone = completed.has(i);
-                    const isLocked = i > 0 && !completed.has(i - 1);
+                    const isLocked = i > 0 && !completed.has(i-1);
                     
-                    let icon = 'bi-link-45deg';
-                    let bg = 'bg-blue-50 text-blue-600';
-                    if(t.platform === 'youtube') { icon = 'bi-youtube'; bg = 'bg-red-50 text-red-600'; }
-                    if(t.platform === 'telegram') { icon = 'bi-telegram'; bg = 'bg-sky-50 text-sky-600'; }
+                    let icon = t.platform === 'youtube' ? 'bi-youtube text-red-600' : 'bi-telegram text-blue-500';
+                    let bg = isDone ? 'bg-green-50 border-green-200' : isLocked ? 'bg-gray-50 opacity-40 grayscale' : 'bg-white border-gray-100 shadow-sm';
 
                     return `
                     <div onclick="${!isDone && !isLocked ? `window.doTask(${i},'${t.url}')` : ''}" 
-                         class="task-card p-5 flex justify-between items-center cursor-pointer ${isDone ? 'completed' : isLocked ? 'locked' : ''}">
-                        <div class="flex items-center gap-5">
-                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition-all ${isDone ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : bg}">
-                                <i class="bi ${isDone ? 'bi-check-lg' : icon}"></i>
+                         class="task-card p-4 rounded-2xl border flex items-center justify-between cursor-pointer ${bg}">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl bg-gray-100">
+                                <i class="bi ${isDone ? 'bi-check-lg text-green-600' : icon}"></i>
                             </div>
-                            <div>
-                                <p class="text-[8px] font-black uppercase text-slate-400 tracking-widest mb-1">Bước ${i+1}</p>
-                                <h4 class="font-extrabold text-slate-700 text-sm tracking-tight">${t.label}</h4>
+                            <div class="text-left">
+                                <p class="text-[8px] font-black uppercase text-gray-400">BƯỚC ${i+1}</p>
+                                <h4 class="font-bold text-sm text-gray-700">${t.label}</h4>
                             </div>
                         </div>
-                        <div class="pr-3">
-                             ${isLocked ? '<i class="bi bi-lock-fill text-slate-300"></i>' : isDone ? '<i class="bi bi-check-circle-fill text-emerald-500 text-xl"></i>' : '<i class="bi bi-chevron-right text-slate-400"></i>'}
-                        </div>
+                        <i class="bi bi-chevron-right text-gray-300"></i>
                     </div>`;
                 }).join('');
 
-                if (completed.size >= tasks.length) {
+                if(completed.size === tasks.length) {
                     const btn = document.getElementById('unlock-btn');
-                    btn.className = "w-full py-6 mt-10 rounded-[2rem] font-black text-white bg-blue-600 shadow-xl shadow-blue-600/30 cursor-pointer animate-pulse uppercase text-[11px] tracking-widest transition-transform hover:scale-[1.02] flex items-center justify-center gap-3";
-                    btn.innerHTML = '<i class="bi bi-unlock-fill"></i> Nhận Link ngay';
+                    btn.className = "w-full py-5 mt-10 rounded-2xl font-black text-white bg-blue-600 shadow-xl shadow-blue-200 cursor-pointer animate-pulse uppercase text-xs";
+                    btn.innerHTML = 'BẤM VÀO ĐÂY ĐỂ NHẬN LINK';
                     btn.onclick = async () => {
-                        btn.innerHTML = '<div class="loader border-white border-t-transparent"></div>';
-                        try {
-                            const secret = await getDoc(doc(db, "an_link", id));
-                            const tokenId = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
-                            await setDoc(doc(db, "link_gioi_han", tokenId), { destUrl: secret.data().destUrl, expireAt: Date.now() + 300000 });
-                            window.location.href = window.location.pathname + `?id=${id}&token=${tokenId}`;
-                        } catch(e) { alert("Lỗi: " + e.message); }
+                        btn.innerHTML = '<div class="loader"></div>';
+                        const secret = await getDoc(doc(db, "an_link", id));
+                        const tokenId = Math.random().toString(36).substring(2);
+                        await setDoc(doc(db, "link_gioi_han", tokenId), { destUrl: secret.data().destUrl, expireAt: Date.now() + 300000 });
+                        window.location.href = window.location.pathname + `?id=${id}&token=${tokenId}`;
                     };
                 }
             };
 
-            window.doTask = (i, url) => { 
-                window.open(url, '_blank'); 
-                Swal.fire({ 
-                    title: 'Đang kiểm tra...', 
-                    text: 'Hệ thống đang xác thực nhiệm vụ của bạn', 
-                    timer: 5000, 
-                    timerProgressBar: true, 
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    didOpen: () => { Swal.showLoading() } 
-                }).then(() => { completed.add(i); render(); }); 
+            window.doTask = (i, url) => {
+                window.open(url, '_blank');
+                Swal.fire({ title: 'Đang kiểm tra...', text: 'Vui lòng chờ xác thực nhiệm vụ (5s)', timer: 5000, timerProgressBar: true, showConfirmButton: false, allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } })
+                .then(() => { completed.add(i); render(); });
             };
             render();
         }
@@ -634,24 +402,17 @@
         async function verifyToken(tokenId) {
             const btn = document.getElementById('final-link-btn');
             const counter = document.getElementById('countdown');
-            try {
-                const snap = await getDoc(doc(db, "link_gioi_han", tokenId));
-                if(snap.exists()) {
-                    const d = snap.data();
-                    if(Date.now() > d.expireAt) { 
-                        btn.href="#"; 
-                        btn.innerHTML="Link đã hết hạn <i class='bi bi-x-circle ml-2'></i>"; 
-                        btn.className = "bg-slate-200 text-slate-400 px-16 py-6 rounded-[2rem] font-black uppercase text-sm cursor-not-allowed";
-                        return; 
-                    }
-                    btn.href = d.destUrl;
-                    setInterval(() => {
-                        const left = Math.max(0, Math.floor((d.expireAt - Date.now()) / 1000));
-                        counter.innerText = `Phiên làm việc hết hạn sau: ${left}s`;
-                        if(left <= 0) location.reload();
-                    }, 1000);
-                } else { alert("Token không hợp lệ!"); window.location.href = window.location.origin; }
-            } catch(e) { console.error(e); }
+            const snap = await getDoc(doc(db, "link_gioi_han", tokenId));
+            if(snap.exists()) {
+                const d = snap.data();
+                if(Date.now() > d.expireAt) { btn.innerText = "LINK ĐÃ HẾT HẠN"; btn.className = "bg-gray-400 cursor-not-allowed"; return; }
+                btn.href = d.destUrl;
+                setInterval(() => {
+                    const left = Math.max(0, Math.floor((d.expireAt - Date.now()) / 1000));
+                    counter.innerText = `Link hết hạn sau: ${left}s`;
+                    if(left <= 0) location.reload();
+                }, 1000);
+            } else { alert("Token lỗi!"); }
         }
 
         init();
