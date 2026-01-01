@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - ThaiSonCert Secured</title>
+    <!-- BẢO MẬT: CSP Chặn tải script lạ -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://cdnjs.cloudflare.com https://fonts.gstatic.com;">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -277,6 +280,32 @@
         // --- ADMIN EMAIL CONFIG ---
         const ADMIN_EMAIL = "iamsonnk4@gmail.com";
 
+        // BẢO MẬT: Hàm làm sạch dữ liệu đầu vào (Chống XSS)
+        const escapeHtml = (unsafe) => {
+            if (typeof unsafe !== 'string') return unsafe;
+            return unsafe
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+        // BẢO MẬT: Auto Logout sau 15 phút không hoạt động
+        let idleTimer;
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => {
+                if(auth.currentUser) {
+                    signOut(auth);
+                    alert("⚠️ Phiên làm việc đã hết hạn (15 phút). Vui lòng đăng nhập lại để bảo mật!");
+                }
+            }, 15 * 60 * 1000); // 15 phút
+        }
+        window.addEventListener('mousemove', resetIdleTimer);
+        window.addEventListener('keypress', resetIdleTimer);
+        window.addEventListener('click', resetIdleTimer);
+
         let curType = 'esign';
         let allData = [];
 
@@ -298,6 +327,7 @@
                 loadConfig();
                 load();
                 switchTab('esign'); // Init tab UI
+                resetIdleTimer();   // Bắt đầu đếm giờ
             } else {
                 document.getElementById('login-box').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
@@ -356,8 +386,8 @@
                 if(auth.currentUser?.email !== ADMIN_EMAIL) throw new Error("Mất quyền truy cập!");
 
                 await setDoc(doc(db, "settings", "general"), {
-                    title: document.getElementById('cfg-title').value,
-                    subtitle: document.getElementById('cfg-subtitle').value
+                    title: document.getElementById('cfg-title').value, // Title cho phép HTML nên không escape ở đây (để còn tô màu)
+                    subtitle: escapeHtml(document.getElementById('cfg-subtitle').value)
                 });
                 btn.className = "bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg transition-all flex items-center gap-2";
                 btn.innerHTML = '<i class="fas fa-check-circle"></i> Đã Lưu!';
@@ -403,19 +433,19 @@
             container.innerHTML = list.map(i => `
                 <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all flex items-center gap-4 group ${i.status==='hidden'?'opacity-60 grayscale bg-slate-50 ring-1 ring-slate-200':''}">
                     <div class="relative w-14 h-14 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-slate-200 group-hover:border-indigo-300 transition-colors">
-                        <img src="${i.icon || 'https://i.imgur.com/L6HpZa6.png'}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100?text=Icon'">
+                        <img src="${escapeHtml(i.icon) || 'https://i.imgur.com/L6HpZa6.png'}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100?text=Icon'">
                     </div>
                     
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h4 class="font-bold text-slate-800 truncate text-base group-hover:text-indigo-600 transition-colors">${i.name}</h4>
-                            ${i.badge ? `<span class="bg-red-100 text-red-600 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase border border-red-200 shadow-sm">${i.badge}</span>` : ''}
+                            <h4 class="font-bold text-slate-800 truncate text-base group-hover:text-indigo-600 transition-colors">${escapeHtml(i.name)}</h4>
+                            ${i.badge ? `<span class="bg-red-100 text-red-600 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase border border-red-200 shadow-sm">${escapeHtml(i.badge)}</span>` : ''}
                             ${i.status==='hidden' ? `<span class="bg-slate-200 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full"><i class="fas fa-eye-slash mr-1"></i> ẨN</span>` : ''}
                         </div>
-                        <p class="text-xs text-slate-500 truncate mt-1 flex items-center gap-1"><i class="fas fa-info-circle text-slate-300"></i> ${i.desc || 'Chưa có mô tả'}</p>
+                        <p class="text-xs text-slate-500 truncate mt-1 flex items-center gap-1"><i class="fas fa-info-circle text-slate-300"></i> ${escapeHtml(i.desc) || 'Chưa có mô tả'}</p>
                         <div class="flex gap-4 mt-2 text-[11px] font-medium text-slate-400">
                             <span class="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-100"><i class="fas fa-download text-indigo-400"></i> ${i.downloads||0}</span>
-                            ${i.tag ? `<span class="flex items-center gap-1 capitalize bg-orange-50 px-2 py-0.5 rounded border border-orange-100 text-orange-500"><i class="fas fa-${i.tag}"></i> ${i.tag}</span>` : ''}
+                            ${i.tag ? `<span class="flex items-center gap-1 capitalize bg-orange-50 px-2 py-0.5 rounded border border-orange-100 text-orange-500"><i class="fas fa-${escapeHtml(i.tag)}"></i> ${escapeHtml(i.tag)}</span>` : ''}
                         </div>
                     </div>
 
@@ -456,7 +486,7 @@
             const img = document.getElementById('icon-preview');
             const place = document.getElementById('icon-placeholder');
             if(url) {
-                img.src = url;
+                img.src = url; // Không escape ở đây để hiện ảnh, nhưng CSP sẽ chặn nếu nguồn lạ
                 img.classList.remove('hidden');
                 place.classList.add('hidden');
                 // Auto error handler
@@ -541,9 +571,12 @@
                 const tagRadio = document.querySelector('input[name="tag_icon"]:checked');
                 if(tagRadio) selectedTag = tagRadio.value;
 
+                // Escape HTML trước khi lưu (Tùy chọn: Hoặc escape khi hiển thị)
+                // Ở đây ta lưu raw, nhưng khi hiển thị ở trên đã dùng escapeHtml
+                
                 const data = {
                     type: curType,
-                    name: name,
+                    name: name, // Lưu raw để dễ sửa
                     desc: document.getElementById('inp-desc').value,
                     url: url,
                     icon: document.getElementById('inp-icon').value,
