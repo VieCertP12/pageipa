@@ -275,9 +275,6 @@
                 
                 <!-- Simple Header -->
                 <div class="bg-white border-b border-gray-100 p-6 text-center pt-8">
-                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
                     <h1 id="u_title" class="text-xl font-bold text-gray-900 mb-1">Đang tải...</h1>
                     <p id="u_subtitle" class="text-sm text-gray-500">Hoàn thành các bước để tiếp tục</p>
                 </div>
@@ -293,8 +290,15 @@
                     </div>
                 </div>
 
+                <!-- User Note Area -->
+                <div id="u_note_area" class="hidden px-4 mb-2">
+                    <!-- Note will be injected here -->
+                </div>
+
                 <!-- Tasks List -->
-                <div id="u_tasks" class="px-4 space-y-3 flex-1 pb-6"></div>
+                <div id="u_tasks" class="px-4 space-y-3 flex-1 pb-6">
+                    <!-- Tasks will act as simple list items -->
+                </div>
 
                 <!-- Footer Unlock -->
                 <div class="p-4 bg-white border-t border-gray-100 mt-auto">
