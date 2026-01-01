@@ -2,505 +2,446 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Link4Sub Pro - Apple Design</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link4Sub Pro - System</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts - Inter for Apple-like typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <style>
-        /* --- APPLE SYSTEM VARIABLES --- */
-        :root {
-            --ios-bg: #F2F2F7;
-            --ios-card: #FFFFFF;
-            --ios-blue: #007AFF;
-            --ios-green: #34C759;
-            --ios-red: #FF3B30;
-            --ios-gray: #8E8E93;
-            --ios-separator: #C6C6C8;
-            --ios-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; color: #1e293b; overflow: hidden; }
 
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--ios-bg); 
-            color: #1C1C1E; 
-            -webkit-font-smoothing: antialiased;
-            overflow: hidden; /* App-like feel */
+        /* --- UI COMPONENTS --- */
+        .pc-input {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 10px 14px; font-size: 14px; width: 100%; transition: all 0.2s; color: #334155;
         }
+        .pc-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         
-        /* --- UTILS --- */
-        .ios-scroll {
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
+        .pc-btn {
+            background-color: #3b82f6; color: white; border-radius: 8px; font-weight: 600;
+            padding: 10px 20px; transition: all 0.2s; border: none; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .ios-scroll::-webkit-scrollbar { display: none; }
-
-        .glass-header {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            position: sticky; top: 0; z-index: 50;
-        }
-
-        /* --- COMPONENTS --- */
-        /* iOS Inputs - Grouped Style */
-        .ios-group {
-            background: var(--ios-card);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
+        .pc-btn:hover { background-color: #2563eb; transform: translateY(-1px); }
+        .pc-btn:active { transform: translateY(0); }
         
-        .ios-cell {
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #E5E5EA; /* Light separator */
-            position: relative;
+        .pc-btn-secondary { 
+            background: #fff; border: 1px solid #e2e8f0; color: #64748b; 
         }
-        .ios-cell:last-child { border-bottom: none; }
-        
-        .ios-label {
-            width: 140px;
-            font-size: 15px;
-            font-weight: 500;
-            color: #1C1C1E;
-            flex-shrink: 0;
-        }
-        
-        .ios-input {
-            flex: 1;
-            font-size: 15px;
-            color: #007AFF;
-            border: none;
-            outline: none;
-            background: transparent;
-            text-align: right;
-        }
-        .ios-input::placeholder { color: #C7C7CC; }
+        .pc-btn-secondary:hover { background: #f8fafc; color: #334155; border-color: #cbd5e1; }
 
-        /* iOS Buttons */
-        .ios-btn {
-            background-color: var(--ios-blue);
-            color: white;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            padding: 14px;
-            width: 100%;
-            border: none;
-            transition: transform 0.1s, opacity 0.2s;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
+        /* Sidebar Navigation */
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; border-radius: 8px;
+            color: #64748b; font-weight: 500; font-size: 14px;
+            transition: all 0.2s; cursor: pointer; margin-bottom: 4px;
         }
-        .ios-btn:active { transform: scale(0.97); opacity: 0.9; }
-        
-        .ios-btn-secondary {
-            background-color: #E5F1FF;
-            color: var(--ios-blue);
-        }
+        .nav-item:hover { background: #f1f5f9; color: #1e293b; }
+        .nav-item.active { background: #eff6ff; color: #3b82f6; font-weight: 600; }
+        .nav-item i { width: 20px; text-align: center; }
 
-        /* Platform Pills */
-        .platform-scroll {
-            display: flex; gap: 12px; padding: 4px 20px 16px; 
-            overflow-x: auto; scrollbar-width: none;
-        }
-        .platform-btn {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 72px; height: 72px;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            transition: all 0.2s;
-            flex-shrink: 0;
-            border: 2px solid transparent;
-        }
-        .platform-btn i { font-size: 24px; margin-bottom: 4px; }
-        .platform-btn span { font-size: 10px; font-weight: 500; }
-        .platform-btn.active { border-color: var(--clr); color: var(--clr); background: #F2F2F7; transform: translateY(-2px); }
-
-        /* Task Chips */
-        .task-chip {
-            background: #fff; border: 1px solid #E5E5EA;
-            padding: 8px 16px; border-radius: 20px;
-            font-size: 13px; font-weight: 600; color: #666;
-            transition: all 0.2s; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 6px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-        }
-        .task-chip:active { transform: scale(0.95); }
-        .task-chip.active { background: var(--clr); color: white; border-color: var(--clr); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-
-        /* Switches (iOS Style) */
-        .ios-switch { position: relative; display: inline-block; width: 51px; height: 31px; }
+        /* Switches */
+        .ios-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .ios-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #E9E9EA; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 27px; width: 27px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        input:checked + .slider { background-color: var(--ios-green); }
-        input:checked + .slider:before { transform: translateX(20px); }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: #10b981; }
+        input:checked + .slider:before { transform: translateX(18px); }
 
-        /* Admin Tab Bar (Floating) */
-        .floating-tab {
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 4px;
-            display: flex;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.05);
+        /* Platform Icons */
+        .stu_b_ftr { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 80px; height: 80px; border-radius: 12px; background: #fff; 
+            color: #94a3b8; border: 1px solid #e2e8f0; font-size: 11px; gap: 6px; cursor: pointer;
+            transition: all 0.2s;
         }
-        .floating-tab button {
-            padding: 8px 24px;
-            border-radius: 16px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #8E8E93;
-            transition: all 0.3s;
-        }
-        .floating-tab button.active {
-            background: #000;
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+        .stu_b_ftr:hover { border-color: #cbd5e1; transform: translateY(-2px); }
+        .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); background: #fff; box-shadow: 0 4px 12px -2px rgba(0,0,0,0.1); }
+        .stu_b_ftr i { font-size: 28px; }
 
-        /* --- USER UI SPECIFIC --- */
-        .user-header {
-            padding: 40px 24px 20px;
-            text-align: center;
-            background: #fff;
-            border-bottom-left-radius: 32px;
-            border-bottom-right-radius: 32px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
-            margin-bottom: 24px;
+        .btn_iftr { 
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; 
+            border-radius: 8px; background: #fff; color: #475569; font-size: 13px; font-weight: 500;
+            border: 1px solid #e2e8f0; margin: 4px; cursor: pointer; transition: all 0.2s;
         }
-        .task-row {
-            background: white;
-            padding: 16px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .task-row:active { transform: scale(0.98); background: #F2F2F7; }
-        .task-row.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(1); background: #f9f9f9; }
-        .task-icon {
-            width: 44px; height: 44px;
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
-            margin-right: 14px;
+        .btn_iftr:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); }
+        .btn_iftr.active i { color: white; }
+        .btn_add { border: 1px dashed #3b82f6; color: #3b82f6; background: #f0f9ff; }
+        .btn_add:hover { background: #dbeafe; border-color: #2563eb; }
+
+        .grp { display: none; }
+        .grp.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Loading Spinner */
+        .loader { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* User View Styles */
+        .user-card-wrapper { max-width: 480px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; background: white; box-shadow: 0 0 40px rgba(0,0,0,0.05); }
+        @media(min-width: 768px) {
+            .user-card-wrapper { height: auto; min-height: 80vh; border-radius: 24px; margin-top: 4vh; margin-bottom: 4vh; border: 1px solid #e2e8f0; }
         }
         
-        /* Spinner */
-        .spinner { width: 20px; height: 20px; border: 2.5px solid #E5E5EA; border-top-color: var(--ios-blue); border-radius: 50%; animation: spin .8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Animation */
-        .slide-up { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .task-row {
+            background: white; padding: 16px; border-radius: 12px;
+            display: flex; align-items: center; margin-bottom: 12px;
+            border: 1px solid #f1f5f9; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+        }
+        .task-row:hover { border-color: #e2e8f0; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .task-row.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(1); background: #f8fafc; }
+        
+        .mini-loader { width: 20px; height: 20px; border: 2px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
     </style>
 </head>
-<body class="h-screen flex items-center justify-center">
+<body class="h-screen flex overflow-hidden">
 
-    <!-- MAIN CONTAINER (Mobile First approach but works on Desktop) -->
-    <div id="app" class="w-full h-full md:h-[90vh] md:max-w-[480px] md:rounded-[40px] md:border-[8px] md:border-gray-900 bg-[#F2F2F7] relative overflow-hidden shadow-2xl flex flex-col">
+    <!-- APP CONTAINER -->
+    <div id="app" class="w-full h-full flex relative">
         
-        <!-- GLOBAL LOADER -->
-        <div id="global-loader" class="absolute inset-0 bg-white/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden">
-            <div class="spinner w-8 h-8 border-4 border-gray-200 border-t-blue-600"></div>
+        <!-- Loading Screen -->
+        <div id="global-loader" class="absolute inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hidden">
+            <div class="loader mb-3"></div>
+            <div class="text-sm text-slate-500 font-medium">Đang tải dữ liệu...</div>
         </div>
 
-        <!-- === VIEW: LOGIN === -->
-        <div id="view-login" class="flex-1 flex flex-col items-center justify-center p-8 hidden">
-            <div class="w-24 h-24 bg-white rounded-[24px] shadow-xl flex items-center justify-center mb-8">
-                <i class="fa-brands fa-apple text-5xl text-black"></i>
-            </div>
-            <h1 class="text-2xl font-bold mb-2">Admin Login</h1>
-            <p class="text-gray-400 text-sm mb-8">Hệ thống quản lý Link4Sub</p>
-            
-            <div class="w-full ios-group">
-                <div class="ios-cell">
-                    <div class="ios-label">Email</div>
-                    <input type="email" id="adminEmail" class="ios-input" placeholder="admin@example.com">
+        <!-- === VIEW: LOGIN (Centered) === -->
+        <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center bg-slate-100 hidden">
+            <div class="bg-white p-10 rounded-2xl shadow-xl w-full max-w-sm border border-slate-200">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-white text-2xl shadow-lg shadow-blue-500/30">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-slate-800">Admin Login</h1>
+                    <p class="text-sm text-slate-500">Hệ thống quản lý Link4Sub</p>
                 </div>
-                <div class="ios-cell">
-                    <div class="ios-label">Mật khẩu</div>
-                    <input type="password" id="adminPass" class="ios-input" placeholder="••••••">
-                </div>
-            </div>
-
-            <button onclick="authLogin()" class="ios-btn shadow-lg shadow-blue-500/30">
-                Đăng nhập
-            </button>
-        </div>
-
-        <!-- === VIEW: ADMIN === -->
-        <div id="view-admin" class="flex-1 flex flex-col relative hidden bg-[#F2F2F7]">
-            <!-- Header -->
-            <div class="glass-header px-6 py-4 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 bg-black text-white rounded-full flex items-center justify-center"><i class="fa-solid fa-link text-sm"></i></div>
-                    <span class="font-bold text-lg">Dashboard</span>
-                </div>
-                <button onclick="logout()" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-50 transition"><i class="fa-solid fa-power-off text-sm"></i></button>
-            </div>
-
-            <!-- Content -->
-            <div class="flex-1 ios-scroll p-5 pb-32">
                 
-                <!-- Tab Create -->
-                <div id="tab_create_stu">
-                    <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
-                        <input type="hidden" id="edit_doc_id" value="">
-                        
-                        <!-- Section: Info -->
-                        <div class="text-xs font-semibold text-gray-400 uppercase ml-4 mb-2 mt-2">Thông tin cơ bản</div>
-                        <div class="ios-group">
-                            <div class="ios-cell">
-                                <div class="ios-label">Tiêu đề</div>
-                                <input type="text" id="i_ttl" class="ios-input" placeholder="Nhập tiêu đề...">
-                            </div>
-                            <div class="ios-cell">
-                                <div class="ios-label">Mô tả phụ</div>
-                                <input type="text" id="i_sttl" class="ios-input" placeholder="Hướng dẫn user...">
-                            </div>
-                        </div>
-
-                        <!-- Section: Type -->
-                        <div class="text-xs font-semibold text-gray-400 uppercase ml-4 mb-2">Loại Link</div>
-                        <div class="bg-white p-2 rounded-2xl mb-6 flex gap-2 shadow-sm">
-                            <label class="flex-1 cursor-pointer">
-                                <input type="radio" name="destType" value="link" checked onchange="toggleDestType()" class="hidden peer">
-                                <div class="py-3 text-center rounded-xl text-sm font-semibold text-gray-500 peer-checked:bg-blue-500 peer-checked:text-white transition">Link Đích</div>
-                            </label>
-                            <label class="flex-1 cursor-pointer">
-                                <input type="radio" name="destType" value="note" onchange="toggleDestType()" class="hidden peer">
-                                <div class="py-3 text-center rounded-xl text-sm font-semibold text-gray-500 peer-checked:bg-orange-500 peer-checked:text-white transition">Ghi Chú</div>
-                            </label>
-                        </div>
-
-                        <!-- Section: Config Destination -->
-                        <div class="text-xs font-semibold text-gray-400 uppercase ml-4 mb-2" id="destTitle">Cấu hình Đích</div>
-                        <div class="ios-group">
-                            <div class="ios-cell">
-                                <div class="ios-label">Tên nút</div>
-                                <input type="text" id="i_dest_name" class="ios-input" placeholder="Mở khóa ngay">
-                            </div>
-                            
-                            <!-- Link Input -->
-                            <div class="ios-cell" id="dest_container_link">
-                                <div class="ios-label">URL Gốc</div>
-                                <input type="url" id="i_dest_url" class="ios-input" placeholder="https://...">
-                            </div>
-                            
-                            <!-- Note Input -->
-                            <div class="hidden p-4 bg-white" id="dest_container_note">
-                                <textarea id="i_dest_note" class="w-full h-24 bg-gray-50 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 border-none resize-none font-mono" placeholder="Nhập nội dung cần khóa (Key, Code)..."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Section: Notes -->
-                        <div class="text-xs font-semibold text-gray-400 uppercase ml-4 mb-2">Ghi chú</div>
-                        <div class="ios-group">
-                            <div class="ios-cell">
-                                <div class="ios-label text-gray-400">Admin Note</div>
-                                <input type="text" id="i_note" class="ios-input text-gray-500" placeholder="Chỉ bạn thấy...">
-                            </div>
-                            <div class="ios-cell">
-                                <div class="ios-label text-yellow-600">User Note</div>
-                                <input type="text" id="i_user_note" class="ios-input text-yellow-600" placeholder="Hiện cho User...">
-                            </div>
-                        </div>
-
-                        <!-- Section: Tasks -->
-                        <div class="text-xs font-semibold text-gray-400 uppercase ml-4 mb-2">Nhiệm vụ</div>
-                        
-                        <!-- Platforms Scroll -->
-                        <div class="platform-scroll">
-                            <div class="platform-btn active" onclick="selectPlatform('yt', this)" style="--clr:#FF3B30"><i class="fa-brands fa-youtube"></i><span>YouTube</span></div>
-                            <div class="platform-btn" onclick="selectPlatform('tg', this)" style="--clr:#0088CC"><i class="fa-brands fa-telegram"></i><span>Telegram</span></div>
-                            <div class="platform-btn" onclick="selectPlatform('tk', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i><span>TikTok</span></div>
-                            <div class="platform-btn" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i><span>FaceBook</span></div>
-                        </div>
-
-                        <!-- Task Chips -->
-                        <div class="px-5 py-4 flex flex-wrap gap-2">
-                            <!-- YT -->
-                            <div id="ftr_yt" class="w-full flex flex-wrap gap-2">
-                                <div class="task-chip" onclick="addTask('yt', null, 'Đăng ký Kênh')"><i class="fa-solid fa-plus"></i> Sub Channel</div>
-                                <div class="task-chip" onclick="addTask('yt', null, 'Like Video')"><i class="fa-solid fa-plus"></i> Like Video</div>
-                                <div class="task-chip" onclick="addTask('yt', null, 'Comment Video')"><i class="fa-solid fa-plus"></i> Comment</div>
-                            </div>
-                            <!-- TG -->
-                            <div id="ftr_tg" class="w-full flex flex-wrap gap-2 hidden">
-                                <div class="task-chip" onclick="addTask('tg', null, 'Join Group')"><i class="fa-solid fa-plus"></i> Join Group</div>
-                                <div class="task-chip" onclick="addTask('tg', null, 'Join Channel')"><i class="fa-solid fa-plus"></i> Join Channel</div>
-                            </div>
-                            <!-- TK -->
-                            <div id="ftr_tk" class="w-full flex flex-wrap gap-2 hidden">
-                                <div class="task-chip" onclick="addTask('tk', null, 'Follow Tiktok')"><i class="fa-solid fa-plus"></i> Follow</div>
-                                <div class="task-chip" onclick="addTask('tk', null, 'Like Video')"><i class="fa-solid fa-plus"></i> Like</div>
-                            </div>
-                            <!-- FB -->
-                            <div id="ftr_fb" class="w-full flex flex-wrap gap-2 hidden">
-                                <div class="task-chip" onclick="addTask('fb', null, 'Follow Fanpage')"><i class="fa-solid fa-plus"></i> Follow</div>
-                            </div>
-                        </div>
-
-                        <!-- Dynamic Inputs -->
-                        <div id="dynamic_inputs" class="px-5 space-y-3 mb-8">
-                            <!-- Tasks will be added here -->
-                        </div>
-
-                        <div class="h-20"></div> <!-- Spacer -->
-                    </form>
-                </div>
-
-                <!-- Tab Manage -->
-                <div id="tab_manage_links" class="hidden">
-                    <div class="flex justify-between items-center mb-4 px-4">
-                        <h2 class="font-bold text-xl">Danh sách Link</h2>
-                        <button onclick="fetchLinks()" class="text-blue-500 text-sm font-semibold"><i class="fa-solid fa-rotate"></i> Reload</button>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email</label>
+                        <input type="email" id="adminEmail" class="pc-input" placeholder="admin@example.com">
                     </div>
-                    <div id="links-list" class="space-y-3 px-4">
-                        <!-- Links injected here -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Mật khẩu</label>
+                        <input type="password" id="adminPass" class="pc-input" placeholder="••••••">
                     </div>
-                    <div class="h-20"></div>
-                </div>
-
-            </div>
-
-            <!-- Floating Action Bar -->
-            <div id="admin-actions" class="absolute bottom-6 left-0 right-0 px-6 z-40">
-                <div id="create-actions" class="flex gap-3">
-                    <button onclick="resetForm()" class="ios-btn bg-white text-gray-500 shadow-sm w-1/3">Reset</button>
-                    <button onclick="handleSubmitCreate()" id="btnAction" class="ios-btn flex-1 shadow-lg shadow-blue-500/30">Tạo Link</button>
+                    <button onclick="authLogin()" class="pc-btn w-full justify-center mt-2 py-3 shadow-lg shadow-blue-500/20">
+                        Đăng nhập
+                    </button>
                 </div>
             </div>
+        </div>
+
+        <!-- === VIEW: ADMIN (PC DASHBOARD) === -->
+        <div id="view-admin" class="w-full h-full flex hidden bg-slate-50">
             
-            <!-- Result Modal (Overlay) -->
-            <div id="resultModal" class="absolute inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-6 backdrop-blur-sm">
-                <div class="bg-white w-full rounded-3xl p-6 text-center shadow-2xl animate-bounce-in">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600 text-3xl">
-                        <i class="fa-solid fa-check"></i>
+            <!-- Sidebar -->
+            <div class="w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0">
+                <div class="h-16 flex items-center px-6 border-b border-slate-100">
+                    <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center mr-3 font-bold"><i class="fa-solid fa-bolt"></i></div>
+                    <span class="font-bold text-slate-800 text-lg">Link4Sub Pro</span>
+                </div>
+                
+                <div class="p-4 flex-1 overflow-y-auto">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-3 px-2">Menu</div>
+                    <div class="nav-item active" onclick="switchTab('stu')" id="btn-tab-stu">
+                        <i class="fa-solid fa-plus-circle"></i> Tạo Link Mới
                     </div>
-                    <h3 class="text-xl font-bold mb-1">Thành công!</h3>
-                    <p class="text-gray-500 text-sm mb-6">Link của bạn đã sẵn sàng.</p>
+                    <div class="nav-item" onclick="switchTab('manage')" id="btn-tab-manage">
+                        <i class="fa-solid fa-list-ul"></i> Quản Lý Link
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-slate-100">
+                    <button onclick="logout()" class="nav-item w-full text-red-500 hover:bg-red-50 hover:text-red-600">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col overflow-hidden relative">
+                <!-- Topbar -->
+                <div class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
+                    <h2 class="text-lg font-bold text-slate-800" id="page-title">Tạo Liên Kết Mới</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-slate-500">Xin chào, <b>Admin</b></span>
+                        <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user"></i></div>
+                    </div>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="flex-1 overflow-y-auto p-8">
                     
-                    <div class="bg-gray-100 rounded-xl p-3 mb-4 flex items-center gap-2">
-                        <input id="resultLink" readonly class="bg-transparent flex-1 text-sm outline-none text-gray-600">
-                        <button onclick="copyResult()" class="text-blue-600 font-bold text-sm">COPY</button>
-                    </div>
-                    
-                    <div class="flex gap-3">
-                        <a href="#" id="previewLink" target="_blank" class="ios-btn bg-gray-100 text-gray-800 flex-1">Xem thử</a>
-                        <button onclick="document.getElementById('resultModal').classList.add('hidden')" class="ios-btn flex-1">Đóng</button>
-                    </div>
-                </div>
-            </div>
+                    <!-- TAB 1: CREATE -->
+                    <div id="tab_create_stu" class="max-w-5xl mx-auto">
+                        <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
+                            <input type="hidden" id="edit_doc_id" value="">
 
-            <!-- Floating Tab Bar -->
-            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-30">
-                <div class="floating-tab">
-                    <button onclick="switchTab('stu')" id="btn-tab-stu" class="active">Tạo Mới</button>
-                    <button onclick="switchTab('manage')" id="btn-tab-manage">Quản Lý</button>
+                            <!-- Card: Basic Info -->
+                            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+                                <h3 class="text-sm font-bold text-slate-800 uppercase mb-4 flex justify-between items-center">
+                                    <span><i class="fa-regular fa-file-lines mr-2"></i> Thông tin cơ bản</span>
+                                    <span id="editModeBadge" class="hidden text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Chế độ sửa</span>
+                                </h3>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-600 mb-1">Tiêu đề chính</label>
+                                        <input type="text" id="i_ttl" class="pc-input" placeholder="Nhập tiêu đề nhiệm vụ...">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-600 mb-1">Mô tả phụ</label>
+                                        <input type="text" id="i_sttl" class="pc-input" placeholder="Hướng dẫn người dùng...">
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-600 mb-1">Ghi chú (Nội bộ)</label>
+                                        <input type="text" id="i_note" class="pc-input" placeholder="Ghi chú riêng cho Admin...">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-blue-600 mb-1">Lời nhắn cho User</label>
+                                        <input type="text" id="i_user_note" class="pc-input bg-blue-50/50 border-blue-100" placeholder="Hiển thị thông báo màu vàng cho user...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card: Destination -->
+                            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+                                <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-bullseye mr-2"></i> Cấu hình Đích đến</h3>
+                                
+                                <div class="flex gap-6 mb-4">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="destType" value="link" checked onchange="toggleDestType()" class="w-4 h-4 text-blue-600">
+                                        <span class="text-sm font-medium text-slate-700">Link Đích (URL)</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="destType" value="note" onchange="toggleDestType()" class="w-4 h-4 text-blue-600">
+                                        <span class="text-sm font-medium text-slate-700">Ghi Chú (Key/Code)</span>
+                                    </label>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-600 mb-1">Tên nút Mở khóa</label>
+                                        <input type="text" id="i_dest_name" class="pc-input" placeholder="Ví dụ: Lấy Link Ngay">
+                                    </div>
+                                    
+                                    <div id="dest_container_link">
+                                        <label class="block text-sm font-medium text-slate-600 mb-1">Link gốc (URL)</label>
+                                        <input type="url" id="i_dest_url" class="pc-input" placeholder="https://...">
+                                    </div>
+
+                                    <div id="dest_container_note" class="hidden">
+                                        <label class="block text-sm font-medium text-slate-600 mb-1">Nội dung Ghi chú</label>
+                                        <textarea id="i_dest_note" class="pc-input h-24 font-mono" placeholder="Nhập Key, Code hoặc nội dung cần ẩn..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card: Tasks -->
+                            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+                                <h3 class="text-sm font-bold text-slate-800 uppercase mb-4"><i class="fa-solid fa-list-check mr-2"></i> Thiết lập Nhiệm vụ</h3>
+                                
+                                <!-- Platform Selector -->
+                                <div class="flex gap-4 mb-6">
+                                    <button type="button" class="stu_b_ftr active" onclick="selectPlatform('yt', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i><span>YouTube</span></button>
+                                    <button type="button" class="stu_b_ftr" onclick="selectPlatform('tg', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i><span>Telegram</span></button>
+                                    <button type="button" class="stu_b_ftr" onclick="selectPlatform('tk', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i><span>TikTok</span></button>
+                                    <button type="button" class="stu_b_ftr" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i><span>Facebook</span></button>
+                                </div>
+
+                                <!-- Quick Add Buttons -->
+                                <div class="p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300 mb-6 flex flex-wrap gap-2">
+                                    <!-- YT -->
+                                    <div id="ftr_yt" class="w-full">
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Đăng ký Kênh</button>
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like Video</button>
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
+                                        <button type="button" class="btn_iftr btn_add" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Thêm Khác</button>
+                                    </div>
+                                    <!-- TG -->
+                                    <div id="ftr_tg" class="w-full hidden">
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Join Group</button>
+                                        <button type="button" class="btn_iftr btn_add" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Thêm Khác</button>
+                                    </div>
+                                    <!-- TK -->
+                                    <div id="ftr_tk" class="w-full hidden">
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button>
+                                        <button type="button" class="btn_iftr btn_add" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Thêm Khác</button>
+                                    </div>
+                                    <!-- FB -->
+                                    <div id="ftr_fb" class="w-full hidden">
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button>
+                                        <button type="button" class="btn_iftr btn_add" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Thêm Khác</button>
+                                    </div>
+                                </div>
+
+                                <!-- Dynamic Inputs Grid -->
+                                <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <!-- Default YouTube -->
+                                    <div class="grp" id="grp_yt1">
+                                        <div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition">
+                                            <input type="text" id="lbl_yt1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Đăng ký kênh YouTube">
+                                            <input class="pc-input bg-slate-50" id="i_yt1" type="url" placeholder="Link kênh...">
+                                        </div>
+                                    </div>
+                                    <div class="grp" id="grp_ytl1">
+                                        <div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition">
+                                            <input type="text" id="lbl_ytl1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Like Video">
+                                            <input class="pc-input bg-slate-50" id="i_ytl1" type="url" placeholder="Link video...">
+                                        </div>
+                                    </div>
+                                    <div class="grp" id="grp_ytc1">
+                                        <div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition">
+                                            <input type="text" id="lbl_ytc1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Comment Video">
+                                            <input class="pc-input bg-slate-50" id="i_ytc1" type="url" placeholder="Link video...">
+                                        </div>
+                                    </div>
+                                    <!-- Default Others -->
+                                    <div class="grp" id="grp_tg1"><div class="bg-white border border-slate-200 p-3 rounded-lg"><input type="text" id="lbl_tg1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Join Telegram"><input class="pc-input bg-slate-50" id="i_tg1" type="url" placeholder="Link Group..."></div></div>
+                                    <div class="grp" id="grp_tk1"><div class="bg-white border border-slate-200 p-3 rounded-lg"><input type="text" id="lbl_tk1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Tiktok"><input class="pc-input bg-slate-50" id="i_tk1" type="url" placeholder="Link Profile..."></div></div>
+                                    <div class="grp" id="grp_fb1"><div class="bg-white border border-slate-200 p-3 rounded-lg"><input type="text" id="lbl_fb1" class="text-xs font-bold text-slate-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Facebook"><input class="pc-input bg-slate-50" id="i_fb1" type="url" placeholder="Link Fanpage..."></div></div>
+                                </div>
+                            </div>
+
+                            <!-- Footer Actions -->
+                            <div class="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200 sticky bottom-0 z-10">
+                                <button type="button" onclick="resetForm()" class="pc-btn pc-btn-secondary px-6">Làm mới</button>
+                                <button type="submit" id="btnAction" class="pc-btn flex-1 py-3 text-lg shadow-lg shadow-blue-500/20">
+                                    <i class="fa-solid fa-rocket"></i> Tạo Liên Kết
+                                </button>
+                            </div>
+
+                            <!-- Result Box -->
+                            <div id="resultArea" class="hidden mt-6 bg-green-50 border border-green-200 p-6 rounded-xl text-center">
+                                <h3 class="text-green-700 font-bold text-lg mb-2"><i class="fa-solid fa-check-circle mr-2"></i>Thành công!</h3>
+                                <div class="flex gap-2 max-w-2xl mx-auto">
+                                    <input id="resultLink" type="text" readonly class="pc-input bg-white text-center font-medium">
+                                    <button type="button" onclick="copyResult()" class="pc-btn bg-green-600 hover:bg-green-700">Copy</button>
+                                    <a href="#" id="previewLink" target="_blank" class="pc-btn pc-btn-secondary">Xem</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- TAB 2: MANAGE -->
+                    <div id="tab_manage_links" class="hidden max-w-6xl mx-auto">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="relative w-64">
+                                <input type="text" placeholder="Tìm kiếm link..." class="pc-input pl-10">
+                                <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400"></i>
+                            </div>
+                            <button onclick="fetchLinks()" class="pc-btn pc-btn-secondary"><i class="fa-solid fa-rotate mr-2"></i> Làm mới dữ liệu</button>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                            <table class="w-full text-left">
+                                <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase">
+                                    <tr>
+                                        <th class="py-4 px-6">Tiêu đề / Link</th>
+                                        <th class="py-4 px-6">Ghi chú</th>
+                                        <th class="py-4 px-6">Loại</th>
+                                        <th class="py-4 px-6 text-center">Trạng thái</th>
+                                        <th class="py-4 px-6 text-right">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="links-table-body" class="text-sm text-slate-600 divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-        <!-- === VIEW: USER (iOS App Style) === -->
-        <div id="view-user" class="hidden flex-1 flex flex-col bg-white overflow-y-auto">
-            
-            <!-- Header -->
-            <div class="user-header bg-white">
-                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-[22px] flex items-center justify-center mx-auto mb-5 shadow-lg shadow-blue-500/20 text-white text-4xl transform rotate-3">
-                    <i class="fa-solid fa-gift"></i>
-                </div>
-                <h1 id="u_title" class="text-2xl font-bold text-gray-900 mb-2 leading-tight">Đang tải...</h1>
-                <p id="u_subtitle" class="text-[15px] text-gray-500 font-normal">Hoàn thành nhiệm vụ để mở khóa</p>
-                
-                <!-- User Note -->
-                <div id="u_note_area" class="hidden mt-4 p-3 bg-yellow-50 border border-yellow-100 rounded-xl text-sm text-yellow-800 text-left flex items-start gap-3">
-                    <i class="fa-solid fa-circle-info mt-1 text-yellow-500"></i>
-                    <span class="leading-snug"></span>
-                </div>
-            </div>
-
-            <!-- Content -->
-            <div class="flex-1 px-5 pb-8">
-                
-                <!-- Ad Banner -->
-                <div class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl border border-orange-100 flex items-center gap-4 shadow-sm">
-                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-orange-500 shadow-sm text-lg">
-                        <i class="fa-solid fa-crown"></i>
+        <!-- === VIEW: USER (Centered Card) === -->
+        <div id="view-user" class="hidden absolute inset-0 z-50 overflow-y-auto bg-white flex flex-col">
+            <div class="user-card-wrapper w-full flex-1">
+                <!-- Header -->
+                <div class="relative bg-white pt-10 pb-6 px-6 text-center border-b border-slate-100">
+                    <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white text-3xl shadow-lg shadow-blue-500/30">
+                        <i class="fa-solid fa-gift"></i>
                     </div>
-                    <div class="text-sm">
-                        <div class="font-bold text-gray-800">Cần chứng chỉ iOS?</div>
-                        <div class="text-gray-500 text-xs mt-0.5">Giá rẻ từ 150k tại <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold">Muachungchi.com</a></div>
+                    <h1 id="u_title" class="text-xl font-bold text-slate-900 mb-1">Đang tải...</h1>
+                    <p id="u_subtitle" class="text-sm text-slate-500">Hoàn thành nhiệm vụ để tiếp tục</p>
+                    
+                    <!-- User Note -->
+                    <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-sm text-yellow-800 text-left flex gap-3">
+                        <i class="fa-solid fa-circle-info mt-1 text-yellow-600"></i>
+                        <span></span>
                     </div>
                 </div>
 
-                <div class="uppercase text-xs font-bold text-gray-400 mb-3 ml-2 tracking-wider">Nhiệm vụ cần làm</div>
-                
-                <!-- Tasks List -->
-                <div id="u_tasks" class="space-y-3">
+                <!-- Banner -->
+                <div class="px-6 py-4">
+                    <div class="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100 p-3 rounded-xl flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-orange-500 shadow-sm text-lg">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <div class="text-sm">
+                            <div class="font-bold text-slate-800">Mua Chứng Chỉ iOS VIP?</div>
+                            <div class="text-slate-500 text-xs">Giá rẻ từ 150k tại <a href="https://muachungchi.com" target="_blank" class="text-blue-600 font-bold hover:underline">Muachungchi.com</a></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task List -->
+                <div id="u_tasks" class="px-6 flex-1 space-y-3 pb-6">
                     <!-- Tasks injected here -->
                 </div>
-            </div>
 
-            <!-- Bottom Unlock Area -->
-            <div class="p-5 bg-white/80 backdrop-blur-md border-t border-gray-100 sticky bottom-0 z-20 pb-8">
-                <div id="progressArea" class="hidden mb-3">
-                    <div class="flex justify-between text-xs text-gray-400 font-bold mb-1 uppercase"><span>Tiến độ</span> <span id="progressText">0%</span></div>
-                    <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                        <div id="progressBar" class="h-full bg-blue-500 w-0 transition-all duration-300"></div>
-                    </div>
-                </div>
-
-                <button id="unlockBtn" onclick="doUnlock()" disabled class="ios-btn bg-gray-100 text-gray-400 cursor-not-allowed">
-                    <i class="fa-solid fa-lock"></i> Hoàn thành nhiệm vụ
-                </button>
-                
-                <!-- Result Box (Note/Key) -->
-                <div id="noteResult" class="hidden mt-4">
-                    <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-gray-400 uppercase">Nội dung</span>
-                            <button onclick="copyNote()" class="text-xs bg-white border border-gray-200 px-2 py-1 rounded-md font-bold text-blue-600 shadow-sm">COPY</button>
+                <!-- Footer -->
+                <div class="p-6 bg-white border-t border-slate-100 mt-auto sticky bottom-0 z-10">
+                    <div id="progressArea" class="hidden mb-3">
+                        <div class="flex justify-between text-xs text-slate-400 font-bold mb-1 uppercase"><span>Tiến độ</span> <span id="progressText">0%</span></div>
+                        <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="progressBar" class="h-full bg-green-500 w-0 transition-all duration-300"></div>
                         </div>
-                        <textarea id="noteContentDisplay" readonly class="w-full bg-transparent text-sm font-mono text-gray-800 outline-none resize-none h-20"></textarea>
+                    </div>
+                    
+                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-slate-100 text-slate-400 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all">
+                        <i class="fa-solid fa-lock"></i> <span>Hoàn thành nhiệm vụ</span>
+                    </button>
+
+                    <!-- Note Result -->
+                    <div id="noteResult" class="hidden mt-4">
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-1">
+                            <div class="flex justify-between items-center px-3 py-2 border-b border-slate-200">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Nội dung</span>
+                                <button onclick="copyNote()" class="text-xs bg-white border border-slate-200 px-2 py-1 rounded text-blue-600 font-bold shadow-sm">COPY</button>
+                            </div>
+                            <textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-3 text-sm font-mono text-slate-700 outline-none resize-none h-20"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <a href="#" onclick="window.location.href=window.location.pathname" class="text-[10px] font-bold text-slate-300 uppercase tracking-widest hover:text-slate-500">Create your link</a>
                     </div>
                 </div>
-
-                <div class="mt-4 text-center">
-                    <a href="#" onclick="window.location.href=window.location.pathname" class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Create Link</a>
-                </div>
             </div>
-
         </div>
 
     </div>
 
-    <!-- FIREBASE SDK -->
+    <!-- FIREBASE SDK & APP LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // CONFIG
         let firebaseConfig;
         if (typeof __firebase_config !== 'undefined') {
             firebaseConfig = JSON.parse(__firebase_config);
@@ -528,6 +469,7 @@
         window.initApp = async () => {
             const linkId = getLinkId();
             if (linkId) {
+                // Show user view immediately
                 document.getElementById('view-login').classList.add('hidden');
                 document.getElementById('view-admin').classList.add('hidden');
                 document.getElementById('view-user').classList.remove('hidden');
@@ -551,7 +493,7 @@
             });
         }
 
-        // EXPORT TO WINDOW
+        // --- EXPORT TO WINDOW (GLOBAL) ---
         window.db = db;
         window.collection = collection;
         window.addDoc = addDoc;
@@ -569,47 +511,65 @@
         initApp();
     </script>
 
-    <!-- LOGIC -->
+    <!-- UI Logic -->
     <script>
+        // CONFIG
+        window.TASK_MAP = {
+            'yt1': { label: 'Đăng ký YouTube', icon: 'fa-youtube', color: 'text-red-600' },
+            'ytl1': { label: 'Like Video', icon: 'fa-thumbs-up', color: 'text-red-600' },
+            'ytc1': { label: 'Comment Video', icon: 'fa-comment', color: 'text-red-600' },
+            'tg1': { label: 'Join Group', icon: 'fa-telegram', color: 'text-blue-500' },
+            'tk1': { label: 'Follow Tiktok', icon: 'fa-tiktok', color: 'text-black' },
+            'fb1': { label: 'Follow Facebook', icon: 'fa-facebook', color: 'text-blue-700' }
+        };
+
         // UI Helpers
         function switchView(v) {
             ['view-login','view-admin','view-user'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            const t = document.getElementById(`view-${v}`); t.classList.remove('hidden'); if(v==='admin') t.classList.add('flex');
+            const t = document.getElementById(`view-${v}`); 
+            t.classList.remove('hidden'); 
+            if(v==='admin') {
+                t.classList.add('flex'); // Enable Flexbox for Admin Layout
+                document.getElementById('page-title').innerText = "Tạo Liên Kết Mới"; // Default title
+            }
         }
         
         function switchTab(t) {
-            document.getElementById('btn-tab-stu').className = t==='stu'?'active':'';
-            document.getElementById('btn-tab-manage').className = t==='manage'?'active':'';
-            document.getElementById('tab_create_stu').className = t==='stu'?'block':'hidden';
-            document.getElementById('tab_manage_links').className = t==='manage'?'block':'hidden';
-            // Show/Hide Action Bar
-            document.getElementById('admin-actions').className = t==='stu' ? 'absolute bottom-6 left-0 right-0 px-6 z-40' : 'hidden';
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`btn-tab-${t}`).classList.add('active');
+
+            document.getElementById('tab_create_stu').className = t==='stu'?'block max-w-5xl mx-auto':'hidden';
+            document.getElementById('tab_manage_links').className = t==='manage'?'block max-w-6xl mx-auto':'hidden';
+            
+            document.getElementById('page-title').innerText = t==='stu' ? 'Tạo Liên Kết Mới' : 'Quản Lý Liên Kết';
             
             if(t==='manage') fetchLinks();
         }
 
         function selectPlatform(pf, btn) {
-            document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             ['yt','tg','tk','fb'].forEach(id => document.getElementById(`ftr_${id}`).classList.add('hidden'));
             document.getElementById(`ftr_${pf}`).classList.remove('hidden');
-            // Allow horizontal scroll to specific position if needed
         }
 
+        function toggleInput(id, btn) {
+            const grp = document.getElementById(`grp_${id}`); if(!grp) return;
+            if(btn.classList.contains('active')) { btn.classList.remove('active'); grp.classList.remove('active'); }
+            else { btn.classList.add('active'); grp.classList.add('active'); const inp = grp.querySelector('.pc-input'); if(inp) setTimeout(() => inp.focus(), 100); }
+        }
+        
         function toggleDestType() {
             const type = document.querySelector('input[name="destType"]:checked').value;
             const linkCon = document.getElementById('dest_container_link');
             const noteCon = document.getElementById('dest_container_note');
-            const title = document.getElementById('destTitle');
             
             if(type === 'link') {
                 linkCon.classList.remove('hidden');
                 noteCon.classList.add('hidden');
-                title.innerText = "Cấu hình Đích (Link)";
             } else {
                 linkCon.classList.add('hidden');
                 noteCon.classList.remove('hidden');
-                title.innerText = "Cấu hình Đích (Ghi chú)";
             }
         }
 
@@ -617,23 +577,22 @@
             const id = existingId || `${platform}_custom_${Date.now()}`;
             const container = document.getElementById('dynamic_inputs');
             
-            let label = "Nhiệm vụ mới", color = "text-gray-500", icon = "fa-link";
-            if(platform === 'yt') { label = "YouTube Task"; color = "text-red-500"; icon="fa-youtube"; }
-            if(platform === 'tg') { label = "Telegram Task"; color = "text-blue-500"; icon="fa-telegram"; }
-            if(platform === 'tk') { label = "TikTok Task"; color = "text-black"; icon="fa-tiktok"; }
-            if(platform === 'fb') { label = "Facebook Task"; color = "text-blue-700"; icon="fa-facebook"; }
+            let label = "Nhiệm vụ mới", color = "text-slate-600";
+            if(platform === 'yt') { label = "Nhiệm vụ YouTube"; color = "text-red-600"; }
+            if(platform === 'tg') { label = "Nhiệm vụ Telegram"; color = "text-blue-500"; }
+            if(platform === 'tk') { label = "Nhiệm vụ Tiktok"; color = "text-slate-900"; }
+            if(platform === 'fb') { label = "Nhiệm vụ Facebook"; color = "text-blue-700"; }
             if(existingLabel) label = existingLabel;
 
             const div = document.createElement('div');
             div.id = `grp_${id}`;
-            div.className = "grp bg-white p-3 rounded-2xl border border-gray-100 shadow-sm mb-3 slide-up flex items-center gap-3"; 
+            div.className = "grp active"; 
             div.innerHTML = `
-                <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center ${color} text-lg shrink-0"><i class="fa-brands ${icon}"></i></div>
-                <div class="flex-1">
-                    <input type="text" id="lbl_${id}" class="text-xs font-bold text-gray-800 w-full bg-transparent outline-none mb-1" value="${label}">
-                    <input class="text-sm w-full bg-transparent outline-none text-blue-600 placeholder-gray-300" id="i_${id}" type="url" placeholder="Dán liên kết vào đây..." value="${existingUrl}">
+                <div class="bg-white border border-slate-200 p-3 rounded-lg hover:border-blue-400 transition relative">
+                    <input type="text" id="lbl_${id}" class="text-xs font-bold ${color} uppercase mb-2 w-full bg-transparent outline-none" value="${label}">
+                    <input class="pc-input bg-slate-50" id="i_${id}" type="url" placeholder="Dán link vào đây..." value="${existingUrl}">
+                    <button type="button" onclick="this.closest('.grp').remove()" class="absolute top-2 right-2 text-slate-300 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <button type="button" onclick="this.closest('.grp').remove()" class="w-8 h-8 rounded-full hover:bg-red-50 text-gray-300 hover:text-red-500 flex items-center justify-center transition"><i class="fa-solid fa-minus"></i></button>
             `;
             container.appendChild(div);
             if(!existingId) setTimeout(() => document.getElementById(`i_${id}`).focus(), 100);
@@ -643,18 +602,38 @@
             if(!confirm("Xóa trắng form?")) return;
             document.getElementById('fgSTU').reset();
             document.getElementById('edit_doc_id').value = "";
-            document.getElementById('btnAction').innerText = "Tạo Link";
+            document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Tạo Liên Kết';
             document.getElementById('formTitle').innerText = "Thông tin cơ bản";
             document.getElementById('editModeBadge').classList.add('hidden');
-            document.getElementById('dynamic_inputs').innerHTML = "";
+            
+            // Remove custom tasks
+            document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
+            // Hide default tasks
+            document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
+            document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
+            
             document.querySelector('input[name="destType"][value="link"]').click();
+            document.getElementById('resultArea').classList.add('hidden');
         }
 
         function copyResult() { document.getElementById('resultLink').select(); document.execCommand('copy'); showToast("Đã copy!", "success"); }
         function copyNote() { document.getElementById('noteContentDisplay').select(); document.execCommand('copy'); showToast("Đã copy nội dung!", "success"); }
         
+        window.copyToClip = (text) => {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => showToast("Đã copy!", "success"));
+            } else {
+                let textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed"; textArea.style.left = "-9999px";
+                document.body.appendChild(textArea); textArea.focus(); textArea.select();
+                try { document.execCommand('copy'); showToast("Đã copy!", "success"); } catch (err) { showToast("Lỗi copy", "error"); }
+                document.body.removeChild(textArea);
+            }
+        }
+
         function showToast(msg, type) { 
-            if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, gravity: "top", position: "center", backgroundColor: type === "success" ? "#34C759" : "#FF3B30", className: "rounded-xl shadow-lg font-bold" }).showToast();
+            if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, gravity: "top", position: "right", backgroundColor: type === "success" ? "#10b981" : "#ef4444" }).showToast();
             else alert(msg); 
         }
 
@@ -694,9 +673,11 @@
 
             const tasks = {};
             document.querySelectorAll('#dynamic_inputs .grp').forEach(grp => {
+                if(!grp.classList.contains('active') && !grp.id.includes('_custom_')) return; // Skip inactive default tasks
+                
                 const id = grp.id.replace('grp_', '');
-                const inp = grp.querySelector('input[type="url"]'); // Select second input
-                const lbl = grp.querySelector('input[type="text"]'); // Select first input
+                const inp = grp.querySelector('input[type="url"]');
+                const lbl = grp.querySelector('input[type="text"]');
                 
                 if(inp && inp.value) {
                     let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
@@ -728,10 +709,11 @@
                 const finalLink = window.location.origin + window.location.pathname + "?id=" + resultId;
                 document.getElementById('resultLink').value = finalLink;
                 document.getElementById('previewLink').href = finalLink;
-                document.getElementById('resultModal').classList.remove('hidden');
+                document.getElementById('resultArea').classList.remove('hidden');
+                document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
                 
-                if(docId) { // Reset Edit Mode
-                    document.getElementById('btnAction').innerText = "Tạo Link";
+                if(docId) { // Reset Edit Mode UI
+                    document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Tạo Link';
                     document.getElementById('edit_doc_id').value = "";
                     document.getElementById('formTitle').innerText = "Thông tin cơ bản";
                     document.getElementById('editModeBadge').classList.add('hidden');
@@ -741,8 +723,8 @@
         };
 
         window.fetchLinks = async () => {
-            const list = document.getElementById('links-list');
-            list.innerHTML = '<div class="text-center py-10"><div class="spinner border-gray-300 border-t-blue-500"></div></div>';
+            const list = document.getElementById('links-table-body');
+            list.innerHTML = '<tr><td colspan="5" class="py-8 text-center"><div class="loader inline-block border-slate-300 border-t-blue-500"></div></td></tr>';
             
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'links'));
@@ -751,38 +733,35 @@
                 links.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 
                 list.innerHTML = '';
-                if(links.length === 0) { list.innerHTML = '<div class="text-center text-gray-400 py-10">Chưa có link nào</div>'; return; }
+                if(links.length === 0) { list.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-400">Chưa có link nào</td></tr>'; return; }
 
                 links.forEach(link => {
                     const isActive = link.active !== false;
-                    const typeBadge = link.type === 'note' ? '<span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded">NOTE</span>' : '<span class="bg-blue-100 text-blue-600 text-[10px] font-bold px-2 py-0.5 rounded">LINK</span>';
-                    const div = document.createElement('div');
-                    div.className = "bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between";
-                    div.innerHTML = `
-                        <div class="flex-1 min-w-0 pr-4">
-                            <div class="flex items-center gap-2 mb-1">
-                                ${typeBadge}
-                                <div class="font-semibold text-gray-800 truncate">${link.title}</div>
-                            </div>
-                            <div class="text-xs text-gray-400 flex items-center gap-2">
-                                <span>${new Date(link.createdAt).toLocaleDateString('vi-VN')}</span>
-                                ${link.note ? `<span class="bg-gray-100 px-1.5 rounded text-gray-500 truncate max-w-[120px]">${link.note}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <label class="ios-switch scale-75 origin-right">
+                    const typeBadge = link.type === 'note' ? '<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold">NOTE</span>' : '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">LINK</span>';
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-50 transition border-b border-slate-50";
+                    tr.innerHTML = `
+                        <td class="py-4 px-6">
+                            <div class="font-bold text-slate-800 truncate max-w-[200px]">${link.title}</div>
+                            <div class="text-xs text-slate-400">${new Date(link.createdAt).toLocaleDateString('vi-VN')}</div>
+                        </td>
+                        <td class="py-4 px-6 text-sm text-slate-500">${link.note || '-'}</td>
+                        <td class="py-4 px-6 text-center">${typeBadge}</td>
+                        <td class="py-4 px-6 text-center">
+                            <label class="ios-switch scale-90">
                                 <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)">
                                 <span class="slider"></span>
                             </label>
-                            <div class="flex gap-1">
-                                <button onclick="editLink('${link.id}')" class="w-8 h-8 rounded-full bg-gray-50 hover:bg-blue-50 text-gray-500 hover:text-blue-600 flex items-center justify-center transition"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteLink('${link.id}')" class="w-8 h-8 rounded-full bg-gray-50 hover:bg-red-50 text-gray-500 hover:text-red-500 flex items-center justify-center transition"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </div>
+                        </td>
+                        <td class="py-4 px-6 text-right">
+                            <button onclick="editLink('${link.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded transition mr-1"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-slate-500 hover:bg-slate-100 p-2 rounded transition mr-1"><i class="fa-regular fa-copy"></i></button>
+                            <button onclick="deleteLink('${link.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded transition"><i class="fa-solid fa-trash"></i></button>
+                        </td>
                     `;
-                    list.appendChild(div);
+                    list.appendChild(tr);
                 });
-            } catch (e) { list.innerHTML = '<div class="text-red-500 text-center">Lỗi tải dữ liệu</div>'; }
+            } catch (e) { list.innerHTML = '<tr><td colspan="5" class="text-red-500 text-center py-4">Lỗi tải dữ liệu</td></tr>'; }
         };
 
         window.toggleStatus = async (id, status) => { try { await window.updateDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id), { active: status }); } catch (e) {} };
@@ -798,7 +777,7 @@
                     document.getElementById('edit_doc_id').value = id;
                     document.getElementById('formTitle').innerText = "Đang chỉnh sửa";
                     document.getElementById('editModeBadge').classList.remove('hidden');
-                    document.getElementById('btnAction').innerText = "Lưu Thay Đổi";
+                    document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi';
                     
                     document.getElementById('i_ttl').value = data.title;
                     document.getElementById('i_sttl').value = data.subtitle;
@@ -812,11 +791,30 @@
                     if(type === 'link') document.getElementById('i_dest_url').value = data.destUrl;
                     else document.getElementById('i_dest_note').value = data.noteContent;
 
-                    document.getElementById('dynamic_inputs').innerHTML = "";
+                    // Reset Inputs
+                    document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
+                    document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
+
                     if(data.tasks) {
                         for (const [key, taskData] of Object.entries(data.tasks)) {
-                            const platform = key.split('_')[0];
-                            addTask(platform, key, taskData.label, taskData.url);
+                            let grp = document.getElementById(`grp_${key}`);
+                            if(!grp) { 
+                                const platform = key.split('_')[0]; 
+                                addTask(platform, key, taskData.label, taskData.url); 
+                                continue; 
+                            }
+                            const inp = grp.querySelector('input[type="url"]');
+                            const lbl = grp.querySelector('input[type="text"]');
+                            
+                            if (grp && inp) {
+                                grp.classList.add('active');
+                                inp.value = typeof taskData === 'string' ? taskData : taskData.url;
+                                if(lbl && typeof taskData === 'object') lbl.value = taskData.label;
+                                
+                                const btn = document.querySelector(`button[onclick*="'${key}'"]`);
+                                if(btn) btn.classList.add('active');
+                            }
                         }
                     }
                 }
@@ -872,7 +870,7 @@
                 entries.forEach(([key, taskData], idx) => {
                     const label = taskData.label || "Nhiệm vụ";
                     const url = taskData.url;
-                    let icon = taskData.icon || 'fa-link', color = taskData.color || 'text-gray-600', bg = taskData.bg || 'bg-gray-100';
+                    let icon = taskData.icon || 'fa-link', color = taskData.color || 'text-slate-600', bg = taskData.bg || 'bg-slate-100';
                     if(!taskData.icon) {
                         if(key.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; }
                         else if(key.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
@@ -892,11 +890,11 @@
                             <i class="fa-brands ${icon} ${icon.includes('fa-solid')?'fa-solid':''}"></i>
                         </div>
                         <div class="flex-1">
-                            <h4 class="font-bold text-gray-800 text-sm leading-tight mb-0.5">${label}</h4>
-                            <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wide status-text">${isDisabled ? 'Đang khóa' : 'Nhấn để mở'}</p>
+                            <h4 class="font-bold text-slate-800 text-sm leading-tight mb-0.5">${label}</h4>
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wide status-text">${isDisabled ? 'Đang khóa' : 'Nhấn để mở'}</p>
                         </div>
-                        <div id="status-${idx}" class="text-gray-300">
-                            ${isDisabled ? '<i class="fa-solid fa-lock text-sm"></i>' : '<i class="fa-solid fa-chevron-right"></i>'}
+                        <div id="status-${idx}" class="text-slate-300">
+                            ${isDisabled ? '<i class="fa-solid fa-lock text-sm"></i>' : '<i class="fa-solid fa-chevron-right text-lg"></i>'}
                         </div>
                     `;
                     div.onclick = () => doTask(idx, url);
@@ -913,11 +911,11 @@
 
             window.open(url, '_blank');
 
-            card.classList.add('active'); // Loading state style if needed
+            card.classList.add('active'); // Loading state style
             const icon = document.getElementById(`status-${idx}`);
             const text = card.querySelector('.status-text');
             
-            icon.innerHTML = '<div class="spinner w-5 h-5 border-gray-300 border-t-blue-500"></div>';
+            icon.innerHTML = '<div class="mini-loader"></div>';
             text.innerText = "Đang kiểm tra...";
             text.className = "text-[11px] text-blue-600 font-bold uppercase tracking-wide status-text";
 
@@ -927,7 +925,7 @@
                 
                 card.classList.remove('active');
                 card.style.opacity = "1";
-                card.style.backgroundColor = "#F0FDF4"; // Light green
+                card.style.backgroundColor = "#F0FDF4"; 
                 card.style.borderColor = "#DCFCE7";
                 
                 icon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500 text-xl"></i>';
@@ -940,7 +938,7 @@
                     const nextText = nextCard.querySelector('.status-text');
 
                     nextCard.classList.remove('disabled');
-                    nextIcon.innerHTML = '<i class="fa-solid fa-chevron-right text-gray-400"></i>';
+                    nextIcon.innerHTML = '<i class="fa-solid fa-chevron-right text-slate-400"></i>';
                     nextText.innerText = "Nhấn để mở";
                 }
 
@@ -951,7 +949,7 @@
         function resetLockBtn(name) {
             const btn = document.getElementById('unlockBtn');
             btn.disabled = true;
-            btn.className = "ios-btn bg-gray-100 text-gray-400 cursor-not-allowed shadow-none";
+            btn.className = "w-full bg-slate-100 text-slate-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all shadow-none border border-transparent";
             btn.innerHTML = `<i class="fa-solid fa-lock"></i><span>${name || 'Đang khóa'}</span>`;
             document.getElementById('progressArea').classList.add('hidden');
             document.getElementById('noteResult').classList.add('hidden');
@@ -966,7 +964,7 @@
             if(done >= req) {
                 const btn = document.getElementById('unlockBtn');
                 btn.disabled = false;
-                btn.className = "ios-btn shadow-lg shadow-blue-500/30 animate-pulse";
+                btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 animate-bounce cursor-pointer transform transition-transform";
                 btn.innerHTML = `<i class="fa-solid fa-unlock-keyhole"></i><span>Mở Khóa Ngay</span>`;
                 if(navigator.vibrate) navigator.vibrate(200);
             }
@@ -975,7 +973,7 @@
         window.doUnlock = () => {
             if(!finalData) return;
             const btn = document.getElementById('unlockBtn');
-            btn.classList.remove('animate-pulse');
+            btn.classList.remove('animate-bounce');
             
             if(finalData.type === 'note') {
                 const noteArea = document.getElementById('noteResult');
@@ -986,7 +984,7 @@
                 
                 btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Đã Mở Ghi Chú</span>`;
                 btn.disabled = true; 
-                btn.className = "ios-btn bg-gray-800 text-white shadow-none cursor-default";
+                btn.className = "w-full bg-slate-800 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-default";
             } else {
                 if(finalData.destUrl) window.location.href = finalData.destUrl;
             }
