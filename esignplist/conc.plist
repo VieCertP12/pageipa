@@ -13,17 +13,29 @@
 					<key>url</key>
 					<string>https://github.com/VieCertP12/pageipa/releases/download/j1/7_signed.ipa</string>
 				</dict>
+				<dict>
+					<key>kind</key>
+					<string>display-image</string>
+					<key>url</key>
+					<string>https://github.com/VieCertP12/pageipa/releases/download/j1/Screenshot%202026-01-02%20023624.png</string>
+				</dict>
+				<dict>
+					<key>kind</key>
+					<string>full-size-image</string>
+					<key>url</key>
+					<string>https://github.com/VieCertP12/pageipa/releases/download/j1/Screenshot%202026-01-02%20023624.png</string>
+				</dict>
 			</array>
 			<key>metadata</key>
 			<dict>
 				<key>bundle-identifier</key>
-				<string>conc</string>
+				<string>conc1</string>
 				<key>bundle-version</key>
 				<string>1.0</string>
 				<key>kind</key>
 				<string>software</string>
 				<key>title</key>
-				<string>Esign qqqq</string>
+				<string>Esign qqqq1</string>
 			</dict>
 		</dict>
 	</array>
