@@ -10,15 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = {
-            theme: {
-                extend: { 
-                    fontFamily: { sans: ['"Outfit"', 'sans-serif'] },
-                    animation: { 'slide-in': 'slideIn 0.3s ease-out forwards', 'fade-out': 'fadeOut 0.3s ease-in forwards' },
-                    keyframes: { slideIn: { '0%': { transform: 'translateX(100%)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } }, fadeOut: { '0%': { opacity: '1' }, '100%': { opacity: '0' } } }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Outfit"', 'sans-serif'] }, animation: { 'slide-in': 'slideIn 0.3s ease-out forwards' }, keyframes: { slideIn: { '0%': { transform: 'translateX(100%)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } } } } } }
     </script>
     <style> 
         .hidden { display: none !important; } 
@@ -27,6 +19,9 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .icon-preview-box svg { width: 100%; height: 100%; fill: currentColor; }
+        .icon-preview-box img { width: 100%; height: 100%; object-fit: cover; }
+        .icon-preview-box i { font-size: 1.25rem; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800">
@@ -65,11 +60,11 @@
             <!-- SECTION 1: CẤU HÌNH WEB -->
             <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center justify-between cursor-pointer" onclick="document.getElementById('config-body').classList.toggle('hidden');">
-                    <h3 class="font-bold text-slate-700"><i class="fas fa-palette text-indigo-500"></i> Cấu Hình Giao Diện & Link</h3>
+                    <h3 class="font-bold text-slate-700"><i class="fas fa-palette text-indigo-500"></i> Cấu Hình Giao Diện & Màu Sắc</h3>
                     <i class="fas fa-chevron-down text-slate-400"></i>
                 </div>
                 <div id="config-body" class="p-6 hidden space-y-6">
-                    <!-- Config Màu Sắc & Text -->
+                    <!-- Config Màu Tiêu Đề -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Tiêu đề chính (H1)</label>
@@ -87,37 +82,47 @@
                         </div>
                     </div>
                     
-                    <!-- Config 3 Nút Hero -->
+                    <!-- Config 3 Nút Hero (CÓ CHỈNH MÀU) -->
                     <div class="border-t border-slate-100 pt-4">
-                        <h4 class="font-bold text-sm text-slate-600 mb-4 uppercase">Cấu hình 3 Nút Chức Năng</h4>
+                        <h4 class="font-bold text-sm text-slate-600 mb-4 uppercase">Cấu hình 3 Nút Chức Năng (Text - Màu - Icon)</h4>
                         <div class="grid md:grid-cols-3 gap-4">
-                            <!-- Button 1 -->
-                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                                <div class="text-xs font-bold mb-2 text-indigo-600">Nút 1 (Hỗ Trợ)</div>
-                                <input id="btn1-text" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Tên nút">
-                                <input id="btn1-url" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Link (URL)">
-                                <input id="btn1-icon" class="w-full p-2 rounded border text-sm" placeholder="Class (fas fa-home) hoặc Link ảnh hoặc mã <svg>">
-                            </div>
-                            <!-- Button 2 -->
-                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                                <div class="text-xs font-bold mb-2 text-indigo-600">Nút 2 (Mua Cert)</div>
-                                <input id="btn2-text" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Tên nút">
-                                <input id="btn2-url" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Link (URL)">
-                                <input id="btn2-icon" class="w-full p-2 rounded border text-sm" placeholder="Class (fas fa-home) hoặc Link ảnh hoặc mã <svg>">
-                            </div>
-                            <!-- Button 3 -->
-                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                                <div class="text-xs font-bold mb-2 text-indigo-600">Nút 3 (DNS/Khác)</div>
-                                <input id="btn3-text" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Tên nút">
-                                <input id="btn3-url" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Link (URL)">
-                                <input id="btn3-icon" class="w-full p-2 rounded border text-sm" placeholder="Class (fas fa-home) hoặc Link ảnh hoặc mã <svg>">
-                            </div>
+                            <!-- Helper tạo ô input cho từng nút -->
+                            <script>
+                                const labels = ["Nút 1 (Trái)", "Nút 2 (Giữa)", "Nút 3 (Phải)"];
+                                for(let i=1; i<=3; i++) {
+                                    document.write(`
+                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
+                                        <div class="flex justify-between items-center">
+                                            <div class="text-xs font-bold text-indigo-600 uppercase">${labels[i-1]}</div>
+                                            <div id="btn${i}-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
+                                        </div>
+                                        <input id="btn${i}-text" class="w-full p-2 rounded border text-sm" placeholder="Nhập tên nút...">
+                                        <input id="btn${i}-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://link...">
+                                        <input id="btn${i}-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-home)" oninput="previewHeroIcon(${i}, this.value)">
+                                        
+                                        <div class="grid grid-cols-3 gap-2 mt-1">
+                                            <div class="text-center">
+                                                <label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label>
+                                                <input type="color" id="btn${i}-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff">
+                                            </div>
+                                            <div class="text-center">
+                                                <label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label>
+                                                <input type="color" id="btn${i}-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#334155">
+                                            </div>
+                                            <div class="text-center">
+                                                <label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label>
+                                                <input type="color" id="btn${i}-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#6366f1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    `);
+                                }
+                            </script>
                         </div>
-                        <p class="text-[10px] text-slate-400 mt-2 italic">* Hỗ trợ: FontAwesome (vd: fas fa-home), Link ảnh (http...), hoặc mã SVG trực tiếp.</p>
                     </div>
 
                     <div class="flex justify-end pt-2">
-                        <button onclick="saveConfig()" id="btn-save-cfg" class="bg-slate-800 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-900 transition"><i class="fas fa-save"></i> Lưu Thay Đổi</button>
+                        <button onclick="saveConfig()" id="btn-save-cfg" class="bg-slate-800 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-900 transition"><i class="fas fa-save"></i> Lưu Cấu Hình</button>
                     </div>
                 </div>
             </div>
@@ -144,10 +149,7 @@
                 </div>
 
                 <div class="mb-2 text-xs text-slate-400 italic text-right">* Kéo thả các thẻ bên dưới để sắp xếp vị trí hiển thị</div>
-                <div id="list-data" class="grid gap-3">
-                    <!-- Loading Skeleton -->
-                    <div class="animate-pulse bg-white p-4 rounded-xl border border-slate-200 h-20"></div>
-                </div>
+                <div id="list-data" class="grid gap-3"></div>
             </div>
         </div>
     </div>
@@ -167,8 +169,8 @@
                     <input id="inp-desc" type="text" class="w-full p-3 border rounded-xl" placeholder="Mô tả">
                     <input id="inp-url" type="text" class="w-full p-3 border rounded-xl" placeholder="Link Tải">
                     <div class="flex gap-2">
-                        <input id="inp-icon" type="text" class="flex-1 p-3 border rounded-xl" placeholder="Link Icon" oninput="previewIcon(this.value)">
-                        <img id="icon-preview" class="w-12 h-12 rounded-lg border object-cover bg-slate-100">
+                        <input id="inp-icon" type="text" class="flex-1 p-3 border rounded-xl" placeholder="Link Icon / SVG / Class" oninput="previewIcon(this.value)">
+                        <div id="icon-preview" class="icon-preview-box w-12 h-12 rounded-lg border bg-slate-100 overflow-hidden flex items-center justify-center"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <select id="inp-badge" class="w-full p-3 border rounded-xl">
@@ -208,38 +210,37 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-
-        // Toast
-        window.showToast = (msg, type='success') => {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `p-4 rounded-lg shadow-xl flex items-center gap-3 animate-slide-in bg-white border-l-4 ${type==='success'?'border-green-500 text-green-700':'border-red-500 text-red-600'}`;
-            toast.innerHTML = `<span class="font-bold">${msg}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        
+        window.smartParseIcon = (s) => {
+            if (!s) return ''; s = s.trim();
+            if (s.startsWith('<svg') || s.startsWith('<i ') || s.startsWith('<img') || s.startsWith('<wa-icon')) return s;
+            if (s.startsWith('http')) return `<img src="${s}" alt="icon">`;
+            const matchName = s.match(/\[['"]([^'"]+)['"]\]/);
+            if (matchName && matchName[1]) {
+                const matchPrefix = s.match(/byPrefixAndName\.([a-z]+)/);
+                return `<i class="${matchPrefix ? matchPrefix[1] : 'fas'} fa-${matchName[1]}"></i>`;
+            }
+            const matchWa = s.match(/name=["']([^"']+)["']/);
+            if (matchWa && matchWa[1]) return `<i class="fas fa-${matchWa[1]}"></i>`;
+            return `<i class="${s}"></i>`;
         }
-
-        // Auth
+        
         onAuthStateChanged(auth, async (u) => {
             if(u) {
                 document.getElementById('login-box').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
-                loadConfig();
-                load();
-                switchTab('esign');
+                loadConfig(); load(); switchTab('esign');
             } else {
                 document.getElementById('login-box').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
             }
         });
-
         document.getElementById('btn-login').addEventListener('click', () => {
-            signInWithEmailAndPassword(auth, document.getElementById('adm-email').value, document.getElementById('adm-pass').value)
-            .catch(() => showToast("Sai thông tin đăng nhập!", "error"));
+            signInWithEmailAndPassword(auth, document.getElementById('adm-email').value, document.getElementById('adm-pass').value).catch(() => alert("Sai thông tin!"));
         });
         document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-        // --- Config Logic (Mới: Màu sắc + Buttons) ---
+        // --- Config Logic (Cập nhật Load/Save 3 màu) ---
         async function loadConfig() {
             try {
                 const s = await getDoc(doc(db, "settings", "general"));
@@ -247,16 +248,20 @@
                     const d = s.data();
                     document.getElementById('cfg-title').value = d.title || "";
                     document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
-                    
                     document.getElementById('cfg-subtitle').value = d.subtitle || "";
                     document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
-
-                    // Load Hero Buttons
                     const btns = d.heroButtons || [{}, {}, {}];
                     for(let i=0; i<3; i++) {
                         document.getElementById(`btn${i+1}-text`).value = btns[i]?.text || "";
                         document.getElementById(`btn${i+1}-url`).value = btns[i]?.url || "";
-                        document.getElementById(`btn${i+1}-icon`).value = btns[i]?.icon || "";
+                        const iconVal = btns[i]?.icon || "";
+                        document.getElementById(`btn${i+1}-icon`).value = iconVal;
+                        // Load Colors (Default Fallbacks)
+                        document.getElementById(`btn${i+1}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
+                        document.getElementById(`btn${i+1}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
+                        document.getElementById(`btn${i+1}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
+                        
+                        window.previewHeroIcon(i+1, iconVal);
                     }
                 }
             } catch(e) {}
@@ -266,16 +271,17 @@
             const btn = document.getElementById('btn-save-cfg');
             btn.innerHTML = 'Đang lưu...';
             try {
-                // Get buttons data
                 const heroButtons = [];
                 for(let i=1; i<=3; i++) {
                     heroButtons.push({
                         text: document.getElementById(`btn${i}-text`).value,
                         url: document.getElementById(`btn${i}-url`).value,
-                        icon: document.getElementById(`btn${i}-icon`).value
+                        icon: document.getElementById(`btn${i}-icon`).value,
+                        bgColor: document.getElementById(`btn${i}-bg-color`).value,
+                        textColor: document.getElementById(`btn${i}-text-color`).value,
+                        iconColor: document.getElementById(`btn${i}-icon-color`).value
                     });
                 }
-
                 await setDoc(doc(db, "settings", "general"), {
                     title: document.getElementById('cfg-title').value,
                     titleColor: document.getElementById('cfg-title-color').value,
@@ -283,37 +289,30 @@
                     subtitleColor: document.getElementById('cfg-subtitle-color').value,
                     heroButtons: heroButtons
                 }, { merge: true });
-                showToast("Đã lưu cấu hình!");
-            } catch(e) { showToast("Lỗi: " + e.message, "error"); }
-            btn.innerHTML = '<i class="fas fa-save"></i> Lưu Thay Đổi';
+                alert("Đã lưu cấu hình!");
+            } catch(e) { alert(e.message); }
+            btn.innerHTML = '<i class="fas fa-save"></i> Lưu Cấu Hình';
         }
 
-        // --- Core App Logic & Drag Drop ---
-        let curType = 'esign';
-        let allData = [];
+        window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
 
+        // --- App Logic ---
+        let curType = 'esign'; let allData = [];
         async function load() {
             const s = await getDocs(query(collection(db, "apps")));
-            allData = [];
-            s.forEach(d => allData.push({id: d.id, ...d.data()}));
-            // Sắp xếp theo order (nếu có), nếu không có thì lấy updatedAt
+            allData = []; s.forEach(d => allData.push({id: d.id, ...d.data()}));
             allData.sort((a,b) => (a.order || 9999) - (b.order || 9999));
             render();
         }
-
         function render() {
             const term = document.getElementById('search-app').value.toLowerCase();
-            // Lọc và render
             const list = allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
-            
-            const container = document.getElementById('list-data');
             document.getElementById('count-badge').innerText = `${list.length} App`;
-
-            container.innerHTML = list.map((i, idx) => `
+            document.getElementById('list-data').innerHTML = list.map((i, idx) => `
                 <div draggable="true" class="draggable-item bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-md transition-all cursor-move" data-id="${i.id}">
                     <div class="text-slate-300 px-2 cursor-grab"><i class="fas fa-grip-vertical"></i></div>
-                    <div class="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border">
-                        <img src="${i.icon}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100'">
+                    <div class="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border icon-preview-box">
+                        ${window.smartParseIcon(i.icon) || '<img src="https://placehold.co/100">'}
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2">
@@ -328,160 +327,67 @@
                     </div>
                 </div>
             `).join('');
-            
             addDragEvents();
         }
-
-        // DRAG & DROP LOGIC
         function addDragEvents() {
-            const draggables = document.querySelectorAll('.draggable-item');
             const container = document.getElementById('list-data');
-
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', () => {
-                    draggable.classList.add('dragging');
-                });
-                draggable.addEventListener('dragend', async () => {
-                    draggable.classList.remove('dragging');
-                    await saveOrder(); // Tự động lưu sau khi thả
+            document.querySelectorAll('.draggable-item').forEach(d => {
+                d.addEventListener('dragstart', () => d.classList.add('dragging'));
+                d.addEventListener('dragend', async () => {
+                    d.classList.remove('dragging');
+                    await saveOrder();
                 });
             });
-
             container.addEventListener('dragover', e => {
                 e.preventDefault();
                 const afterElement = getDragAfterElement(container, e.clientY);
                 const draggable = document.querySelector('.dragging');
-                if (afterElement == null) {
-                    container.appendChild(draggable);
-                } else {
-                    container.insertBefore(draggable, afterElement);
-                }
+                if (!afterElement) container.appendChild(draggable); else container.insertBefore(draggable, afterElement);
             });
         }
-
         function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
-            return draggableElements.reduce((closest, child) => {
+            return [...container.querySelectorAll('.draggable-item:not(.dragging)')].reduce((closest, child) => {
                 const box = child.getBoundingClientRect();
                 const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
+                return offset < 0 && offset > closest.offset ? { offset: offset, element: child } : closest;
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
-
         async function saveOrder() {
-            const items = document.querySelectorAll('.draggable-item');
             const batch = writeBatch(db);
-            let updatedCount = 0;
-            
-            items.forEach((item, index) => {
+            document.querySelectorAll('.draggable-item').forEach((item, index) => {
                 const id = item.dataset.id;
-                // Cập nhật lại trong allData local
-                const dataItem = allData.find(x => x.id === id);
-                if(dataItem) dataItem.order = index;
-
-                // Chuẩn bị batch update lên Firestore
-                const ref = doc(db, "apps", id);
-                batch.update(ref, { order: index });
-                updatedCount++;
+                const d = allData.find(x => x.id === id); if(d) d.order = index;
+                batch.update(doc(db, "apps", id), { order: index });
             });
-
-            if(updatedCount > 0) {
-                try {
-                    await batch.commit();
-                    showToast("Đã cập nhật vị trí!");
-                } catch(e) { console.error(e); }
-            }
+            try { await batch.commit(); } catch(e){}
         }
-
         document.getElementById('search-app').addEventListener('input', render);
-
         window.switchTab = (t) => {
             curType = t;
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = (btn.dataset.tab === t) 
-                    ? "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 text-white shadow-lg transition-all"
-                    : "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-white text-slate-500 hover:bg-slate-50 transition-all";
+                btn.className = (btn.dataset.tab === t) ? "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 text-white shadow-lg transition-all" : "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-white text-slate-500 hover:bg-slate-50 transition-all";
             });
-            document.getElementById('div-tag').classList.toggle('hidden', t !== 'mods');
-            render();
+            document.getElementById('div-tag').classList.toggle('hidden', t !== 'mods'); render();
         }
-
-        window.previewIcon = (url) => { document.getElementById('icon-preview').src = url; }
-
+        window.previewIcon = (val) => { document.getElementById('icon-preview').innerHTML = window.smartParseIcon(val); }
         window.openModal = () => {
-            document.getElementById('edit-id').value = '';
-            document.getElementById('inp-name').value = '';
-            document.getElementById('inp-desc').value = '';
-            document.getElementById('inp-url').value = '';
-            document.getElementById('inp-icon').value = '';
-            document.getElementById('icon-preview').src = '';
-            document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`;
-            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('edit-id').value = ''; document.getElementById('inp-name').value = ''; document.getElementById('inp-desc').value = ''; document.getElementById('inp-url').value = ''; document.getElementById('inp-icon').value = ''; document.getElementById('icon-preview').innerHTML = ''; document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`; document.getElementById('modal').classList.remove('hidden');
         };
-
         window.closeModal = () => document.getElementById('modal').classList.add('hidden');
-
         window.edit = (id) => {
-            const item = allData.find(x => x.id === id);
-            if(!item) return;
-            document.getElementById('edit-id').value = id;
-            document.getElementById('inp-name').value = item.name;
-            document.getElementById('inp-desc').value = item.desc;
-            document.getElementById('inp-url').value = item.url;
-            document.getElementById('inp-icon').value = item.icon;
-            document.getElementById('icon-preview').src = item.icon;
-            document.getElementById('inp-badge').value = item.badge || '';
-            document.getElementById('inp-status').value = item.status || 'active';
-            document.getElementById('modal-title').innerText = `Chỉnh Sửa App`;
-            document.getElementById('modal').classList.remove('hidden');
+            const item = allData.find(x => x.id === id); if(!item) return;
+            document.getElementById('edit-id').value = id; document.getElementById('inp-name').value = item.name; document.getElementById('inp-desc').value = item.desc; document.getElementById('inp-url').value = item.url; document.getElementById('inp-icon').value = item.icon; 
+            document.getElementById('icon-preview').innerHTML = window.smartParseIcon(item.icon);
+            document.getElementById('inp-badge').value = item.badge || ''; document.getElementById('inp-status').value = item.status || 'active'; document.getElementById('modal-title').innerText = `Chỉnh Sửa App`; document.getElementById('modal').classList.remove('hidden');
         };
-
-        window.del = async (id) => {
-            if(confirm("Xóa nhé?")) {
-                await deleteDoc(doc(db, "apps", id));
-                showToast("Đã xóa!");
-                load();
-            }
-        };
-
+        window.del = async (id) => { if(confirm("Xóa nhé?")) { await deleteDoc(doc(db, "apps", id)); load(); } };
         document.getElementById('btn-save').addEventListener('click', async () => {
-            const id = document.getElementById('edit-id').value;
-            const name = document.getElementById('inp-name').value;
-            if(!name) return showToast("Nhập tên đi!", "error");
-
-            const btn = document.getElementById('btn-save');
-            btn.innerHTML = 'Lưu...'; btn.disabled = true;
-
-            const selectedTag = document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire';
-            
-            const data = {
-                type: curType,
-                name: name,
-                desc: document.getElementById('inp-desc').value,
-                url: document.getElementById('inp-url').value,
-                icon: document.getElementById('inp-icon').value,
-                badge: document.getElementById('inp-badge').value,
-                status: document.getElementById('inp-status').value,
-                tag: selectedTag,
-                updatedAt: new Date().toISOString()
-            };
-            if(!id) {
-                data.downloads = 0;
-                // Mặc định order xuống cuối cùng
-                data.order = allData.length + 1;
-            }
-
-            try {
-                const docId = id || (curType[0] + Date.now());
-                await setDoc(doc(db, "apps", docId), data, { merge: true });
-                closeModal();
-                showToast("OK!");
-                load();
-            } catch(e) { showToast(e.message, "error"); }
+            const id = document.getElementById('edit-id').value; const name = document.getElementById('inp-name').value;
+            if(!name) return alert("Nhập tên đi!");
+            const btn = document.getElementById('btn-save'); btn.innerHTML = 'Lưu...'; btn.disabled = true;
+            const data = { type: curType, name: name, desc: document.getElementById('inp-desc').value, url: document.getElementById('inp-url').value, icon: document.getElementById('inp-icon').value, badge: document.getElementById('inp-badge').value, status: document.getElementById('inp-status').value, tag: document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire', updatedAt: new Date().toISOString() };
+            if(!id) { data.downloads = 0; data.order = allData.length + 1; }
+            try { await setDoc(doc(db, "apps", id || (curType[0] + Date.now())), data, { merge: true }); closeModal(); load(); } catch(e) { alert(e.message); }
             btn.innerHTML = 'Lưu'; btn.disabled = false;
         });
     </script>
