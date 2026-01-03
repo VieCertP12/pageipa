@@ -33,6 +33,7 @@
 
     <div id="toast-container" class="fixed top-20 right-5 z-[100] flex flex-col gap-3 pointer-events-none"></div>
 
+    <!-- LOGIN SCREEN -->
     <div id="login-box" class="fixed inset-0 z-50 flex items-center justify-center bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80');">
         <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-md"></div>
         <div class="relative w-full max-w-md p-8 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20">
@@ -48,6 +49,7 @@
         </div>
     </div>
 
+    <!-- MAIN DASHBOARD -->
     <div id="dashboard" class="hidden min-h-screen pb-20">
         <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -60,12 +62,14 @@
 
         <div class="max-w-6xl mx-auto px-4 mt-8 space-y-8">
             
+            <!-- SECTION 1: CẤU HÌNH WEB -->
             <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center justify-between cursor-pointer" onclick="document.getElementById('config-body').classList.toggle('hidden');">
                     <h3 class="font-bold text-slate-700"><i class="fas fa-palette text-indigo-500"></i> Cấu Hình Giao Diện & Link</h3>
                     <i class="fas fa-chevron-down text-slate-400"></i>
                 </div>
                 <div id="config-body" class="p-6 hidden space-y-6">
+                    <!-- Config Màu Sắc & Text -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Tiêu đề chính (H1)</label>
@@ -83,28 +87,33 @@
                         </div>
                     </div>
                     
+                    <!-- Config 3 Nút Hero -->
                     <div class="border-t border-slate-100 pt-4">
                         <h4 class="font-bold text-sm text-slate-600 mb-4 uppercase">Cấu hình 3 Nút Chức Năng</h4>
                         <div class="grid md:grid-cols-3 gap-4">
+                            <!-- Button 1 -->
                             <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
                                 <div class="text-xs font-bold mb-2 text-indigo-600">Nút 1 (Hỗ Trợ)</div>
                                 <input id="btn1-text" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Tên nút">
                                 <input id="btn1-url" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Link (URL)">
-                                <input id="btn1-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon FontAwesome (vd: fas fa-headset)">
+                                <input id="btn1-icon" class="w-full p-2 rounded border text-sm" placeholder="Class (fas fa-home) hoặc Link ảnh hoặc mã <svg>">
                             </div>
+                            <!-- Button 2 -->
                             <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
                                 <div class="text-xs font-bold mb-2 text-indigo-600">Nút 2 (Mua Cert)</div>
                                 <input id="btn2-text" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Tên nút">
                                 <input id="btn2-url" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Link (URL)">
-                                <input id="btn2-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon FontAwesome">
+                                <input id="btn2-icon" class="w-full p-2 rounded border text-sm" placeholder="Class (fas fa-home) hoặc Link ảnh hoặc mã <svg>">
                             </div>
+                            <!-- Button 3 -->
                             <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
                                 <div class="text-xs font-bold mb-2 text-indigo-600">Nút 3 (DNS/Khác)</div>
                                 <input id="btn3-text" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Tên nút">
                                 <input id="btn3-url" class="w-full mb-2 p-2 rounded border text-sm" placeholder="Link (URL)">
-                                <input id="btn3-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon FontAwesome">
+                                <input id="btn3-icon" class="w-full p-2 rounded border text-sm" placeholder="Class (fas fa-home) hoặc Link ảnh hoặc mã <svg>">
                             </div>
                         </div>
+                        <p class="text-[10px] text-slate-400 mt-2 italic">* Hỗ trợ: FontAwesome (vd: fas fa-home), Link ảnh (http...), hoặc mã SVG trực tiếp.</p>
                     </div>
 
                     <div class="flex justify-end pt-2">
@@ -113,6 +122,7 @@
                 </div>
             </div>
 
+            <!-- SECTION 2: QUẢN LÝ APP -->
             <div>
                 <div class="flex justify-center mb-8">
                     <div class="bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200 inline-flex gap-1">
@@ -135,12 +145,14 @@
 
                 <div class="mb-2 text-xs text-slate-400 italic text-right">* Kéo thả các thẻ bên dưới để sắp xếp vị trí hiển thị</div>
                 <div id="list-data" class="grid gap-3">
+                    <!-- Loading Skeleton -->
                     <div class="animate-pulse bg-white p-4 rounded-xl border border-slate-200 h-20"></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- MODAL EDIT/ADD -->
     <div id="modal" class="fixed inset-0 z-[60] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
         <div class="flex items-center justify-center min-h-screen px-4">
@@ -186,6 +198,7 @@
         </div>
     </div>
 
+    <!-- LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
