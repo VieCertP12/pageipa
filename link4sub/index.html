@@ -430,13 +430,7 @@
         window.authLogin = () => {
             const e = document.getElementById('adminEmail').value, p = document.getElementById('adminPass').value;
             if(!e || !p) return showToast("Missing fields", "error");
-            window.signInWithEmailAndPassword(auth, e, p).catch((e) => {
-                let msg = "Login failed";
-                if(e.code === "auth/invalid-email") msg = "Email không hợp lệ";
-                else if(e.code === "auth/user-not-found") msg = "Tài khoản không tồn tại";
-                else if(e.code === "auth/wrong-password") msg = "Sai mật khẩu";
-                showToast(msg, "error");
-            });
+            window.signInWithEmailAndPassword(auth, e, p).catch(() => showToast("Login failed", "error"));
         };
         window.logout = () => signOut(auth).then(() => window.location.reload());
 
