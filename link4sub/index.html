@@ -23,10 +23,13 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['"Outfit"', 'sans-serif'] },
-                    animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards', 'verify': 'verifyRun 3s linear forwards' },
+                    animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards', 'verify': 'verifyRun 3s linear forwards', 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite' },
                     keyframes: { 
                         fadeIn: { '0%': { opacity: '0', transform: 'scale(0.98)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
                         verifyRun: { '0%': { width: '0%' }, '100%': { width: '100%' } }
+                    },
+                    colors: {
+                        ios: { bg: '#F2F2F7', card: '#FFFFFF', blue: '#007AFF', green: '#34C759', gray: '#8E8E93', border: '#E5E5EA' }
                     }
                 }
             }
@@ -52,23 +55,70 @@
         .ios-switch { position: relative; display: inline-block; width: 51px; height: 31px; }
         .ios-switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #E9E9EA; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .slider:before { position: absolute; content: ""; height: 27px; width: 27px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         input:checked + .slider { background-color: #34C759; }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* User View */
+        /* User View - REDESIGNED */
         .user-view-container { background: #F2F2F7; position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow-y: auto; }
-        .user-card-wrapper { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #F2F2F7; display: flex; flex-direction: column; }
-        @media(min-width: 768px) { .user-card-wrapper { min-height: auto; margin: 5vh auto; border-radius: 32px; overflow: hidden; border: 8px solid rgba(255,255,255,0.5); height: 85vh; background: white; box-shadow: 0 20px 40px rgba(0,0,0,0.1); } }
+        .user-card-wrapper { 
+            max-width: 480px; margin: 0 auto; 
+            min-height: 100vh;
+            display: flex; flex-direction: column; 
+            background: #FFFFFF; /* White background for mobile feel */
+        }
+        @media(min-width: 768px) { 
+            .user-card-wrapper { 
+                min-height: auto; 
+                margin: 5vh auto; 
+                border-radius: 40px; 
+                overflow: hidden; 
+                border: 1px solid rgba(0,0,0,0.05);
+                height: 85vh; 
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); 
+            } 
+        }
 
-        /* Tasks */
-        .task-card { background: white; padding: 16px; display: flex; align-items: center; gap: 16px; position: relative; border-bottom: 1px solid #E5E5EA; overflow: hidden; }
-        .task-card:last-child { border-bottom: none; }
-        .task-card.disabled { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
-        .task-icon-wrapper { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; z-index: 2; }
+        /* Tasks Redesigned */
+        .task-card { 
+            background: #FFFFFF; 
+            padding: 16px; 
+            display: flex; align-items: center; gap: 16px; 
+            position: relative;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border: 1px solid #F2F2F7;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .task-card:active { transform: scale(0.98); background: #F9F9F9; }
+        .task-card.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(0.8); background: #F9F9F9; }
         
-        .verifying .verify-bar { position: absolute; top: 0; left: 0; height: 100%; background: rgba(52, 199, 89, 0.1); z-index: 1; animation: verifyRun 3s linear forwards; }
-        .mini-loader { width: 18px; height: 18px; border: 2px solid #E5E5EA; border-top-color: #007AFF; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+        .task-icon-wrapper { 
+            width: 56px; height: 56px; 
+            border-radius: 16px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 24px; flex-shrink: 0; z-index: 2; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        /* Unlock Button Redesign */
+        .unlock-btn-disabled {
+            background: #E5E5EA; 
+            color: #8E8E93; 
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .unlock-btn-active {
+            background: linear-gradient(135deg, #007AFF 0%, #00C6FF 100%);
+            color: white;
+            box-shadow: 0 10px 30px -10px rgba(0, 122, 255, 0.5);
+            animation: pulse-slow 2s infinite;
+        }
+
+        /* Animation */
+        .verifying .verify-bar { position: absolute; bottom: 0; left: 0; height: 3px; width: 0%; background: #34C759; z-index: 10; animation: verifyRun 3s linear forwards; border-radius: 0 0 20px 20px; }
+        .mini-loader { width: 20px; height: 20px; border: 2px solid #E5E5EA; border-top-color: #007AFF; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
         .verifying .mini-loader { display: block !important; }
         .verifying .task-status-icon { display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -90,13 +140,13 @@
         <!-- LOGIN -->
         <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center p-4 hidden">
             <div class="glass-card p-10 rounded-[2rem] w-full max-w-sm text-center">
-                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-md border border-gray-100"><i class="fa-brands fa-apple"></i></div>
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-md border border-gray-100"><i class="fa-brands fa-apple text-black"></i></div>
                 <h1 class="text-2xl font-bold mb-1">Admin Portal</h1>
                 <p class="text-gray-400 mb-8 text-sm">Sign in to manage</p>
                 <div class="space-y-4">
                     <input type="email" id="adminEmail" class="pc-input" placeholder="Email">
                     <input type="password" id="adminPass" class="pc-input" placeholder="Password">
-                    <button onclick="window.authLogin()" class="pc-btn w-full py-3.5 shadow-none">Sign In</button>
+                    <button onclick="window.handleLogin()" class="pc-btn w-full py-3.5 shadow-none">Sign In</button>
                 </div>
             </div>
         </div>
@@ -221,7 +271,14 @@
             </div>
 
             <div class="user-card-wrapper">
-                <!-- AD BANNER (RECOVERED) -->
+                <div id="u_header" class="relative pt-6 pb-6 px-6 text-center bg-white border-b border-gray-100">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold mb-4 uppercase tracking-wide"><i class="fa-brands fa-apple"></i> Secure Link</div>
+                    <h1 id="u_title" class="text-2xl font-bold text-black mb-2 tracking-tight leading-tight">Loading...</h1>
+                    <p id="u_subtitle" class="text-sm text-gray-500 font-medium max-w-[90%] mx-auto">Complete tasks to unlock</p>
+                    <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-100 p-3 rounded-xl text-xs text-yellow-800 text-left flex gap-3"><i class="fa-solid fa-circle-info mt-0.5 text-yellow-600"></i><span class="font-medium"></span></div>
+                </div>
+
+                <!-- AD BANNER -->
                 <div class="px-5 py-2 mb-0 mt-4">
                     <div class="group relative w-full bg-white rounded-[24px] p-5 shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-white/60 cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98]" onclick="window.open('https://muachungchi.com', '_blank')">
                         <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60 group-hover:bg-blue-100 transition-colors"></div>
@@ -238,28 +295,22 @@
                     </div>
                 </div>
 
-                <div id="u_header" class="relative pt-6 pb-6 px-6 text-center bg-white border-b border-gray-100">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold mb-4 uppercase tracking-wide"><i class="fa-brands fa-apple"></i> Secure Link</div>
-                    <h1 id="u_title" class="text-2xl font-bold text-black mb-2 tracking-tight leading-tight">Loading...</h1>
-                    <p id="u_subtitle" class="text-sm text-gray-500 font-medium max-w-[90%] mx-auto">Complete tasks to unlock</p>
-                    <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-100 p-3 rounded-xl text-xs text-yellow-800 text-left flex gap-3"><i class="fa-solid fa-circle-info mt-0.5 text-yellow-600"></i><span class="font-medium"></span></div>
+                <div class="flex-1 overflow-y-auto px-4 pb-32 bg-[#F2F2F7]">
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 ml-4 mt-6">Required Tasks</div>
+                    <div id="u_tasks" class="space-y-3"></div>
                 </div>
 
-                <div class="flex-1 overflow-y-auto px-4 pb-24 bg-[#F2F2F7]" id="u_tasks_scroll">
-                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-4 mt-4">Tasks</div>
-                    <div id="u_tasks" class="apple-list"></div>
-                </div>
-
-                <div class="p-6 bg-white/90 border-t border-gray-200 fixed bottom-0 left-0 right-0 backdrop-blur-xl z-50 max-w-[480px] mx-auto rounded-t-3xl">
-                    <div id="progressArea" class="hidden mb-4">
-                        <div class="flex justify-between text-[10px] text-gray-400 font-bold mb-2 uppercase tracking-wider"><span>Progress</span> <span id="progressText">0%</span></div>
-                        <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div id="progressBar" class="h-full bg-blue-500 w-0 transition-all duration-500 ease-out"></div></div>
+                <div class="p-6 bg-white/95 border-t border-gray-200 fixed bottom-0 left-0 right-0 backdrop-blur-xl z-50 max-w-[480px] mx-auto rounded-t-[32px] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+                    <div id="progressArea" class="hidden mb-5">
+                        <div class="flex justify-between text-[11px] text-gray-400 font-bold mb-2 uppercase tracking-wider"><span>Progress</span> <span id="progressText">0%</span></div>
+                        <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div id="progressBar" class="h-full bg-[#007AFF] w-0 transition-all duration-500 ease-out rounded-full"></div></div>
                     </div>
-                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all text-[15px]"><i class="fa-solid fa-lock text-xs"></i> <span>Complete Tasks</span></button>
+                    <button id="unlockBtn" onclick="doUnlock()" disabled class="unlock-btn-disabled w-full font-bold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all duration-300 text-[16px] shadow-sm transform active:scale-95"><i class="fa-solid fa-lock text-sm"></i> <span>Locked</span></button>
+                    
                     <div id="noteResult" class="hidden mt-4 animate-fade-in">
-                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-1">
-                            <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200"><span class="text-[10px] font-bold text-gray-400 uppercase">Secret</span><button onclick="copyNote()" class="text-[10px] text-blue-600 font-bold">COPY</button></div>
-                            <textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-3 text-sm font-mono text-black outline-none resize-none h-20"></textarea>
+                        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-1 shadow-inner">
+                            <div class="flex justify-between items-center px-4 py-2.5 border-b border-gray-200"><span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Secret Content</span><button onclick="copyNote()" class="text-[11px] text-blue-600 font-bold hover:bg-blue-50 px-2 py-1 rounded transition">COPY</button></div>
+                            <textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-4 text-sm font-mono text-slate-700 outline-none resize-none h-24 leading-relaxed"></textarea>
                         </div>
                     </div>
                 </div>
@@ -342,7 +393,7 @@
         };
         window.logout = () => signOut(auth).then(() => window.location.reload());
 
-        // EDIT & FORM - SMART ICON LOGIC
+        // EDIT & FORM
         window.selectPlatform = (pf, btn) => {
             document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             ['yt','tg','tk','fb'].forEach(id => document.getElementById(`ftr_${id}`).classList.add('hidden'));
@@ -434,12 +485,7 @@
                 const kid = g.id.replace('grp_', '');
                 const u = g.querySelector('input.pc-input').value;
                 const l = g.querySelector('input[type="text"]').value;
-                
-                // AUTO ICON LOGIC HERE
-                if(u) {
-                    const style = getTaskStyle(kid, l); // Gọi hàm thông minh
-                    tasks[kid] = { url: u, label: l, icon: style.icon, color: style.color, bg: style.bg };
-                }
+                if(u) tasks[kid] = { url: u, label: l, icon: getIcon(kid), color: getColor(kid), bg: getBg(kid) };
             });
 
             document.getElementById('global-loader').classList.remove('hidden');
@@ -470,38 +516,9 @@
         window.toggleStatus = (id, s) => updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { active: s });
         window.deleteLink = (id) => confirm("Delete?") && deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
 
-        // UTILS FOR STYLES (THE SMART ICON LOGIC)
         function getIcon(k) { if(k.includes('yt')) return 'fa-youtube'; if(k.includes('tg')) return 'fa-telegram'; if(k.includes('fb')) return 'fa-facebook'; return 'fa-link'; }
         function getColor(k) { if(k.includes('yt')) return 'text-red-600'; if(k.includes('tg')) return 'text-blue-500'; if(k.includes('fb')) return 'text-blue-700'; return 'text-gray-600'; }
         function getBg(k) { if(k.includes('yt')) return 'bg-red-50'; if(k.includes('tg')) return 'bg-blue-50'; return 'bg-gray-100'; }
-
-        // SMART TASK STYLE GENERATOR (User View Side)
-        function getTaskStyle(id, lblText) {
-            let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
-            const txt = lblText ? lblText.toLowerCase().trim() : '';
-            
-            // YOUTUBE
-            if(id.includes('yt')) { 
-                icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; 
-                if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; 
-                if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; 
-            }
-            // TELEGRAM
-            else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
-            // TIKTOK
-            else if(id.includes('tk')) { 
-                icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; 
-                if(txt.includes('like') || txt.includes('tim')) { icon = 'fa-heart'; color = 'text-pink-500'; } 
-            }
-            // FACEBOOK
-            else if(id.includes('fb')) { 
-                icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; 
-                if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; 
-                if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-share'; 
-                if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; 
-            }
-            return { icon, color, bg };
-        }
 
         // USER LOGIC
         async function loadUserLink(id) {
@@ -510,10 +527,10 @@
                 if(!s.exists() || s.data().active === false) return showError("Unavailable", "Link inactive or not found");
                 const d = s.data();
                 document.getElementById('u_title').innerText = d.title;
-                document.getElementById('u-subtitle').innerText = d.subtitle; // Fix ID
+                document.getElementById('u_subtitle').innerText = d.subtitle;
                 if(d.userNote) { 
                     const n = document.getElementById('u_note_area'); 
-                    n.innerHTML = `<i class="fa-solid fa-circle-info text-yellow-600"></i> ${d.userNote}`; n.classList.remove('hidden'); 
+                    n.innerHTML = `<i class="fa-solid fa-circle-info mt-0.5 text-yellow-600"></i><span class="font-medium">${d.userNote}</span>`; n.classList.remove('hidden'); 
                 }
                 
                 const ul = document.getElementById('u_tasks'); ul.innerHTML = '';
@@ -522,14 +539,13 @@
                     Object.entries(d.tasks).forEach(([k, t], i) => {
                         const lbl = typeof t==='string'? 'Task' : t.label;
                         const url = typeof t==='string'? t : t.url;
-                        
-                        // APPLY SMART ICON LOGIC
-                        let { icon, color, bg } = t.icon ? t : getTaskStyle(k, lbl);
+                        let icon = 'fa-link';
+                        if(k.includes('yt')) icon='fa-youtube'; if(k.includes('fb')) icon='fa-facebook'; if(k.includes('tg')) icon='fa-telegram'; if(k.includes('tk')) icon='fa-tiktok';
                         
                         window.userTasks.push({ url, done: false });
                         const div = document.createElement('div');
                         div.className = `task-card cursor-pointer ${i===0?'':'disabled'}`; div.id = 'tc-'+i;
-                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon-wrapper ${bg} ${color}"><i class="fa-brands ${icon} ${icon.includes('fa-')?'':'fa-solid'}"></i></div><div class="flex-1 font-bold text-sm ml-3">${lbl}</div><div class="mini-loader"></div><div class="task-status-icon text-gray-300"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
+                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon-wrapper bg-gray-100 text-blue-600"><i class="fa-brands ${icon}"></i></div><div class="flex-1 font-bold text-sm ml-3">${lbl}</div><div class="mini-loader"></div><div class="task-status-icon text-gray-300"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
                         div.onclick = () => doTask(i, url);
                         ul.appendChild(div);
                     });
@@ -572,16 +588,16 @@
             if(done === total) {
                 const btn = document.getElementById('unlockBtn');
                 btn.disabled = false;
-                btn.classList.replace('bg-gray-100', 'bg-blue-600');
-                btn.classList.replace('text-gray-400', 'text-white');
-                btn.classList.add('animate-bounce');
+                btn.classList.remove('unlock-btn-disabled');
+                btn.classList.add('unlock-btn-active');
                 btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Unlock Now';
             }
         }
 
         function updateUnlockBtn(d) {
             window.finalDest = d;
-            document.getElementById('unlockBtn').innerHTML = `<i class="fa-solid fa-lock"></i> ${d.destName}`;
+            const btn = document.getElementById('unlockBtn');
+            btn.innerHTML = `<i class="fa-solid fa-lock text-sm"></i> <span>${d.destName || 'Unlock'}</span>`;
         }
 
         window.doUnlock = () => {
@@ -591,6 +607,10 @@
             else {
                 document.getElementById('noteResult').classList.remove('hidden');
                 document.getElementById('noteContentDisplay').value = L4S_SEC.dec(d.noteContent);
+                const btn = document.getElementById('unlockBtn');
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Opened';
+                btn.classList.remove('unlock-btn-active');
+                btn.classList.add('bg-green-600', 'text-white', 'shadow-none');
             }
         };
 
