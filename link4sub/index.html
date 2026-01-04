@@ -654,39 +654,94 @@
         window.editLink = async (id) => {
             document.getElementById('global-loader').classList.remove('hidden');
             try {
+                // 1. Chuyển Tab & Reset sạch sẽ trước
                 switchTab('stu');
+                resetForm(true); // true = force reset without confirm
+
+                // 2. Lấy dữ liệu
                 const docSnap = await window.getDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id));
+                
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+                    
+                    // 3. Điền Basic Info
                     document.getElementById('edit_doc_id').value = id; 
                     document.getElementById('formTitle').innerText = "Editing Link"; 
                     document.getElementById('editModeBadge').classList.remove('hidden'); 
                     document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes';
-                    document.getElementById('i_ttl').value = data.title; document.getElementById('i_sttl').value = data.subtitle; document.getElementById('i_note').value = data.note || ''; document.getElementById('i_user_note').value = data.userNote || ''; document.getElementById('i_dest_name').value = data.destName;
                     
+                    document.getElementById('i_ttl').value = data.title || ''; 
+                    document.getElementById('i_sttl').value = data.subtitle || ''; 
+                    document.getElementById('i_note').value = data.note || ''; 
+                    document.getElementById('i_user_note').value = data.userNote || ''; 
+                    document.getElementById('i_dest_name').value = data.destName || 'Unlock';
+                    
+                    // 4. Điền Destination
                     const type = data.type || 'link';
-                    document.querySelector(`input[name="destType"][value="${type}"]`).click();
+                    const radio = document.querySelector(`input[name="destType"][value="${type}"]`);
+                    if(radio) { radio.checked = true; toggleDestType(); }
+                    
                     document.getElementById('i_dest_url').value = L4S_SEC.dec(data.destUrl) || ''; 
                     document.getElementById('i_dest_note').value = L4S_SEC.dec(data.noteContent) || '';
 
-                    document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
-                    document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
-                    document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
-
+                    // 5. Điền Tasks (PHẦN QUAN TRỌNG ĐÃ FIX)
                     if(data.tasks) {
+                        // Xóa hết task cũ (nếu có)
+                        document.querySelectorAll('.grp.active').forEach(el => el.classList.remove('active'));
+                        document.querySelectorAll('.btn_iftr.active').forEach(el => el.classList.remove('active'));
+
                         for (const [key, taskData] of Object.entries(data.tasks)) {
-                            let grp = document.getElementById(`grp_${key}`);
-                            if(!grp) { const platform = key.split('_')[0]; addTask(platform, key, taskData.label, taskData.url); continue; }
-                            const inp = grp.querySelector('input[type="url"]'), lbl = grp.querySelector('input[type="text"]');
-                            if (grp && inp) {
-                                grp.classList.add('active'); inp.value = typeof taskData === 'string' ? taskData : taskData.url;
-                                if(lbl && typeof taskData === 'object') lbl.value = taskData.label;
-                                const btn = document.querySelector(`button[onclick*="'${key}'"]`); if(btn) btn.classList.add('active');
+                            // Key ví dụ: yt1, yt_custom_123, tg1...
+                            const platform = key.substring(0, 2); // yt, tg, tk, fb
+                            const label = typeof taskData === 'string' ? 'Task' : taskData.label;
+                            const url = typeof taskData === 'string' ? taskData : taskData.url;
+
+                            // Kiểm tra xem là task có sẵn (Built-in) hay Custom
+                            const existingGrp = document.getElementById(`grp_${key}`);
+                            
+                            if (existingGrp) {
+                                // Task có sẵn (vd: yt1) -> Kích hoạt nó lên
+                                toggleInput(key, document.querySelector(`button[onclick*="'${key}'"]`));
+                                document.getElementById(`i_${key}`).value = url;
+                                document.getElementById(`lbl_${key}`).value = label;
+                            } else {
+                                // Task Custom -> Tạo mới
+                                addTask(platform, key, label, url);
                             }
                         }
                     }
+                } else {
+                    showToast("Link not found!", "error");
                 }
-            } catch(e) { console.log(e); } finally { document.getElementById('global-loader').classList.add('hidden'); }
+            } catch(e) { 
+                console.error(e); 
+                showToast("Error loading link", "error"); 
+            } finally { 
+                document.getElementById('global-loader').classList.add('hidden'); 
+            }
+        };
+
+        // Hàm Reset sửa lại chút để hỗ trợ force reset
+        window.resetForm = (force = false) => {
+            if(!force && !confirm("Clear form?")) return;
+            document.getElementById('fgSTU').reset(); 
+            document.getElementById('edit_doc_id').value = "";
+            document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Create Link';
+            document.getElementById('formTitle').innerText = "Basic Info"; 
+            document.getElementById('editModeBadge').classList.add('hidden');
+            
+            // Xóa sạch task custom
+            document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
+            
+            // Ẩn hết task active
+            document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
+            document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
+            
+            // Reset radio
+            const r = document.querySelector('input[name="destType"][value="link"]');
+            if(r) { r.checked = true; toggleDestType(); }
+            
+            document.getElementById('resultArea').classList.add('hidden');
         };
 
         // USER VIEW LOGIC
