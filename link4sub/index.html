@@ -52,7 +52,7 @@
         .ios-switch { position: relative; display: inline-block; width: 51px; height: 31px; }
         .ios-switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #E9E9EA; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 27px; width: 27px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         input:checked + .slider { background-color: #34C759; }
         input:checked + .slider:before { transform: translateX(20px); }
 
@@ -85,18 +85,18 @@
 </head>
 <body class="h-screen flex overflow-hidden">
     <div id="app" class="w-full h-full flex relative">
-        <div id="global-loader" class="absolute inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hidden backdrop-blur-sm"><div class="loader mb-3"></div><div class="text-sm text-slate-500 font-bold">Đang kết nối...</div></div>
+        <div id="global-loader" class="absolute inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hidden backdrop-blur-sm"><div class="loader mb-3"></div><div class="text-sm text-slate-500 font-bold">Connecting...</div></div>
         
         <!-- LOGIN -->
         <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center p-4 hidden">
             <div class="glass-card p-10 rounded-[2rem] w-full max-w-sm text-center">
-                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-md"><i class="fa-brands fa-apple"></i></div>
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-md border border-gray-100"><i class="fa-brands fa-apple"></i></div>
                 <h1 class="text-2xl font-bold mb-1">Admin Portal</h1>
                 <p class="text-gray-400 mb-8 text-sm">Sign in to manage</p>
                 <div class="space-y-4">
                     <input type="email" id="adminEmail" class="pc-input" placeholder="Email">
                     <input type="password" id="adminPass" class="pc-input" placeholder="Password">
-                    <button onclick="window.handleLogin()" class="pc-btn w-full py-3.5 shadow-none">Sign In</button>
+                    <button onclick="window.authLogin()" class="pc-btn w-full py-3.5 shadow-none">Sign In</button>
                 </div>
             </div>
         </div>
@@ -105,7 +105,7 @@
         <div id="view-admin" class="w-full h-full flex hidden">
             <div class="w-72 bg-white/80 border-r border-gray-200 flex flex-col z-20 backdrop-blur-xl">
                 <div class="h-20 flex items-center px-8 gap-3">
-                    <div class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold"><i class="fa-brands fa-apple"></i></div>
+                    <div class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold shadow-sm"><i class="fa-brands fa-apple"></i></div>
                     <span class="font-bold text-xl">Link4Sub Pro</span>
                 </div>
                 <div class="p-4 flex-1 space-y-1">
@@ -135,21 +135,21 @@
                         <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
                             <input type="hidden" id="edit_doc_id" value="">
                             <div class="glass-card rounded-2xl p-8 mb-8 bg-white">
-                                <h3 class="text-base font-bold uppercase mb-6 flex justify-between"><span>Basic Info</span><span id="editModeBadge" class="hidden text-[10px] bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">EDITING</span></h3>
+                                <h3 class="text-base font-bold uppercase mb-6 flex justify-between"><span>Basic Info</span><span id="editModeBadge" class="hidden text-[10px] bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full border border-yellow-200">EDITING</span></h3>
                                 <div class="grid grid-cols-2 gap-8 mb-6">
                                     <div><label class="block text-sm font-bold text-gray-500 mb-2">Main Title</label><input type="text" id="i_ttl" class="pc-input"></div>
                                     <div><label class="block text-sm font-bold text-gray-500 mb-2">Subtitle</label><input type="text" id="i_sttl" class="pc-input"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-8">
                                     <div><label class="block text-sm font-bold text-gray-500 mb-2">Note (Admin)</label><input type="text" id="i_note" class="pc-input"></div>
-                                    <div><label class="block text-sm font-bold text-blue-500 mb-2">User Alert</label><input type="text" id="i_user_note" class="pc-input bg-blue-50"></div>
+                                    <div><label class="block text-sm font-bold text-blue-500 mb-2">User Alert</label><input type="text" id="i_user_note" class="pc-input bg-blue-50 border-blue-100 text-blue-600"></div>
                                 </div>
                             </div>
                             <div class="glass-card rounded-2xl p-8 mb-8 bg-white">
                                 <h3 class="text-base font-bold uppercase mb-6">Destination</h3>
                                 <div class="flex gap-4 mb-6">
-                                    <label class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg cursor-pointer"><input type="radio" name="destType" value="link" checked onchange="toggleDestType()"> <span class="font-bold text-sm">URL</span></label>
-                                    <label class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg cursor-pointer"><input type="radio" name="destType" value="note" onchange="toggleDestType()"> <span class="font-bold text-sm">Secret Text</span></label>
+                                    <label class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-100 transition"><input type="radio" name="destType" value="link" checked onchange="toggleDestType()"> <span class="font-bold text-sm">URL Link</span></label>
+                                    <label class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-100 transition"><input type="radio" name="destType" value="note" onchange="toggleDestType()"> <span class="font-bold text-sm">Secret Text</span></label>
                                 </div>
                                 <div class="grid grid-cols-2 gap-8">
                                     <div><label class="block text-sm font-bold text-gray-500 mb-2">Button Text</label><input type="text" id="i_dest_name" class="pc-input" placeholder="Unlock"></div>
@@ -171,24 +171,24 @@
                                         <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Subscribe</button>
                                         <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like</button>
                                         <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
-                                        <button type="button" class="btn_iftr btn_add" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Custom</button>
+                                        <button type="button" class="btn_iftr btn_add border-dashed border-red-300 text-red-500" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Custom</button>
                                     </div>
-                                    <div id="ftr_tg" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Join</button><button type="button" class="btn_iftr btn_add" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Custom</button></div>
-                                    <div id="ftr_tk" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button><button type="button" class="btn_iftr btn_add" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Custom</button></div>
-                                    <div id="ftr_fb" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button><button type="button" class="btn_iftr btn_add" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_tg" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Join</button><button type="button" class="btn_iftr btn_add border-dashed border-blue-300 text-blue-500" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_tk" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button><button type="button" class="btn_iftr btn_add border-dashed border-gray-400 text-gray-600" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_fb" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button><button type="button" class="btn_iftr btn_add border-dashed border-blue-300 text-blue-500" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Custom</button></div>
                                 </div>
-                                <div id="dynamic_inputs" class="grid grid-cols-2 gap-4">
-                                    <div class="grp" id="grp_yt1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_yt1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent" value="Đăng ký kênh"><input class="pc-input bg-gray-50" id="i_yt1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_ytl1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_ytl1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent" value="Like Video"><input class="pc-input bg-gray-50" id="i_ytl1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_ytc1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_ytc1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent" value="Comment Video"><input class="pc-input bg-gray-50" id="i_ytc1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_tg1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_tg1" class="text-xs font-bold text-blue-500 mb-1 w-full bg-transparent" value="Join Telegram"><input class="pc-input bg-gray-50" id="i_tg1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_tk1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_tk1" class="text-xs font-bold text-black mb-1 w-full bg-transparent" value="Follow TikTok"><input class="pc-input bg-gray-50" id="i_tk1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_fb1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_fb1" class="text-xs font-bold text-blue-700 mb-1 w-full bg-transparent" value="Follow Facebook"><input class="pc-input bg-gray-50" id="i_fb1" placeholder="Link..."></div></div>
+                                <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="grp" id="grp_yt1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_yt1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent outline-none" value="Đăng ký kênh"><input class="pc-input bg-gray-50" id="i_yt1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_ytl1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_ytl1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent outline-none" value="Like Video"><input class="pc-input bg-gray-50" id="i_ytl1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_ytc1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_ytc1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent outline-none" value="Comment Video"><input class="pc-input bg-gray-50" id="i_ytc1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_tg1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_tg1" class="text-xs font-bold text-blue-500 mb-1 w-full bg-transparent outline-none" value="Join Telegram"><input class="pc-input bg-gray-50" id="i_tg1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_tk1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_tk1" class="text-xs font-bold text-black mb-1 w-full bg-transparent outline-none" value="Follow TikTok"><input class="pc-input bg-gray-50" id="i_tk1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_fb1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_fb1" class="text-xs font-bold text-blue-700 mb-1 w-full bg-transparent outline-none" value="Follow Facebook"><input class="pc-input bg-gray-50" id="i_fb1" placeholder="Link..."></div></div>
                                 </div>
                             </div>
-                            <div class="flex gap-4 glass-nav p-4 rounded-2xl sticky bottom-4 z-20">
-                                <button type="button" onclick="resetForm()" class="pc-btn pc-btn-secondary px-8">Reset</button>
-                                <button type="submit" id="btnAction" class="pc-btn flex-1">Create Link</button>
+                            <div class="flex gap-4 glass-nav p-4 rounded-2xl sticky bottom-4 z-20 border border-white/50 bg-white/90 shadow-xl backdrop-blur-xl">
+                                <button type="button" onclick="resetForm()" class="pc-btn pc-btn-secondary px-8 shadow-sm">Reset</button>
+                                <button type="submit" id="btnAction" class="pc-btn flex-1 shadow-lg shadow-blue-500/20">Create Link</button>
                             </div>
                             <div id="resultArea" class="hidden mt-8 bg-green-50 border border-green-200 p-8 rounded-3xl text-center shadow-sm">
                                 <h3 class="text-green-700 font-extrabold text-xl mb-3"><i class="fa-solid fa-check-circle mr-2"></i>Success!</h3>
@@ -198,10 +198,10 @@
                     </div>
                     <!-- Manage -->
                     <div id="tab_manage_links" class="hidden max-w-7xl mx-auto animate-fade-in">
-                        <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                             <table class="w-full text-left">
-                                <thead class="bg-gray-50 border-b text-xs font-bold text-gray-500 uppercase"><tr><th class="p-5">Title</th><th class="p-5">Views</th><th class="p-5 text-center">Status</th><th class="p-5 text-right">Actions</th></tr></thead>
-                                <tbody id="links-table-body" class="text-sm"></tbody>
+                                <thead class="bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider"><tr><th class="p-5">Title</th><th class="p-5">Views</th><th class="p-5 text-center">Status</th><th class="p-5 text-right">Actions</th></tr></thead>
+                                <tbody id="links-table-body" class="text-sm divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
                     </div>
@@ -267,6 +267,7 @@
         </div>
     </div>
 
+    <!-- LOGIC JS (FIXED) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -341,7 +342,7 @@
         };
         window.logout = () => signOut(auth).then(() => window.location.reload());
 
-        // EDIT & FORM
+        // EDIT & FORM - SMART ICON LOGIC
         window.selectPlatform = (pf, btn) => {
             document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             ['yt','tg','tk','fb'].forEach(id => document.getElementById(`ftr_${id}`).classList.add('hidden'));
@@ -433,7 +434,12 @@
                 const kid = g.id.replace('grp_', '');
                 const u = g.querySelector('input.pc-input').value;
                 const l = g.querySelector('input[type="text"]').value;
-                if(u) tasks[kid] = { url: u, label: l, icon: getIcon(kid), color: getColor(kid), bg: getBg(kid) };
+                
+                // AUTO ICON LOGIC HERE
+                if(u) {
+                    const style = getTaskStyle(kid, l); // Gọi hàm thông minh
+                    tasks[kid] = { url: u, label: l, icon: style.icon, color: style.color, bg: style.bg };
+                }
             });
 
             document.getElementById('global-loader').classList.remove('hidden');
@@ -457,25 +463,45 @@
                 list.innerHTML = '';
                 snap.forEach(d => {
                     const l = {id:d.id, ...d.data()};
-                    list.innerHTML += `<tr class="border-b hover:bg-gray-50">
-                        <td class="p-5 font-bold">${l.title}<div class="text-xs text-gray-400 font-normal">${new Date(l.createdAt).toLocaleDateString()}</div></td>
-                        <td class="p-5">${l.views||0}</td>
-                        <td class="p-5 text-center"><label class="ios-switch scale-75"><input type="checkbox" ${l.active!==false?'checked':''} onchange="window.toggleStatus('${l.id}', this.checked)"><span class="slider"></span></label></td>
-                        <td class="p-5 text-right">
-                            <button onclick="window.editLink('${l.id}')" class="text-blue-600 hover:bg-blue-50 p-2.5 rounded-xl transition mr-1"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="window.copyToClip('${window.location.origin + window.location.pathname + "?id=" + l.id}')" class="text-gray-500 hover:bg-gray-100 p-2.5 rounded-xl transition mr-1"><i class="fa-regular fa-copy"></i></button>
-                            <button onclick="window.deleteLink('${l.id}')" class="text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>`;
+                    list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-5 font-bold">${l.title}<div class="text-xs text-gray-400 font-normal">${new Date(l.createdAt).toLocaleDateString()}</div></td><td class="p-5">${l.views||0}</td><td class="p-5 text-center"><label class="ios-switch scale-75"><input type="checkbox" ${l.active!==false?'checked':''} onchange="window.toggleStatus('${l.id}', this.checked)"><span class="slider"></span></label></td><td class="p-5 text-right"><button onclick="window.editLink('${l.id}')" class="text-blue-600 hover:bg-blue-50 p-2.5 rounded-xl transition mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="window.deleteLink('${l.id}')" class="text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition"><i class="fa-solid fa-trash"></i></button></td></tr>`;
                 });
             });
         };
         window.toggleStatus = (id, s) => updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { active: s });
         window.deleteLink = (id) => confirm("Delete?") && deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
 
+        // UTILS FOR STYLES (THE SMART ICON LOGIC)
         function getIcon(k) { if(k.includes('yt')) return 'fa-youtube'; if(k.includes('tg')) return 'fa-telegram'; if(k.includes('fb')) return 'fa-facebook'; return 'fa-link'; }
         function getColor(k) { if(k.includes('yt')) return 'text-red-600'; if(k.includes('tg')) return 'text-blue-500'; if(k.includes('fb')) return 'text-blue-700'; return 'text-gray-600'; }
         function getBg(k) { if(k.includes('yt')) return 'bg-red-50'; if(k.includes('tg')) return 'bg-blue-50'; return 'bg-gray-100'; }
+
+        // SMART TASK STYLE GENERATOR (User View Side)
+        function getTaskStyle(id, lblText) {
+            let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
+            const txt = lblText ? lblText.toLowerCase().trim() : '';
+            
+            // YOUTUBE
+            if(id.includes('yt')) { 
+                icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; 
+                if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; 
+                if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; 
+            }
+            // TELEGRAM
+            else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
+            // TIKTOK
+            else if(id.includes('tk')) { 
+                icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; 
+                if(txt.includes('like') || txt.includes('tim')) { icon = 'fa-heart'; color = 'text-pink-500'; } 
+            }
+            // FACEBOOK
+            else if(id.includes('fb')) { 
+                icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; 
+                if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; 
+                if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-share'; 
+                if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; 
+            }
+            return { icon, color, bg };
+        }
 
         // USER LOGIC
         async function loadUserLink(id) {
@@ -484,7 +510,7 @@
                 if(!s.exists() || s.data().active === false) return showError("Unavailable", "Link inactive or not found");
                 const d = s.data();
                 document.getElementById('u_title').innerText = d.title;
-                document.getElementById('u_subtitle').innerText = d.subtitle;
+                document.getElementById('u-subtitle').innerText = d.subtitle; // Fix ID
                 if(d.userNote) { 
                     const n = document.getElementById('u_note_area'); 
                     n.innerHTML = `<i class="fa-solid fa-circle-info text-yellow-600"></i> ${d.userNote}`; n.classList.remove('hidden'); 
@@ -496,13 +522,14 @@
                     Object.entries(d.tasks).forEach(([k, t], i) => {
                         const lbl = typeof t==='string'? 'Task' : t.label;
                         const url = typeof t==='string'? t : t.url;
-                        let icon = 'fa-link';
-                        if(k.includes('yt')) icon='fa-youtube'; if(k.includes('fb')) icon='fa-facebook'; if(k.includes('tg')) icon='fa-telegram'; if(k.includes('tk')) icon='fa-tiktok';
+                        
+                        // APPLY SMART ICON LOGIC
+                        let { icon, color, bg } = t.icon ? t : getTaskStyle(k, lbl);
                         
                         window.userTasks.push({ url, done: false });
                         const div = document.createElement('div');
                         div.className = `task-card cursor-pointer ${i===0?'':'disabled'}`; div.id = 'tc-'+i;
-                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon-wrapper bg-gray-100 text-blue-600"><i class="fa-brands ${icon}"></i></div><div class="flex-1 font-bold text-sm ml-3">${lbl}</div><div class="mini-loader"></div><div class="task-status-icon text-gray-300"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
+                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon-wrapper ${bg} ${color}"><i class="fa-brands ${icon} ${icon.includes('fa-')?'':'fa-solid'}"></i></div><div class="flex-1 font-bold text-sm ml-3">${lbl}</div><div class="mini-loader"></div><div class="task-status-icon text-gray-300"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
                         div.onclick = () => doTask(i, url);
                         ul.appendChild(div);
                     });
