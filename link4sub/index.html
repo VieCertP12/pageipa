@@ -457,7 +457,16 @@
                 list.innerHTML = '';
                 snap.forEach(d => {
                     const l = {id:d.id, ...d.data()};
-                    list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-5 font-bold">${l.title}<div class="text-xs text-gray-400 font-normal">${new Date(l.createdAt).toLocaleDateString()}</div></td><td class="p-5">${l.views||0}</td><td class="p-5 text-center"><label class="ios-switch scale-75"><input type="checkbox" ${l.active!==false?'checked':''} onchange="window.toggleStatus('${l.id}', this.checked)"><span class="slider"></span></label></td><td class="p-5 text-right"><button onclick="window.editLink('${l.id}')" class="text-blue-600 mr-3"><i class="fa-solid fa-pen"></i></button><button onclick="window.deleteLink('${l.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+                    list.innerHTML += `<tr class="border-b hover:bg-gray-50">
+                        <td class="p-5 font-bold">${l.title}<div class="text-xs text-gray-400 font-normal">${new Date(l.createdAt).toLocaleDateString()}</div></td>
+                        <td class="p-5">${l.views||0}</td>
+                        <td class="p-5 text-center"><label class="ios-switch scale-75"><input type="checkbox" ${l.active!==false?'checked':''} onchange="window.toggleStatus('${l.id}', this.checked)"><span class="slider"></span></label></td>
+                        <td class="p-5 text-right">
+                            <button onclick="window.editLink('${l.id}')" class="text-blue-600 hover:bg-blue-50 p-2.5 rounded-xl transition mr-1"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="window.copyToClip('${window.location.origin + window.location.pathname + "?id=" + l.id}')" class="text-gray-500 hover:bg-gray-100 p-2.5 rounded-xl transition mr-1"><i class="fa-regular fa-copy"></i></button>
+                            <button onclick="window.deleteLink('${l.id}')" class="text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>`;
                 });
             });
         };
