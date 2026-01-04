@@ -244,8 +244,8 @@
                 if (auth && !auth.currentUser) {
                     try { await signInAnonymously(auth); } 
                     catch (e) { 
-                        console.warn("Anon Auth Failed:", e); 
-                        showToast("Auth skipped. Enabling Public Access.", "err"); 
+                        console.error("Anon Auth Failed:", e); 
+                        showError("Auth Error", "Please enable Anonymous Auth in Firebase Console."); 
                     }
                 }
             }
@@ -255,9 +255,7 @@
             onAuthStateChanged(auth, (user) => {
                 const linkId = new URLSearchParams(window.location.search).get('id');
                 if (linkId) {
-                    // Force load even if user is null (fallback for public DB rules)
-                    loadUserLink(linkId); 
-                    document.getElementById('global-loader').classList.add('hidden');
+                    if(user) { loadUserLink(linkId); document.getElementById('global-loader').classList.add('hidden'); }
                 } else if (user && !user.isAnonymous) {
                     switchView('admin'); fetchLinks();
                 } else {
@@ -273,7 +271,7 @@
         };
         window.showToast = (msg, type) => { if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, backgroundColor: type === "success" ? "#34C759" : "#FF3B30", className: "rounded-xl font-bold" }).showToast(); else alert(msg); };
         window.copyToClip = (text) => { navigator.clipboard.writeText(text).then(() => showToast("Copied!", "success")); };
-        function showError(t, m) { alert(t + ": " + m); } 
+        function showError(t, m) { alert(t + ": " + m); } // Simplified Error Handling for New View
 
         // ADMIN LOGIC
         window.switchView = (v) => {
@@ -488,10 +486,7 @@
                 updateUnlockBtn(d);
                 // Track view
                 updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { views: increment(1) });
-            } catch(e) { 
-                console.error(e); 
-                showToast("Failed to load link data", "err");
-            }
+            } catch(e) { console.error(e); }
         }
 
         window.doTask = (i, url) => {
