@@ -4,190 +4,265 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Link4Sub Pro - System</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <!-- Tailwind Config -->
     <script>
-        tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Outfit"', 'sans-serif'] } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Outfit"', 'sans-serif'] },
+                    animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards', 'verify': 'verifyRun 3s linear forwards' },
+                    keyframes: { 
+                        fadeIn: { '0%': { opacity: '0', transform: 'scale(0.98)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+                        verifyRun: { '0%': { width: '0%' }, '100%': { width: '100%' } }
+                    }
+                }
+            }
+        }
     </script>
+
     <style>
         body { background-color: #F2F2F7; color: #1C1C1E; min-height: 100vh; overflow-x: hidden; user-select: none; }
         .pc-input, textarea { user-select: text !important; }
-        .glass-card { background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); border: 1px solid white; box-shadow: 0 8px 30px rgba(0,0,0,0.05); }
-        .pc-input { background: white; border: 1px solid #E5E5EA; border-radius: 12px; padding: 12px; width: 100%; outline: none; transition: 0.2s; }
-        .pc-input:focus { border-color: #007AFF; box-shadow: 0 0 0 3px rgba(0,122,255,0.1); }
-        .pc-btn { background: #007AFF; color: white; border-radius: 12px; padding: 12px 24px; font-weight: 600; transition: 0.2s; }
-        .pc-btn:hover { transform: translateY(-1px); } .pc-btn:active { transform: scale(0.98); }
-        .pc-btn-secondary { background: #E5E5EA; color: black; }
-        .grp { display: none; } .grp.active { display: block; animation: fadeIn 0.3s forwards; }
-        .btn_iftr { border: 1px solid #E5E5EA; padding: 10px 16px; border-radius: 10px; background: white; margin: 4px; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
-        .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); }
-        .stu_b_ftr { width: 80px; height: 80px; border-radius: 16px; background: white; border: 1px solid #E5E5EA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; font-size: 12px; }
-        .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); font-weight: bold; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .loader { width: 30px; height: 30px; border: 3px solid #eee; border-top: 3px solid #007AFF; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } } @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        /* Toggle Switch */
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        
+        /* Glassmorphism */
+        .glass-nav { background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .glass-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 8px 30px rgba(0,0,0,0.04); }
+        
+        /* Elements */
+        .pc-input { background: rgba(255,255,255,0.8); border: 1px solid #E5E5EA; border-radius: 12px; padding: 12px 16px; width: 100%; outline: none; transition: 0.3s; }
+        .pc-input:focus { background: white; border-color: #007AFF; box-shadow: 0 0 0 4px rgba(0,122,255,0.1); }
+        .pc-btn { background: #007AFF; color: white; border-radius: 14px; padding: 12px 24px; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .pc-btn:active { transform: scale(0.98); }
+        .pc-btn-secondary { background: rgba(118,118,128,0.12); color: #1C1C1E; }
+        
+        /* Switch */
+        .ios-switch { position: relative; display: inline-block; width: 51px; height: 31px; }
+        .ios-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #E9E9EA; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 27px; width: 27px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         input:checked + .slider { background-color: #34C759; }
         input:checked + .slider:before { transform: translateX(20px); }
+
         /* User View */
-        .task-card { background: white; padding: 16px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 15px; }
-        .task-card.disabled { opacity: 0.5; pointer-events: none; }
-        .task-icon { width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .verifying .task-status { display: none; }
-        .mini-loader { display: none; width: 20px; height: 20px; border: 2px solid #ddd; border-top-color: #007AFF; border-radius: 50%; animation: spin 1s infinite; }
-        .verifying .mini-loader { display: block; }
+        .user-view-container { background: #F2F2F7; position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow-y: auto; }
+        .user-card-wrapper { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #F2F2F7; display: flex; flex-direction: column; }
+        @media(min-width: 768px) { .user-card-wrapper { min-height: auto; margin: 5vh auto; border-radius: 32px; overflow: hidden; border: 8px solid rgba(255,255,255,0.5); height: 85vh; background: white; box-shadow: 0 20px 40px rgba(0,0,0,0.1); } }
+
+        /* Tasks */
+        .task-card { background: white; padding: 16px; display: flex; align-items: center; gap: 16px; position: relative; border-bottom: 1px solid #E5E5EA; overflow: hidden; }
+        .task-card:last-child { border-bottom: none; }
+        .task-card.disabled { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
+        .task-icon-wrapper { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; z-index: 2; }
+        
+        .verifying .verify-bar { position: absolute; top: 0; left: 0; height: 100%; background: rgba(52, 199, 89, 0.1); z-index: 1; animation: verifyRun 3s linear forwards; }
+        .mini-loader { width: 18px; height: 18px; border: 2px solid #E5E5EA; border-top-color: #007AFF; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+        .verifying .mini-loader { display: block !important; }
+        .verifying .task-status-icon { display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Admin Styles */
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: #8E8E93; font-weight: 500; cursor: pointer; margin-bottom: 4px; }
+        .nav-item.active { background: rgba(0,122,255,0.12); color: #007AFF; font-weight: 600; }
+        .grp { display: none; } .grp.active { display: block; animation: fadeIn 0.3s; }
+        .btn_iftr { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px; background: white; border: 1px solid #E5E5EA; margin: 4px; cursor: pointer; }
+        .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); }
+        .stu_b_ftr { width: 80px; height: 80px; border-radius: 18px; background: white; border: 1px solid #E5E5EA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-size: 11px; cursor: pointer; }
+        .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="bg-gray-100 h-screen flex overflow-hidden">
-
-    <div id="global-loader" class="fixed inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center backdrop-blur-sm"><div class="loader mb-2"></div><span class="text-sm font-bold text-gray-500">Loading System...</span></div>
-
-    <div id="view-login" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="glass-card p-10 rounded-3xl w-full max-w-sm text-center">
-            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow text-2xl"><i class="fa-brands fa-apple"></i></div>
-            <h1 class="text-2xl font-bold mb-2">Admin Access</h1>
-            <div class="space-y-3">
-                <input type="email" id="adminEmail" class="pc-input" placeholder="Email">
-                <input type="password" id="adminPass" class="pc-input" placeholder="Password">
-                <button onclick="window.handleLogin()" class="pc-btn w-full justify-center">Sign In</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-admin" class="hidden w-full h-full flex">
-        <div class="w-64 bg-white border-r flex flex-col shrink-0">
-            <div class="h-20 flex items-center px-6 font-bold text-xl gap-2"><i class="fa-brands fa-apple text-2xl"></i> Link4Sub</div>
-            <div class="p-4 space-y-1 flex-1">
-                <div onclick="window.switchTab('stu')" id="nav-stu" class="p-3 rounded-xl hover:bg-gray-50 cursor-pointer font-medium text-gray-600 active"><i class="fa-solid fa-plus w-6"></i> Create Link</div>
-                <div onclick="window.switchTab('manage')" id="nav-manage" class="p-3 rounded-xl hover:bg-gray-50 cursor-pointer font-medium text-gray-600"><i class="fa-solid fa-list w-6"></i> Manage Links</div>
-                <div onclick="window.switchTab('dash')" id="nav-dash" class="p-3 rounded-xl hover:bg-gray-50 cursor-pointer font-medium text-gray-600"><i class="fa-solid fa-chart-pie w-6"></i> Dashboard</div>
-            </div>
-            <div class="p-4 border-t"><button onclick="window.handleLogout()" class="text-red-500 font-bold w-full text-left p-2"><i class="fa-solid fa-power-off"></i> Logout</button></div>
-        </div>
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <div class="h-20 border-b bg-white/80 backdrop-blur flex items-center justify-between px-8 shrink-0">
-                <h2 id="page-title" class="text-2xl font-bold">Create Link</h2>
-            </div>
-            <div class="flex-1 overflow-y-auto p-8">
-                
-                <div id="tab-stu" class="max-w-4xl mx-auto">
-                    <form id="form-stu" onsubmit="event.preventDefault(); window.saveLink();">
-                        <input type="hidden" id="edit_id">
-                        
-                        <div class="bg-white p-6 rounded-2xl shadow-sm mb-6">
-                            <div class="flex justify-between mb-4"><h3 class="font-bold uppercase text-sm text-gray-500">Basic Info</h3><span id="edit-badge" class="hidden bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-xs font-bold">EDITING MODE</span></div>
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div><label class="text-xs font-bold text-gray-400">Title</label><input id="i_title" class="pc-input" required></div>
-                                <div><label class="text-xs font-bold text-gray-400">Subtitle</label><input id="i_subtitle" class="pc-input"></div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div><label class="text-xs font-bold text-gray-400">Admin Note</label><input id="i_note" class="pc-input"></div>
-                                <div><label class="text-xs font-bold text-blue-500">User Alert</label><input id="i_user_note" class="pc-input bg-blue-50"></div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-6 rounded-2xl shadow-sm mb-6">
-                            <h3 class="font-bold uppercase text-sm text-gray-500 mb-4">Destination</h3>
-                            <div class="flex gap-4 mb-4">
-                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="dtype" value="link" checked onchange="window.toggleDest()"> <span>URL Link</span></label>
-                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="dtype" value="note" onchange="window.toggleDest()"> <span>Secret Text</span></label>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div><label class="text-xs font-bold text-gray-400">Button Name</label><input id="i_dest_name" class="pc-input" value="Unlock Now"></div>
-                                <div id="box-link"><label class="text-xs font-bold text-gray-400">Target URL</label><input id="i_dest_url" type="url" class="pc-input"></div>
-                                <div id="box-note" class="hidden"><label class="text-xs font-bold text-gray-400">Secret Content</label><textarea id="i_dest_note" class="pc-input"></textarea></div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-6 rounded-2xl shadow-sm mb-6">
-                            <h3 class="font-bold uppercase text-sm text-gray-500 mb-4">Tasks</h3>
-                            <div class="flex gap-2 mb-4 overflow-x-auto">
-                                <div class="stu_b_ftr active" onclick="window.selPlat('yt', this)" style="--clr:#f00"><i class="fa-brands fa-youtube text-xl"></i> YT</div>
-                                <div class="stu_b_ftr" onclick="window.selPlat('tg', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram text-xl"></i> TG</div>
-                                <div class="stu_b_ftr" onclick="window.selPlat('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook text-xl"></i> FB</div>
-                                <div class="stu_b_ftr" onclick="window.selPlat('tk', this)" style="--clr:#000"><i class="fa-brands fa-tiktok text-xl"></i> TK</div>
-                            </div>
-                            
-                            <div id="btns-yt" class="mb-4">
-                                <div class="btn_iftr" onclick="window.toggleTask('yt1', this)" style="--clr:#f00"><i class="fa-brands fa-youtube"></i> Subscribe</div>
-                                <div class="btn_iftr" onclick="window.toggleTask('ytl1', this)" style="--clr:#f00"><i class="fa-solid fa-thumbs-up"></i> Like</div>
-                                <div class="btn_iftr border-dashed border-red-300 text-red-500" onclick="window.addCustom('yt')">+ Custom</div>
-                            </div>
-                            <div id="btns-tg" class="mb-4 hidden">
-                                <div class="btn_iftr" onclick="window.toggleTask('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Join</div>
-                                <div class="btn_iftr border-dashed border-blue-300 text-blue-500" onclick="window.addCustom('tg')">+ Custom</div>
-                            </div>
-                            <div id="btns-fb" class="mb-4 hidden">
-                                <div class="btn_iftr" onclick="window.toggleTask('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</div>
-                                <div class="btn_iftr border-dashed border-blue-300 text-blue-500" onclick="window.addCustom('fb')">+ Custom</div>
-                            </div>
-                            <div id="btns-tk" class="mb-4 hidden">
-                                <div class="btn_iftr" onclick="window.toggleTask('tk1', this)" style="--clr:#000"><i class="fa-brands fa-tiktok"></i> Follow</div>
-                                <div class="btn_iftr border-dashed border-gray-400 text-gray-600" onclick="window.addCustom('tk')">+ Custom</div>
-                            </div>
-
-                            <div id="task-inputs" class="grid grid-cols-2 gap-4">
-                                <div id="grp_yt1" class="grp"><input id="lbl_yt1" value="Subscribe Channel" class="text-xs font-bold text-gray-400 bg-transparent w-full mb-1"><input id="val_yt1" class="pc-input" placeholder="URL..."></div>
-                                <div id="grp_ytl1" class="grp"><input id="lbl_ytl1" value="Like Video" class="text-xs font-bold text-gray-400 bg-transparent w-full mb-1"><input id="val_ytl1" class="pc-input" placeholder="URL..."></div>
-                                <div id="grp_tg1" class="grp"><input id="lbl_tg1" value="Join Telegram" class="text-xs font-bold text-gray-400 bg-transparent w-full mb-1"><input id="val_tg1" class="pc-input" placeholder="URL..."></div>
-                                <div id="grp_fb1" class="grp"><input id="lbl_fb1" value="Follow Facebook" class="text-xs font-bold text-gray-400 bg-transparent w-full mb-1"><input id="val_fb1" class="pc-input" placeholder="URL..."></div>
-                                <div id="grp_tk1" class="grp"><input id="lbl_tk1" value="Follow TikTok" class="text-xs font-bold text-gray-400 bg-transparent w-full mb-1"><input id="val_tk1" class="pc-input" placeholder="URL..."></div>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-4 sticky bottom-4 z-10 p-4 bg-white/90 backdrop-blur border rounded-2xl shadow-xl">
-                            <button type="button" onclick="window.resetForm(true)" class="pc-btn pc-btn-secondary px-8">Reset</button>
-                            <button type="submit" id="btn-save" class="pc-btn flex-1">Create Link</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div id="tab-manage" class="hidden max-w-6xl mx-auto">
-                    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-                        <table class="w-full text-left">
-                            <thead class="bg-gray-50 border-b text-xs uppercase text-gray-500"><tr><th class="p-4">Title</th><th class="p-4">Views</th><th class="p-4 text-center">Active</th><th class="p-4 text-right">Action</th></tr></thead>
-                            <tbody id="list-links" class="text-sm"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="tab-dash" class="hidden max-w-6xl mx-auto">
-                    <div class="grid grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white p-6 rounded-2xl shadow-sm"><div class="text-xs font-bold text-gray-400 uppercase">Views</div><div class="text-3xl font-bold" id="d-views">0</div></div>
-                        <div class="bg-white p-6 rounded-2xl shadow-sm"><div class="text-xs font-bold text-gray-400 uppercase">Links</div><div class="text-3xl font-bold" id="d-links">0</div></div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div id="view-user" class="hidden fixed inset-0 z-40 bg-[#F2F2F7] flex flex-col overflow-y-auto">
-        <div id="user-gate" class="hidden fixed inset-0 z-50 bg-white flex items-center justify-center flex-col"><i class="fa-solid fa-ban text-4xl text-red-500 mb-4"></i><h2 class="text-xl font-bold">Link Unavailable</h2></div>
+<body class="h-screen flex overflow-hidden">
+    <div id="app" class="w-full h-full flex relative">
+        <div id="global-loader" class="absolute inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hidden backdrop-blur-sm"><div class="loader mb-3"></div><div class="text-sm text-slate-500 font-bold">Đang kết nối...</div></div>
         
-        <div class="max-w-md mx-auto w-full bg-white min-h-screen md:min-h-0 md:my-10 md:rounded-3xl md:shadow-xl overflow-hidden flex flex-col relative">
-            <div class="p-8 text-center border-b">
-                <div class="inline-block px-3 py-1 rounded-full bg-gray-100 text-[10px] font-bold uppercase mb-4 text-gray-500"><i class="fa-solid fa-shield"></i> Secure Link</div>
-                <h1 id="u-title" class="text-2xl font-bold mb-2">Loading...</h1>
-                <p id="u-subtitle" class="text-sm text-gray-500">Complete tasks to continue</p>
-                <div id="u-note" class="hidden mt-4 bg-yellow-50 p-3 rounded-xl text-xs text-left text-yellow-700"></div>
+        <!-- LOGIN -->
+        <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="glass-card p-10 rounded-[2rem] w-full max-w-sm text-center">
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-md"><i class="fa-brands fa-apple"></i></div>
+                <h1 class="text-2xl font-bold mb-1">Admin Portal</h1>
+                <p class="text-gray-400 mb-8 text-sm">Sign in to manage</p>
+                <div class="space-y-4">
+                    <input type="email" id="adminEmail" class="pc-input" placeholder="Email">
+                    <input type="password" id="adminPass" class="pc-input" placeholder="Password">
+                    <button onclick="window.handleLogin()" class="pc-btn w-full py-3.5 shadow-none">Sign In</button>
+                </div>
             </div>
-            
-            <div class="flex-1 bg-gray-50 p-4" id="u-tasks">
+        </div>
+
+        <!-- ADMIN -->
+        <div id="view-admin" class="w-full h-full flex hidden">
+            <div class="w-72 bg-white/80 border-r border-gray-200 flex flex-col z-20 backdrop-blur-xl">
+                <div class="h-20 flex items-center px-8 gap-3">
+                    <div class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold"><i class="fa-brands fa-apple"></i></div>
+                    <span class="font-bold text-xl">Link4Sub Pro</span>
+                </div>
+                <div class="p-4 flex-1 space-y-1">
+                    <div class="text-[11px] font-bold text-gray-400 uppercase mb-3 px-4">Menu</div>
+                    <div class="nav-item" onclick="switchTab('dash')" id="btn-tab-dash"><i class="fa-solid fa-chart-simple w-6 text-center"></i> Dashboard</div>
+                    <div class="nav-item active" onclick="switchTab('stu')" id="btn-tab-stu"><i class="fa-solid fa-plus w-6 text-center"></i> Create Link</div>
+                    <div class="nav-item" onclick="switchTab('manage')" id="btn-tab-manage"><i class="fa-solid fa-list w-6 text-center"></i> Manage Links</div>
+                </div>
+                <div class="p-6 border-t"><button onclick="window.handleLogout()" class="nav-item w-full text-red-500 justify-center"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button></div>
+            </div>
+            <div class="flex-1 flex flex-col overflow-hidden relative z-10">
+                <div class="h-20 glass-nav flex items-center justify-between px-10 shrink-0">
+                    <h2 class="text-2xl font-bold" id="page-title">Create New Link</h2>
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500"><i class="fa-solid fa-user"></i></div>
+                </div>
+                <div class="flex-1 overflow-y-auto p-10">
+                    <!-- Dashboard -->
+                    <div id="tab_dashboard" class="hidden max-w-7xl mx-auto animate-fade-in">
+                        <div class="grid grid-cols-3 gap-6 mb-8">
+                            <div class="glass-card p-6 rounded-2xl bg-white"><div class="text-xs font-bold text-gray-400 uppercase mb-2">Views</div><div class="text-3xl font-bold" id="dash_today_views">0</div></div>
+                            <div class="glass-card p-6 rounded-2xl bg-white"><div class="text-xs font-bold text-gray-400 uppercase mb-2">Active</div><div class="text-3xl font-bold" id="dash_active_links">0</div></div>
+                            <div class="glass-card p-6 rounded-2xl bg-white"><div class="text-xs font-bold text-gray-400 uppercase mb-2">Top Country</div><div class="text-3xl font-bold" id="dash_top_country">-</div></div>
+                        </div>
+                    </div>
+                    <!-- Create/Edit -->
+                    <div id="tab_create_stu" class="max-w-5xl mx-auto animate-fade-in">
+                        <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
+                            <input type="hidden" id="edit_doc_id" value="">
+                            <div class="glass-card rounded-2xl p-8 mb-8 bg-white">
+                                <h3 class="text-base font-bold uppercase mb-6 flex justify-between"><span>Basic Info</span><span id="editModeBadge" class="hidden text-[10px] bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">EDITING</span></h3>
+                                <div class="grid grid-cols-2 gap-8 mb-6">
+                                    <div><label class="block text-sm font-bold text-gray-500 mb-2">Main Title</label><input type="text" id="i_ttl" class="pc-input"></div>
+                                    <div><label class="block text-sm font-bold text-gray-500 mb-2">Subtitle</label><input type="text" id="i_sttl" class="pc-input"></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-8">
+                                    <div><label class="block text-sm font-bold text-gray-500 mb-2">Note (Admin)</label><input type="text" id="i_note" class="pc-input"></div>
+                                    <div><label class="block text-sm font-bold text-blue-500 mb-2">User Alert</label><input type="text" id="i_user_note" class="pc-input bg-blue-50"></div>
+                                </div>
+                            </div>
+                            <div class="glass-card rounded-2xl p-8 mb-8 bg-white">
+                                <h3 class="text-base font-bold uppercase mb-6">Destination</h3>
+                                <div class="flex gap-4 mb-6">
+                                    <label class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg cursor-pointer"><input type="radio" name="destType" value="link" checked onchange="toggleDestType()"> <span class="font-bold text-sm">URL</span></label>
+                                    <label class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg cursor-pointer"><input type="radio" name="destType" value="note" onchange="toggleDestType()"> <span class="font-bold text-sm">Secret Text</span></label>
+                                </div>
+                                <div class="grid grid-cols-2 gap-8">
+                                    <div><label class="block text-sm font-bold text-gray-500 mb-2">Button Text</label><input type="text" id="i_dest_name" class="pc-input" placeholder="Unlock"></div>
+                                    <div id="dest_container_link"><label class="block text-sm font-bold text-gray-500 mb-2">Target URL</label><input type="url" id="i_dest_url" class="pc-input"></div>
+                                    <div id="dest_container_note" class="hidden"><label class="block text-sm font-bold text-gray-500 mb-2">Secret Content</label><textarea id="i_dest_note" class="pc-input h-24"></textarea></div>
+                                </div>
+                            </div>
+                            <!-- Tasks -->
+                            <div class="glass-card rounded-2xl p-8 mb-8 bg-white">
+                                <h3 class="text-base font-bold uppercase mb-6">Tasks</h3>
+                                <div class="flex gap-3 mb-6 overflow-x-auto">
+                                    <button type="button" class="stu_b_ftr active" onclick="selectPlatform('yt', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube text-2xl"></i> YouTube</button>
+                                    <button type="button" class="stu_b_ftr" onclick="selectPlatform('tg', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram text-2xl"></i> Telegram</button>
+                                    <button type="button" class="stu_b_ftr" onclick="selectPlatform('tk', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok text-2xl"></i> TikTok</button>
+                                    <button type="button" class="stu_b_ftr" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook text-2xl"></i> Facebook</button>
+                                </div>
+                                <div class="p-6 bg-gray-50 rounded-2xl border border-dashed border-gray-300 mb-8 flex flex-wrap gap-3">
+                                    <div id="ftr_yt" class="w-full">
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Subscribe</button>
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like</button>
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
+                                        <button type="button" class="btn_iftr btn_add" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Custom</button>
+                                    </div>
+                                    <div id="ftr_tg" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Join</button><button type="button" class="btn_iftr btn_add" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_tk" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button><button type="button" class="btn_iftr btn_add" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_fb" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button><button type="button" class="btn_iftr btn_add" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                </div>
+                                <div id="dynamic_inputs" class="grid grid-cols-2 gap-4">
+                                    <div class="grp" id="grp_yt1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_yt1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent" value="Đăng ký kênh"><input class="pc-input bg-gray-50" id="i_yt1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_ytl1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_ytl1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent" value="Like Video"><input class="pc-input bg-gray-50" id="i_ytl1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_ytc1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_ytc1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent" value="Comment Video"><input class="pc-input bg-gray-50" id="i_ytc1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_tg1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_tg1" class="text-xs font-bold text-blue-500 mb-1 w-full bg-transparent" value="Join Telegram"><input class="pc-input bg-gray-50" id="i_tg1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_tk1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_tk1" class="text-xs font-bold text-black mb-1 w-full bg-transparent" value="Follow TikTok"><input class="pc-input bg-gray-50" id="i_tk1" placeholder="Link..."></div></div>
+                                    <div class="grp" id="grp_fb1"><div class="bg-white border p-3 rounded-xl"><input type="text" id="lbl_fb1" class="text-xs font-bold text-blue-700 mb-1 w-full bg-transparent" value="Follow Facebook"><input class="pc-input bg-gray-50" id="i_fb1" placeholder="Link..."></div></div>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 glass-nav p-4 rounded-2xl sticky bottom-4 z-20">
+                                <button type="button" onclick="resetForm()" class="pc-btn pc-btn-secondary px-8">Reset</button>
+                                <button type="submit" id="btnAction" class="pc-btn flex-1">Create Link</button>
+                            </div>
+                            <div id="resultArea" class="hidden mt-8 bg-green-50 border border-green-200 p-8 rounded-3xl text-center shadow-sm">
+                                <h3 class="text-green-700 font-extrabold text-xl mb-3"><i class="fa-solid fa-check-circle mr-2"></i>Success!</h3>
+                                <div class="flex gap-3 max-w-2xl mx-auto"><input id="resultLink" type="text" readonly class="pc-input bg-white text-center font-bold text-blue-600"><button type="button" onclick="copyResult()" class="pc-btn bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/30">Copy</button><a href="#" id="previewLink" target="_blank" class="pc-btn pc-btn-secondary">View</a></div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Manage -->
+                    <div id="tab_manage_links" class="hidden max-w-7xl mx-auto animate-fade-in">
+                        <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50 border-b text-xs font-bold text-gray-500 uppercase"><tr><th class="p-5">Title</th><th class="p-5">Views</th><th class="p-5 text-center">Status</th><th class="p-5 text-right">Actions</th></tr></thead>
+                                <tbody id="links-table-body" class="text-sm"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- USER VIEW -->
+        <div id="view-user" class="hidden user-view-container pt-0 px-0 pb-0">
+            <!-- Error Gate -->
+            <div id="u_error_gate" class="hidden fixed inset-0 z-[60] bg-white/90 backdrop-blur-xl flex items-center justify-center p-6">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl"><i class="fa-solid fa-ban"></i></div>
+                    <h2 class="text-2xl font-bold text-black mb-2" id="u_error_title">Unavailable</h2>
+                    <p class="text-gray-500 font-medium" id="u_error_msg">Link expired or removed.</p>
+                </div>
+            </div>
+
+            <div class="user-card-wrapper">
+                <!-- AD BANNER (RECOVERED) -->
+                <div class="px-5 py-2 mb-0 mt-4">
+                    <div class="group relative w-full bg-white rounded-[24px] p-5 shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-white/60 cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98]" onclick="window.open('https://muachungchi.com', '_blank')">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60 group-hover:bg-blue-100 transition-colors"></div>
+                        <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-purple-50 rounded-full blur-2xl opacity-60 group-hover:bg-purple-100 transition-colors"></div>
+                        <div class="relative z-10 flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300"><i class="fa-solid fa-crown text-2xl"></i></div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded-md">Sponsored</span><span class="text-[10px] text-gray-400 font-medium">QC</span></div>
+                                <h3 class="font-bold text-[15px] text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">Nâng cấp Chứng Chỉ VIP</h3>
+                                <p class="text-[12px] text-slate-500 font-medium mt-0.5 truncate">Không Revoke • Bảo hành 1 năm</p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors"><i class="fa-solid fa-chevron-right text-xs"></i></div>
+                        </div>
+                    </div>
                 </div>
 
-            <div class="p-6 bg-white border-t sticky bottom-0">
-                <div id="progress-box" class="hidden mb-4"><div class="flex justify-between text-xs font-bold mb-1"><span>Progress</span><span id="pct">0%</span></div><div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div id="bar" class="h-full bg-blue-500 w-0 transition-all duration-300"></div></div></div>
-                <button id="btn-unlock" onclick="window.doUnlock()" disabled class="w-full bg-gray-200 text-gray-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all"><i class="fa-solid fa-lock"></i> <span>Complete Tasks</span></button>
-                <div id="res-box" class="hidden mt-4 bg-gray-100 p-4 rounded-xl break-all font-mono text-sm"></div>
+                <div id="u_header" class="relative pt-6 pb-6 px-6 text-center bg-white border-b border-gray-100">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold mb-4 uppercase tracking-wide"><i class="fa-brands fa-apple"></i> Secure Link</div>
+                    <h1 id="u_title" class="text-2xl font-bold text-black mb-2 tracking-tight leading-tight">Loading...</h1>
+                    <p id="u_subtitle" class="text-sm text-gray-500 font-medium max-w-[90%] mx-auto">Complete tasks to unlock</p>
+                    <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-100 p-3 rounded-xl text-xs text-yellow-800 text-left flex gap-3"><i class="fa-solid fa-circle-info mt-0.5 text-yellow-600"></i><span class="font-medium"></span></div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto px-4 pb-24 bg-[#F2F2F7]" id="u_tasks_scroll">
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-4 mt-4">Tasks</div>
+                    <div id="u_tasks" class="apple-list"></div>
+                </div>
+
+                <div class="p-6 bg-white/90 border-t border-gray-200 fixed bottom-0 left-0 right-0 backdrop-blur-xl z-50 max-w-[480px] mx-auto rounded-t-3xl">
+                    <div id="progressArea" class="hidden mb-4">
+                        <div class="flex justify-between text-[10px] text-gray-400 font-bold mb-2 uppercase tracking-wider"><span>Progress</span> <span id="progressText">0%</span></div>
+                        <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div id="progressBar" class="h-full bg-blue-500 w-0 transition-all duration-500 ease-out"></div></div>
+                    </div>
+                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all text-[15px]"><i class="fa-solid fa-lock text-xs"></i> <span>Complete Tasks</span></button>
+                    <div id="noteResult" class="hidden mt-4 animate-fade-in">
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-1">
+                            <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200"><span class="text-[10px] font-bold text-gray-400 uppercase">Secret</span><button onclick="copyNote()" class="text-[10px] text-blue-600 font-bold">COPY</button></div>
+                            <textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-3 text-sm font-mono text-black outline-none resize-none h-20"></textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -197,312 +272,293 @@
         import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc, increment, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // === CONFIG FIREBASE ===
-        const firebaseConfig = { apiKey: "AIzaSyB8znFxA8oyK1Idl9Lc0CkH_BLwIvbxJfI", authDomain: "link4sub-web.firebaseapp.com", projectId: "link4sub-web", storageBucket: "link4sub-web.firebasestorage.app", messagingSenderId: "897376055886", appId: "1:897376055886:web:0a515c3ac86ced9352c91f" };
-        
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const COL = collection(db, 'artifacts', 'link4sub-pro', 'public', 'data', 'links'); // Collection Path
+        // CONFIG
+        let firebaseConfig;
+        if (typeof __firebase_config !== 'undefined') firebaseConfig = JSON.parse(__firebase_config);
+        else firebaseConfig = { apiKey: "AIzaSyB8znFxA8oyK1Idl9Lc0CkH_BLwIvbxJfI", authDomain: "link4sub-web.firebaseapp.com", projectId: "link4sub-web", storageBucket: "link4sub-web.firebasestorage.app", messagingSenderId: "897376055886", appId: "1:897376055886:web:0a515c3ac86ced9352c91f" };
+        const appId = 'link4sub-pro';
 
-        // === UTILS ===
-        const SEC = {
-            enc: (s) => btoa(encodeURIComponent(s)).split('').reverse().join(''),
-            dec: (s) => decodeURIComponent(atob(s.split('').reverse().join('')))
-        };
-        const toast = (m, t) => Toastify({text:m, duration:2000, style:{background:t=='err'?'#FF3B30':'#34C759'}}).showToast();
+        let app, auth, db;
+        try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); } catch (e) { console.error("Init Error", e); }
 
-        // === GLOBAL FUNCTIONS (Attached to Window) ===
-        
-        // 1. AUTH
-        window.handleLogin = () => {
-            const e = document.getElementById('adminEmail').value, p = document.getElementById('adminPass').value;
-            if(!e || !p) return toast("Missing info", 'err');
-            document.getElementById('global-loader').classList.remove('hidden');
-            signInWithEmailAndPassword(auth, e, p).catch(err => {
-                document.getElementById('global-loader').classList.add('hidden');
-                toast("Login Failed: " + err.message, 'err');
-            });
-        };
-        window.handleLogout = () => signOut(auth).then(() => location.reload());
+        window.db = db; window.doc = doc; window.updateDoc = updateDoc; window.deleteDoc = deleteDoc; window.getDoc = getDoc; window.auth = auth;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword; window.signOut = signOut;
 
-        // 2. ADMIN NAVIGATION & UI
-        window.switchTab = (t) => {
-            ['stu','manage','dash'].forEach(x => {
-                document.getElementById('nav-'+x).classList.remove('bg-gray-100','text-blue-600');
-                document.getElementById('tab-'+x).classList.add('hidden');
-            });
-            document.getElementById('nav-'+t).classList.add('bg-gray-100','text-blue-600');
-            document.getElementById('tab-'+t).classList.remove('hidden');
-            
-            if(t === 'stu') {
-                // Nếu đang edit mà bấm tab Create -> Reset form
-                if(!document.getElementById('edit-badge').classList.contains('hidden')) window.resetForm(true);
+        // INIT
+        window.initApp = async () => {
+            const linkId = new URLSearchParams(window.location.search).get('id');
+            if (linkId) {
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('view-admin').classList.add('hidden');
+                document.getElementById('view-user').classList.remove('hidden');
+                document.getElementById('global-loader').classList.remove('hidden');
+                if (auth && !auth.currentUser) try { await signInAnonymously(auth); } catch (e) { console.error("Anon", e); }
             }
         };
 
-        window.selPlat = (p, btn) => {
-            document.querySelectorAll('.stu_b_ftr').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-            ['yt','tg','fb','tk'].forEach(x => document.getElementById('btns-'+x).classList.add('hidden'));
-            document.getElementById('btns-'+p).classList.remove('hidden');
-        };
-
-        window.toggleDest = () => {
-            const v = document.querySelector('input[name="dtype"]:checked').value;
-            document.getElementById('box-link').classList.toggle('hidden', v !== 'link');
-            document.getElementById('box-note').classList.toggle('hidden', v === 'link');
-        };
-
-        // 3. TASK MANAGEMENT (FIXED FOR EDITING)
-        window.toggleTask = (key, btn) => {
-            // Task có sẵn (yt1, yt2...)
-            const grp = document.getElementById('grp_' + key);
-            if(!grp) return;
-            if(btn.classList.contains('active')) {
-                btn.classList.remove('active'); grp.classList.remove('active');
-            } else {
-                btn.classList.add('active'); grp.classList.add('active');
-            }
-        };
-
-        window.addCustom = (plat) => {
-            const id = plat + '_cus_' + Date.now();
-            const div = document.createElement('div');
-            div.className = 'grp active'; div.id = 'grp_' + id;
-            div.innerHTML = `<div class="bg-white border p-3 rounded-xl relative"><input id="lbl_${id}" value="New Task" class="text-xs font-bold text-gray-500 mb-1 w-full bg-transparent"><input id="val_${id}" class="pc-input" placeholder="URL..."><button type="button" onclick="this.closest('.grp').remove()" class="absolute top-2 right-2 text-red-500"><i class="fa-solid fa-xmark"></i></button></div>`;
-            document.getElementById('task-inputs').appendChild(div);
-        };
-
-        // 4. FORM ACTIONS
-        window.resetForm = (force) => {
-            if(!force && !confirm("Reset form?")) return;
-            document.getElementById('form-stu').reset();
-            document.getElementById('edit_id').value = '';
-            document.getElementById('edit-badge').classList.add('hidden');
-            document.getElementById('btn-save').innerText = 'Create Link';
-            
-            // Clear custom tasks
-            document.querySelectorAll('[id^="grp_"][id*="_cus_"]').forEach(el => el.remove());
-            // Deactivate standard tasks
-            document.querySelectorAll('.grp.active').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.btn_iftr.active').forEach(el => el.classList.remove('active'));
-            
-            document.querySelector('input[value="link"]').click();
-        };
-
-        window.saveLink = async () => {
-            document.getElementById('global-loader').classList.remove('hidden');
-            const id = document.getElementById('edit_id').value;
-            const tasks = {};
-            
-            document.querySelectorAll('.grp').forEach(el => {
-                if(!el.classList.contains('active') && !el.id.includes('_cus_')) return;
-                const kid = el.id.replace('grp_', '');
-                const url = document.getElementById('val_'+kid)?.value;
-                const lbl = document.getElementById('lbl_'+kid)?.value;
-                if(url) tasks[kid] = { url, label: lbl };
-            });
-
-            const dtype = document.querySelector('input[name="dtype"]:checked').value;
-            const data = {
-                title: document.getElementById('i_title').value,
-                subtitle: document.getElementById('i_subtitle').value,
-                note: document.getElementById('i_note').value,
-                userNote: document.getElementById('i_user_note').value,
-                destName: document.getElementById('i_dest_name').value,
-                type: dtype,
-                destUrl: dtype === 'link' ? SEC.enc(document.getElementById('i_dest_url').value) : '',
-                noteContent: dtype === 'note' ? SEC.enc(document.getElementById('i_dest_note').value) : '',
-                tasks: tasks,
-                active: true,
-                createdAt: new Date().toISOString()
-            };
-
-            try {
-                if(id) {
-                    delete data.createdAt; // Don't change date
-                    await updateDoc(doc(COL, id), data);
-                    toast("Updated!", "suc");
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                const linkId = new URLSearchParams(window.location.search).get('id');
+                if (linkId) {
+                    if(user) { loadUserLink(linkId); document.getElementById('global-loader').classList.add('hidden'); }
+                } else if (user && !user.isAnonymous) {
+                    switchView('admin'); fetchLinks();
                 } else {
-                    data.views = 0;
-                    await addDoc(COL, data);
-                    toast("Created!", "suc");
+                    switchView('login');
                 }
-                window.resetForm(true);
-            } catch(e) { console.error(e); toast("Error saving", "err"); }
-            finally { document.getElementById('global-loader').classList.add('hidden'); }
+            });
+        }
+
+        // HELPERS
+        const L4S_SEC = { enc: (s) => btoa(encodeURIComponent(s)).split('').reverse().join(''), dec: (s) => decodeURIComponent(atob(s.split('').reverse().join(''))) };
+        window.showToast = (msg, type) => { if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, backgroundColor: type === "success" ? "#34C759" : "#FF3B30", className: "rounded-xl font-bold shadow-lg" }).showToast(); else alert(msg); };
+        window.copyToClip = (text) => { navigator.clipboard.writeText(text).then(() => showToast("Copied!", "success")); };
+
+        // ADMIN
+        window.switchView = (v) => {
+            ['view-login','view-admin','view-user'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(`view-${v}`).classList.remove('hidden'); 
+            if(v==='admin') { document.getElementById(`view-${v}`).classList.add('flex'); document.getElementById('page-title').innerText = "Create New Link"; }
+        };
+        window.switchTab = (t) => {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const btn = document.getElementById(`btn-tab-${t}`); if(btn) btn.classList.add('active');
+            ['tab_create_stu', 'tab_manage_links', 'tab_dashboard'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            if(t === 'stu') {
+                document.getElementById('tab_create_stu').classList.remove('hidden');
+                document.getElementById('page-title').innerText = 'Create New Link';
+                if(!document.getElementById('editModeBadge').classList.contains('hidden')) window.resetForm(true);
+            } else if(t === 'manage') {
+                document.getElementById('tab_manage_links').classList.remove('hidden');
+                document.getElementById('page-title').innerText = 'Manage Links';
+                window.fetchLinks();
+            }
+        };
+        window.authLogin = () => {
+            const e = document.getElementById('adminEmail').value, p = document.getElementById('adminPass').value;
+            if(!e || !p) return showToast("Missing fields", "error");
+            window.signInWithEmailAndPassword(auth, e, p).catch(() => showToast("Login failed", "error"));
+        };
+        window.logout = () => signOut(auth).then(() => window.location.reload());
+
+        // EDIT & FORM
+        window.selectPlatform = (pf, btn) => {
+            document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+            ['yt','tg','tk','fb'].forEach(id => document.getElementById(`ftr_${id}`).classList.add('hidden'));
+            document.getElementById(`ftr_${pf}`).classList.remove('hidden');
+        };
+        window.toggleInput = (id, btn) => {
+            const grp = document.getElementById(`grp_${id}`);
+            if(btn.classList.contains('active')) { btn.classList.remove('active'); grp.classList.remove('active'); }
+            else { btn.classList.add('active'); grp.classList.add('active'); }
+        };
+        window.toggleDestType = () => {
+            const type = document.querySelector('input[name="destType"]:checked').value;
+            document.getElementById('dest_container_link').classList.toggle('hidden', type !== 'link');
+            document.getElementById('dest_container_note').classList.toggle('hidden', type === 'link');
+        };
+        window.addTask = (platform, existingId, label, url) => {
+            const id = existingId || `${platform}_custom_${Date.now()}`;
+            const div = document.createElement('div'); div.id = `grp_${id}`; div.className = "grp active"; 
+            div.innerHTML = `<div class="bg-white border p-3 rounded-xl relative"><input type="text" id="lbl_${id}" class="text-xs font-bold text-gray-500 mb-1 w-full bg-transparent outline-none" value="${label || 'Task'}"><input class="pc-input bg-gray-50" id="i_${id}" value="${url||''}" placeholder="Link..."><button type="button" onclick="this.closest('.grp').remove()" class="absolute top-2 right-2 text-red-500"><i class="fa-solid fa-xmark"></i></button></div>`;
+            document.getElementById('dynamic_inputs').appendChild(div);
+        };
+        
+        window.resetForm = (force) => {
+            if(!force && !confirm("Clear?")) return;
+            document.getElementById('fgSTU').reset();
+            document.getElementById('edit_doc_id').value = "";
+            document.getElementById('btnAction').innerHTML = 'Create Link';
+            document.getElementById('editModeBadge').classList.add('hidden');
+            document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
+            document.querySelectorAll('.grp.active').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.btn_iftr.active').forEach(e => e.classList.remove('active'));
+            document.querySelector('input[name="destType"][value="link"]').click();
+            document.getElementById('resultArea').classList.add('hidden');
         };
 
-        // 5. EDIT LOGIC (THE FIX)
-        window.startEdit = async (id) => {
+        window.editLink = async (id) => {
             document.getElementById('global-loader').classList.remove('hidden');
             try {
                 window.switchTab('stu');
                 window.resetForm(true);
-                const snap = await getDoc(doc(COL, id));
-                if(snap.exists()) {
-                    const d = snap.data();
-                    document.getElementById('edit_id').value = id;
-                    document.getElementById('edit-badge').classList.remove('hidden');
-                    document.getElementById('btn-save').innerText = 'Save Changes';
+                const snap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('edit_doc_id').value = id;
+                    document.getElementById('btnAction').innerHTML = 'Save Changes';
+                    document.getElementById('editModeBadge').classList.remove('hidden');
+                    document.getElementById('i_ttl').value = data.title;
+                    document.getElementById('i_sttl').value = data.subtitle;
+                    document.getElementById('i_note').value = data.note || '';
+                    document.getElementById('i_user_note').value = data.userNote || '';
+                    document.getElementById('i_dest_name').value = data.destName;
                     
-                    // Basic
-                    document.getElementById('i_title').value = d.title;
-                    document.getElementById('i_subtitle').value = d.subtitle;
-                    document.getElementById('i_note').value = d.note || '';
-                    document.getElementById('i_user_note').value = d.userNote || '';
-                    document.getElementById('i_dest_name').value = d.destName;
-                    
-                    // Dest
-                    document.querySelector(`input[value="${d.type}"]`).click();
-                    if(d.type === 'link') document.getElementById('i_dest_url').value = SEC.dec(d.destUrl);
-                    else document.getElementById('i_dest_note').value = SEC.dec(d.noteContent);
+                    const type = data.type || 'link';
+                    document.querySelector(`input[name="destType"][value="${type}"]`).checked = true;
+                    window.toggleDestType();
+                    if(type === 'link') document.getElementById('i_dest_url').value = L4S_SEC.dec(data.destUrl);
+                    else document.getElementById('i_dest_note').value = L4S_SEC.dec(data.noteContent);
 
-                    // Tasks (Robust Population)
-                    if(d.tasks) {
-                        Object.entries(d.tasks).forEach(([k, v]) => {
-                            const url = typeof v === 'string' ? v : v.url;
+                    if(data.tasks) {
+                        for(const [k, v] of Object.entries(data.tasks)) {
+                            const btn = document.querySelector(`button[onclick*="'${k}'"]`);
                             const lbl = typeof v === 'string' ? 'Task' : v.label;
-                            
-                            // Check built-in
-                            const btn = document.querySelector(`div[onclick*="'${k}'"]`);
+                            const url = typeof v === 'string' ? v : v.url;
                             if(btn) {
-                                // Simulate click to activate
-                                window.toggleTask(k, btn);
-                                document.getElementById('val_'+k).value = url;
-                                document.getElementById('lbl_'+k).value = lbl;
+                                window.toggleInput(k, btn);
+                                document.getElementById(`i_${k}`).value = url;
+                                document.getElementById(`lbl_${k}`).value = lbl;
                             } else {
-                                // Custom task
-                                const plat = k.split('_')[0];
-                                const id = k; // Reuse ID if possible or map
-                                // Manual Create Custom DOM
-                                const div = document.createElement('div');
-                                div.className = 'grp active'; div.id = 'grp_' + k;
-                                div.innerHTML = `<div class="bg-white border p-3 rounded-xl relative"><input id="lbl_${k}" value="${lbl}" class="text-xs font-bold text-gray-500 mb-1 w-full bg-transparent"><input id="val_${k}" value="${url}" class="pc-input"><button type="button" onclick="this.closest('.grp').remove()" class="absolute top-2 right-2 text-red-500"><i class="fa-solid fa-xmark"></i></button></div>`;
-                                document.getElementById('task-inputs').appendChild(div);
+                                window.addTask(k.substring(0,2), k, lbl, url);
                             }
-                        });
+                        }
                     }
-                }
-            } catch(e) { console.error(e); toast("Load failed", 'err'); }
+                } else { showToast("Link not found!", "error"); }
+            } catch(e) { console.error(e); showToast("Error loading", "error"); }
             finally { document.getElementById('global-loader').classList.add('hidden'); }
         };
 
-        // 6. REALTIME LIST
-        let unsub;
-        window.loadList = () => {
-            if(unsub) unsub();
-            unsub = onSnapshot(query(COL, orderBy('createdAt', 'desc')), snap => {
-                const trs = [];
+        window.handleSubmitCreate = async () => {
+            const id = document.getElementById('edit_doc_id').value;
+            const title = document.getElementById('i_ttl').value, subtitle = document.getElementById('i_sttl').value;
+            const destType = document.querySelector('input[name="destType"]:checked').value;
+            let destUrl = "", noteContent = "";
+            if(destType==='link') destUrl = L4S_SEC.enc(document.getElementById('i_dest_url').value);
+            else noteContent = L4S_SEC.enc(document.getElementById('i_dest_note').value);
+            
+            const tasks = {};
+            document.querySelectorAll('.grp').forEach(g => {
+                if(!g.classList.contains('active') && !g.id.includes('custom')) return;
+                const kid = g.id.replace('grp_', '');
+                const u = g.querySelector('input.pc-input').value;
+                const l = g.querySelector('input[type="text"]').value;
+                if(u) tasks[kid] = { url: u, label: l, icon: getIcon(kid), color: getColor(kid), bg: getBg(kid) };
+            });
+
+            document.getElementById('global-loader').classList.remove('hidden');
+            try {
+                const pl = { title, subtitle, destName: document.getElementById('i_dest_name').value, note: document.getElementById('i_note').value, userNote: document.getElementById('i_user_note').value, type: destType, destUrl, noteContent, tasks, active: true, createdAt: new Date().toISOString() };
+                let rid = id;
+                if(id) { delete pl.createdAt; await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), pl); showToast("Saved", "success"); }
+                else { pl.views=0; const ref = await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'links'), pl); rid = ref.id; showToast("Created", "success"); }
+                
+                const link = location.origin + location.pathname + "?id=" + rid;
+                document.getElementById('resultLink').value = link; document.getElementById('previewLink').href = link;
+                document.getElementById('resultArea').classList.remove('hidden');
+                if(id) window.resetForm(true);
+            } catch(e) { console.error(e); showToast("Error", "error"); }
+            finally { document.getElementById('global-loader').classList.add('hidden'); }
+        };
+
+        window.fetchLinks = () => {
+            const list = document.getElementById('links-table-body');
+            onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'links'), orderBy('createdAt', 'desc')), snap => {
+                list.innerHTML = '';
                 snap.forEach(d => {
                     const l = {id:d.id, ...d.data()};
-                    trs.push(`<tr class="border-b hover:bg-gray-50"><td class="p-4 font-bold">${l.title}<div class="text-xs text-gray-400 font-normal">${new Date(l.createdAt).toLocaleDateString()}</div></td><td class="p-4">${l.views||0}</td><td class="p-4 text-center"><input type="checkbox" ${l.active!==false?'checked':''} onchange="window.toggleActive('${l.id}', this.checked)"></td><td class="p-4 text-right"><button onclick="window.startEdit('${l.id}')" class="text-blue-600 mr-4"><i class="fa-solid fa-pen"></i></button><button onclick="window.delLink('${l.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`);
+                    list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-5 font-bold">${l.title}<div class="text-xs text-gray-400 font-normal">${new Date(l.createdAt).toLocaleDateString()}</div></td><td class="p-5">${l.views||0}</td><td class="p-5 text-center"><label class="ios-switch scale-75"><input type="checkbox" ${l.active!==false?'checked':''} onchange="window.toggleStatus('${l.id}', this.checked)"><span class="slider"></span></label></td><td class="p-5 text-right"><button onclick="window.editLink('${l.id}')" class="text-blue-600 mr-3"><i class="fa-solid fa-pen"></i></button><button onclick="window.deleteLink('${l.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;
                 });
-                document.getElementById('list-links').innerHTML = trs.join('');
-                document.getElementById('d-links').innerText = snap.size;
             });
         };
-        window.toggleActive = (id, s) => updateDoc(doc(COL, id), {active:s});
-        window.delLink = (id) => confirm("Delete?") && deleteDoc(doc(COL, id));
+        window.toggleStatus = (id, s) => updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { active: s });
+        window.deleteLink = (id) => confirm("Delete?") && deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
 
-        // 7. INIT FLOW
-        onAuthStateChanged(auth, user => {
-            const id = new URLSearchParams(location.search).get('id');
-            document.getElementById('global-loader').classList.add('hidden');
-            
-            if(id) {
-                // User Flow
-                document.getElementById('view-user').classList.remove('hidden');
-                if(!user) signInAnonymously(auth).catch(console.error);
-                loadUserLink(id);
-            } else {
-                // Admin Flow
-                if(user && !user.isAnonymous) {
-                    document.getElementById('view-admin').classList.remove('hidden');
-                    window.loadList();
-                } else {
-                    document.getElementById('view-login').classList.remove('hidden');
-                }
-            }
-        });
+        function getIcon(k) { if(k.includes('yt')) return 'fa-youtube'; if(k.includes('tg')) return 'fa-telegram'; if(k.includes('fb')) return 'fa-facebook'; return 'fa-link'; }
+        function getColor(k) { if(k.includes('yt')) return 'text-red-600'; if(k.includes('tg')) return 'text-blue-500'; if(k.includes('fb')) return 'text-blue-700'; return 'text-gray-600'; }
+        function getBg(k) { if(k.includes('yt')) return 'bg-red-50'; if(k.includes('tg')) return 'bg-blue-50'; return 'bg-gray-100'; }
 
-        // --- USER VIEW FUNCTIONS ---
-        let uTasks = [], finalDest = null;
+        // USER LOGIC
         async function loadUserLink(id) {
             try {
-                const s = await getDoc(doc(COL, id));
-                if(!s.exists() || s.data().active === false) {
-                    document.getElementById('user-gate').classList.remove('hidden');
-                    return;
-                }
+                const s = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
+                if(!s.exists() || s.data().active === false) return showError("Unavailable", "Link inactive or not found");
                 const d = s.data();
-                document.getElementById('u-title').innerText = d.title;
-                document.getElementById('u-subtitle').innerText = d.subtitle;
-                if(d.userNote) { document.getElementById('u-note').innerText = d.userNote; document.getElementById('u-note').classList.remove('hidden'); }
+                document.getElementById('u_title').innerText = d.title;
+                document.getElementById('u_subtitle').innerText = d.subtitle;
+                if(d.userNote) { 
+                    const n = document.getElementById('u_note_area'); 
+                    n.innerHTML = `<i class="fa-solid fa-circle-info text-yellow-600"></i> ${d.userNote}`; n.classList.remove('hidden'); 
+                }
                 
-                finalDest = d;
-                updateDoc(doc(COL, id), {views: increment(1)});
-
+                const ul = document.getElementById('u_tasks'); ul.innerHTML = '';
+                window.userTasks = []; 
                 if(d.tasks) {
-                    Object.entries(d.tasks).forEach(([k, v], i) => {
-                        const lbl = typeof v==='string'? 'Task' : v.label;
-                        const url = typeof v==='string'? v : v.url;
+                    Object.entries(d.tasks).forEach(([k, t], i) => {
+                        const lbl = typeof t==='string'? 'Task' : t.label;
+                        const url = typeof t==='string'? t : t.url;
                         let icon = 'fa-link';
-                        if(k.includes('yt')) icon='fa-youtube'; if(k.includes('fb')) icon='fa-facebook';
+                        if(k.includes('yt')) icon='fa-youtube'; if(k.includes('fb')) icon='fa-facebook'; if(k.includes('tg')) icon='fa-telegram'; if(k.includes('tk')) icon='fa-tiktok';
                         
-                        uTasks.push({url, done: false});
+                        window.userTasks.push({ url, done: false });
                         const div = document.createElement('div');
                         div.className = `task-card cursor-pointer ${i===0?'':'disabled'}`; div.id = 'tc-'+i;
-                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon bg-gray-100 text-blue-600"><i class="fa-brands ${icon}"></i></div><div class="flex-1 font-bold text-sm">${lbl}</div><div class="mini-loader"></div><div class="task-status text-gray-300"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
-                        div.onclick = () => doTask(i);
-                        document.getElementById('u-tasks').appendChild(div);
+                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon-wrapper bg-gray-100 text-blue-600"><i class="fa-brands ${icon}"></i></div><div class="flex-1 font-bold text-sm ml-3">${lbl}</div><div class="mini-loader"></div><div class="task-status-icon text-gray-300"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
+                        div.onclick = () => doTask(i, url);
+                        ul.appendChild(div);
                     });
                 }
-                document.getElementById('btn-unlock').innerHTML = `<i class="fa-solid fa-lock"></i> ${d.destName}`;
+                updateUnlockBtn(d);
+                updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { views: increment(1) });
             } catch(e) { console.error(e); }
         }
 
-        const doTask = (i) => {
-            const c = document.getElementById('tc-'+i);
-            if(uTasks[i].done || c.classList.contains('disabled') || c.classList.contains('verifying')) return;
-            window.open(uTasks[i].url, '_blank');
-            c.classList.add('verifying');
+        window.doTask = (i, url) => {
+            const card = document.getElementById(`tc-${i}`);
+            if(window.userTasks[i].done || card.classList.contains('disabled') || card.classList.contains('verifying')) return;
+            
+            window.open(url, '_blank');
+            card.classList.add('verifying');
+            
             setTimeout(() => {
-                c.classList.remove('verifying');
-                c.classList.add('bg-green-50');
-                c.querySelector('.task-status').innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
-                uTasks[i].done = true;
-                if(i+1 < uTasks.length) {
-                    const n = document.getElementById('tc-'+(i+1));
-                    n.classList.remove('disabled');
-                    n.querySelector('.task-status').innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+                card.classList.remove('verifying');
+                card.classList.add('bg-green-50');
+                card.querySelector('.task-status-icon').innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
+                window.userTasks[i].done = true;
+                
+                if(i+1 < window.userTasks.length) {
+                    const next = document.getElementById(`tc-${i+1}`);
+                    next.classList.remove('disabled');
+                    next.querySelector('.task-status-icon').innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
                 }
-                chkDone();
+                checkAllDone();
             }, 3000);
         };
 
-        const chkDone = () => {
-            const done = uTasks.filter(x=>x.done).length, total = uTasks.length;
+        function checkAllDone() {
+            const done = window.userTasks.filter(t=>t.done).length;
+            const total = window.userTasks.length;
             const pct = Math.round((done/total)*100);
-            document.getElementById('progress-box').classList.remove('hidden');
-            document.getElementById('bar').style.width = pct+'%';
-            document.getElementById('pct').innerText = pct+'%';
+            document.getElementById('progressArea').classList.remove('hidden');
+            document.getElementById('progressBar').style.width = pct+"%";
+            document.getElementById('progressText').innerText = pct+"%";
+            
             if(done === total) {
-                const b = document.getElementById('btn-unlock');
-                b.disabled = false; b.classList.replace('bg-gray-200','bg-blue-600'); b.classList.replace('text-gray-400','text-white');
-                b.innerHTML = '<i class="fa-solid fa-unlock"></i> Unlock Now';
+                const btn = document.getElementById('unlockBtn');
+                btn.disabled = false;
+                btn.classList.replace('bg-gray-100', 'bg-blue-600');
+                btn.classList.replace('text-gray-400', 'text-white');
+                btn.classList.add('animate-bounce');
+                btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Unlock Now';
+            }
+        }
+
+        function updateUnlockBtn(d) {
+            window.finalDest = d;
+            document.getElementById('unlockBtn').innerHTML = `<i class="fa-solid fa-lock"></i> ${d.destName}`;
+        }
+
+        window.doUnlock = () => {
+            if(!window.finalDest) return;
+            const d = window.finalDest;
+            if(d.type === 'link') location.href = L4S_SEC.dec(d.destUrl);
+            else {
+                document.getElementById('noteResult').classList.remove('hidden');
+                document.getElementById('noteContentDisplay').value = L4S_SEC.dec(d.noteContent);
             }
         };
 
-        window.doUnlock = () => {
-            if(!finalDest) return;
-            if(finalDest.type === 'link') location.href = SEC.dec(finalDest.destUrl);
-            else {
-                document.getElementById('res-box').innerText = SEC.dec(finalDest.noteContent);
-                document.getElementById('res-box').classList.remove('hidden');
-            }
-        }
+        initApp();
     </script>
 </body>
 </html>
