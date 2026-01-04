@@ -53,21 +53,18 @@
         input:checked + .slider { background-color: #34C759; }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* User View */
-        .user-view-container { background: #F2F2F7; position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow-y: auto; }
-        .user-card-wrapper { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #F2F2F7; display: flex; flex-direction: column; }
-        @media(min-width: 768px) { .user-card-wrapper { min-height: auto; margin: 5vh auto; border-radius: 32px; overflow: hidden; border: 8px solid rgba(255,255,255,0.5); height: 85vh; background: white; box-shadow: 0 20px 40px rgba(0,0,0,0.1); } }
-
-        /* Tasks */
+        /* User View Styles */
         .task-card { background: white; padding: 16px; display: flex; align-items: center; gap: 16px; position: relative; border-bottom: 1px solid #E5E5EA; overflow: hidden; }
         .task-card:last-child { border-bottom: none; }
         .task-card.disabled { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
-        .task-icon-wrapper { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; z-index: 2; }
+        
+        /* New Task Icon Style for User View */
+        .task-icon { width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; z-index: 2; }
         
         .verifying .verify-bar { position: absolute; top: 0; left: 0; height: 100%; background: rgba(52, 199, 89, 0.1); z-index: 1; animation: verifyRun 3s linear forwards; }
         .mini-loader { width: 18px; height: 18px; border: 2px solid #E5E5EA; border-top-color: #007AFF; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
         .verifying .mini-loader { display: block !important; }
-        .verifying .task-status-icon { display: none; }
+        .verifying .task-status { display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Admin Styles */
@@ -193,56 +190,30 @@
             </div>
         </div>
 
-        <div id="view-user" class="hidden user-view-container pt-0 px-0 pb-0">
-            <div id="u_error_gate" class="hidden fixed inset-0 z-[60] bg-white/90 backdrop-blur-xl flex items-center justify-center p-6">
-                <div class="text-center">
-                    <div class="w-20 h-20 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl"><i class="fa-solid fa-ban"></i></div>
-                    <h2 class="text-2xl font-bold text-black mb-2" id="u_error_title">Unavailable</h2>
-                    <p class="text-gray-500 font-medium" id="u_error_msg">Link expired or removed.</p>
+        <!-- NEW USER VIEW START -->
+        <div id="view-user" class="hidden fixed inset-0 z-40 bg-[#F2F2F7] flex flex-col overflow-y-auto">
+            <div id="user-gate" class="hidden fixed inset-0 z-50 bg-white flex items-center justify-center flex-col"><i class="fa-solid fa-ban text-4xl text-red-500 mb-4"></i><h2 class="text-xl font-bold">Link Unavailable</h2></div>
+            
+            <div class="max-w-md mx-auto w-full bg-white min-h-screen md:min-h-0 md:my-10 md:rounded-3xl md:shadow-xl overflow-hidden flex flex-col relative">
+                <div class="p-8 text-center border-b">
+                    <div class="inline-block px-3 py-1 rounded-full bg-gray-100 text-[10px] font-bold uppercase mb-4 text-gray-500"><i class="fa-solid fa-shield"></i> Secure Link</div>
+                    <h1 id="u-title" class="text-2xl font-bold mb-2">Loading...</h1>
+                    <p id="u-subtitle" class="text-sm text-gray-500">Complete tasks to continue</p>
+                    <div id="u-note" class="hidden mt-4 bg-yellow-50 p-3 rounded-xl text-xs text-left text-yellow-700"></div>
                 </div>
-            </div>
+                
+                <div class="flex-1 bg-gray-50 p-4" id="u-tasks">
+                </div>
 
-            <div class="user-card-wrapper">
-                <div id="u_header" class="relative pt-12 pb-6 px-6 text-center bg-white border-b border-gray-100">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold mb-4 uppercase"><i class="fa-brands fa-apple"></i> Secure Link</div>
-                    <h1 id="u_title" class="text-2xl font-bold text-black mb-2">Loading...</h1>
-                    <p id="u_subtitle" class="text-sm text-gray-500 font-medium">Complete tasks to unlock</p>
-                    <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-100 p-3 rounded-xl text-xs text-yellow-800 text-left flex gap-3"></div>
-                </div>
-                <div class="px-5 py-2 mb-2">
-                    <div class="group relative w-full bg-white rounded-[24px] p-5 shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-white/60 cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98]" onclick="window.open('https://muachungchi.com', '_blank')">
-                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60 group-hover:bg-blue-100 transition-colors"></div>
-                        <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-purple-50 rounded-full blur-2xl opacity-60 group-hover:bg-purple-100 transition-colors"></div>
-                        <div class="relative z-10 flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300"><i class="fa-solid fa-crown text-2xl"></i></div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded-md">Sponsored</span><span class="text-[10px] text-gray-400 font-medium">QC</span></div>
-                                <h3 class="font-bold text-[15px] text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">Nâng cấp Chứng Chỉ VIP</h3>
-                                <p class="text-[12px] text-slate-500 font-medium mt-0.5 truncate">Không Revoke • Bảo hành 1 năm</p>
-                            </div>
-                            <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors"><i class="fa-solid fa-chevron-right text-xs"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 overflow-y-auto px-4 pb-24 bg-[#F2F2F7]">
-                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-4 mt-4">Tasks</div>
-                    <div id="u_tasks" class="apple-list"></div>
-                </div>
-                <div class="p-6 bg-white/90 border-t border-gray-200 fixed bottom-0 left-0 right-0 backdrop-blur-xl z-50 max-w-[480px] mx-auto rounded-t-3xl">
-                    <div id="progressArea" class="hidden mb-4">
-                        <div class="flex justify-between text-[10px] text-gray-400 font-bold mb-2"><span>Progress</span> <span id="progressText">0%</span></div>
-                        <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div id="progressBar" class="h-full bg-blue-500 w-0 transition-all duration-500 ease-out"></div></div>
-                    </div>
-                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all text-[15px]"><i class="fa-solid fa-lock text-xs"></i> <span>Complete Tasks</span></button>
-                    <div id="noteResult" class="hidden mt-4 animate-fade-in">
-                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-1">
-                            <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200"><span class="text-[10px] font-bold text-gray-400 uppercase">Secret</span><button onclick="copyNote()" class="text-[10px] text-blue-600 font-bold">COPY</button></div>
-                            <textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-3 text-sm font-mono text-black outline-none resize-none h-20"></textarea>
-                        </div>
-                    </div>
+                <div class="p-6 bg-white border-t sticky bottom-0">
+                    <div id="progress-box" class="hidden mb-4"><div class="flex justify-between text-xs font-bold mb-1"><span>Progress</span><span id="pct">0%</span></div><div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div id="bar" class="h-full bg-blue-500 w-0 transition-all duration-300"></div></div></div>
+                    <button id="btn-unlock" onclick="doUnlock()" disabled class="w-full bg-gray-200 text-gray-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all"><i class="fa-solid fa-lock"></i> <span>Complete Tasks</span></button>
+                    <div id="res-box" class="hidden mt-4 bg-gray-100 p-4 rounded-xl break-all font-mono text-sm"></div>
                 </div>
             </div>
         </div>
+        <!-- NEW USER VIEW END -->
+
     </div>
 
     <script type="module">
@@ -300,7 +271,7 @@
         };
         window.showToast = (msg, type) => { if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, backgroundColor: type === "success" ? "#34C759" : "#FF3B30", className: "rounded-xl font-bold" }).showToast(); else alert(msg); };
         window.copyToClip = (text) => { navigator.clipboard.writeText(text).then(() => showToast("Copied!", "success")); };
-        function showError(t, m) { document.getElementById('u_error_gate').classList.remove('hidden'); document.getElementById('u_error_title').innerText = t; document.getElementById('u_error_msg').innerText = m; document.getElementById('global-loader').classList.add('hidden'); }
+        function showError(t, m) { alert(t + ": " + m); } // Simplified Error Handling for New View
 
         // ADMIN LOGIC
         window.switchView = (v) => {
@@ -470,31 +441,44 @@
         function getColor(k) { if(k.includes('yt')) return 'text-red-600'; if(k.includes('tg')) return 'text-blue-500'; if(k.includes('fb')) return 'text-blue-700'; return 'text-gray-600'; }
         function getBg(k) { if(k.includes('yt')) return 'bg-red-50'; if(k.includes('tg')) return 'bg-blue-50'; return 'bg-gray-100'; }
 
-        // USER LOGIC
+        // --- UPDATED USER LOGIC FOR NEW INTERFACE ---
         async function loadUserLink(id) {
             try {
                 const s = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
-                if(!s.exists() || s.data().active === false) return showError("Unavailable", "Link inactive or not found");
+                if(!s.exists() || s.data().active === false) {
+                     document.getElementById('user-gate').classList.remove('hidden'); // New ID
+                     return;
+                }
                 const d = s.data();
-                document.getElementById('u_title').innerText = d.title;
-                document.getElementById('u_subtitle').innerText = d.subtitle;
+                
+                // Map to new IDs
+                document.getElementById('u-title').innerText = d.title;
+                document.getElementById('u-subtitle').innerText = d.subtitle;
                 if(d.userNote) { 
-                    const n = document.getElementById('u_note_area'); 
-                    n.innerHTML = `<i class="fa-solid fa-circle-info text-yellow-600"></i> ${d.userNote}`; n.classList.remove('hidden'); 
+                    const n = document.getElementById('u-note'); 
+                    n.innerText = d.userNote; 
+                    n.classList.remove('hidden'); 
                 }
                 
-                const ul = document.getElementById('u_tasks'); ul.innerHTML = '';
+                const ul = document.getElementById('u-tasks'); ul.innerHTML = '';
                 window.userTasks = []; 
                 if(d.tasks) {
                     Object.entries(d.tasks).forEach(([k, t], i) => {
                         const url = typeof t === 'string' ? t : t.url;
                         const label = typeof t === 'string' ? 'Task' : t.label;
-                        const icon = t.icon || getIcon(k); const color = t.color || getColor(k); const bg = t.bg || getBg(k);
+                        // Use default icon style logic
+                        let iconClass = 'fa-link';
+                        if(k.includes('yt')) iconClass='fa-youtube'; 
+                        if(k.includes('fb')) iconClass='fa-facebook';
+                        if(k.includes('tg')) iconClass='fa-telegram';
+                        if(k.includes('tk')) iconClass='fa-tiktok';
+
                         window.userTasks.push({ url, done: false });
                         
                         const div = document.createElement('div');
                         div.className = `task-card cursor-pointer ${i===0?'':'disabled'}`; div.id = `tc-${i}`;
-                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon-wrapper ${bg} ${color}"><i class="fa-brands ${icon}"></i></div><div class="flex-1 font-bold ml-3">${label}</div><div class="mini-loader"></div><div class="task-status-icon"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
+                        // New structure matching user's HTML
+                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon bg-gray-100 text-blue-600"><i class="fa-brands ${iconClass}"></i></div><div class="flex-1 font-bold text-sm">${label}</div><div class="mini-loader"></div><div class="task-status text-gray-300"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
                         div.onclick = () => doTask(i, url);
                         ul.appendChild(div);
                     });
@@ -502,7 +486,7 @@
                 updateUnlockBtn(d);
                 // Track view
                 updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), { views: increment(1) });
-            } catch(e) { console.error(e); showError("Error", "Connection failed"); }
+            } catch(e) { console.error(e); }
         }
 
         window.doTask = (i, url) => {
@@ -515,13 +499,13 @@
             setTimeout(() => {
                 card.classList.remove('verifying');
                 card.classList.add('bg-green-50');
-                card.querySelector('.task-status-icon').innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
+                card.querySelector('.task-status').innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
                 window.userTasks[i].done = true;
                 
                 if(i+1 < window.userTasks.length) {
                     const next = document.getElementById(`tc-${i+1}`);
                     next.classList.remove('disabled');
-                    next.querySelector('.task-status-icon').innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+                    next.querySelector('.task-status').innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
                 }
                 checkAllDone();
             }, 3000);
@@ -531,23 +515,24 @@
             const done = window.userTasks.filter(t=>t.done).length;
             const total = window.userTasks.length;
             const pct = Math.round((done/total)*100);
-            document.getElementById('progressArea').classList.remove('hidden');
-            document.getElementById('progressBar').style.width = pct+"%";
-            document.getElementById('progressText').innerText = pct+"%";
+            
+            // New IDs for Progress
+            document.getElementById('progress-box').classList.remove('hidden');
+            document.getElementById('bar').style.width = pct+"%";
+            document.getElementById('pct').innerText = pct+"%";
             
             if(done === total) {
-                const btn = document.getElementById('unlockBtn');
+                const btn = document.getElementById('btn-unlock');
                 btn.disabled = false;
-                btn.classList.replace('bg-gray-100', 'bg-blue-600');
+                btn.classList.replace('bg-gray-200', 'bg-blue-600');
                 btn.classList.replace('text-gray-400', 'text-white');
-                btn.classList.add('animate-bounce');
                 btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Unlock Now';
             }
         }
 
         function updateUnlockBtn(d) {
             window.finalDest = d;
-            document.getElementById('unlockBtn').innerHTML = `<i class="fa-solid fa-lock"></i> ${d.destName}`;
+            document.getElementById('btn-unlock').innerHTML = `<i class="fa-solid fa-lock"></i> ${d.destName}`;
         }
 
         window.doUnlock = () => {
@@ -555,9 +540,8 @@
             const d = window.finalDest;
             if(d.type === 'link') location.href = L4S_SEC.dec(d.destUrl);
             else {
-                document.getElementById('noteResult').classList.remove('hidden');
-                document.getElementById('noteContentDisplay').value = L4S_SEC.dec(d.noteContent);
-                document.getElementById('unlockBtn').innerHTML = '<i class="fa-solid fa-check"></i> Opened';
+                document.getElementById('res-box').classList.remove('hidden');
+                document.getElementById('res-box').innerText = L4S_SEC.dec(d.noteContent);
             }
         };
 
@@ -569,14 +553,6 @@
             showToast("Copied!", "success");
         }
         
-        window.copyNote = () => {
-            const copyText = document.getElementById("noteContentDisplay");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(copyText.value);
-            showToast("Copied secret!", "success");
-        }
-
         initApp();
     </script>
 </body>
