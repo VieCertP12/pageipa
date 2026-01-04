@@ -63,13 +63,17 @@
         input:checked + .slider { background-color: #34C759; }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* --- USER VIEW: iOS STYLE REDESIGN --- */
-        .user-view-container { background: #F2F2F7; position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow-y: auto; }
+        /* --- USER VIEW: iOS STYLE REDESIGN V2 --- */
+        .user-view-container { 
+            background-color: #F2F2F7; 
+            background-image: radial-gradient(circle at top right, #eef2ff, transparent), radial-gradient(circle at bottom left, #f0fdf4, transparent);
+            position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow-y: auto; 
+        }
         .user-card-wrapper { 
             max-width: 440px; margin: 0 auto; 
             min-height: 100vh;
             display: flex; flex-direction: column; 
-            background: #F2F2F7;
+            background: transparent;
             position: relative;
         }
         @media(min-width: 768px) { 
@@ -78,94 +82,125 @@
                 margin: 4vh auto; 
                 border-radius: 40px; 
                 overflow: hidden; 
-                border: 8px solid #fff;
+                border: 8px solid rgba(255,255,255,0.4);
                 height: 90vh; 
+                background: #F2F2F7;
                 box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2); 
             } 
         }
 
-        /* iOS Grouped List */
-        .ios-group {
+        /* iOS Task List Redesigned */
+        .ios-list-container {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
             margin-bottom: 24px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
-        
-        .ios-cell {
+
+        .ios-task-item {
             display: flex;
             align-items: center;
-            padding: 14px 16px;
+            padding: 16px;
             background: white;
+            border-bottom: 1px solid #F2F2F7;
+            transition: all 0.2s;
             position: relative;
-            transition: background 0.2s;
             cursor: pointer;
         }
-        .ios-cell:not(:last-child)::after {
-            content: ''; position: absolute; bottom: 0; left: 60px; right: 0;
-            height: 1px; background: #E5E5EA;
-        }
-        .ios-cell:active { background: #E5E5EA; }
-        .ios-cell.disabled { opacity: 0.5; pointer-events: none; }
-        .ios-cell.completed .task-check { transform: scale(1); opacity: 1; }
+        .ios-task-item:last-child { border-bottom: none; }
+        .ios-task-item:active { background-color: #F2F2F7; }
+        .ios-task-item.disabled { opacity: 0.5; filter: grayscale(0.2); pointer-events: none; }
         
-        .task-icon-box {
-            width: 32px; height: 32px; border-radius: 8px;
+        /* Icon Box with Gradients */
+        .ios-icon-box {
+            width: 48px; height: 48px;
+            border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 16px; color: white; margin-right: 14px;
+            font-size: 22px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            margin-right: 16px;
             flex-shrink: 0;
-            background: linear-gradient(135deg, #8E8E93, #636366); /* Default gray */
+            position: relative;
+            z-index: 2;
         }
-        .task-icon-box.yt { background: linear-gradient(135deg, #FF3B30, #FF2D55); }
-        .task-icon-box.fb { background: linear-gradient(135deg, #007AFF, #5856D6); }
-        .task-icon-box.tg { background: linear-gradient(135deg, #2AC0FF, #007AFF); }
-        .task-icon-box.tk { background: linear-gradient(135deg, #000000, #333333); }
+        .brand-yt { background: linear-gradient(135deg, #FF3B30, #D70015); }
+        .brand-fb { background: linear-gradient(135deg, #007AFF, #0040DD); }
+        .brand-tg { background: linear-gradient(135deg, #2AC0FF, #007AFF); }
+        .brand-tk { background: linear-gradient(135deg, #000000, #333333); }
+        .brand-default { background: linear-gradient(135deg, #8E8E93, #636366); }
 
-        .task-status {
-            width: 24px; height: 24px;
-            display: flex; align-items: center; justify-content: center;
+        .task-content { flex: 1; min-width: 0; z-index: 2; }
+        .task-title { font-weight: 600; font-size: 16px; color: #1C1C1E; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .task-sub { font-size: 13px; color: #8E8E93; font-weight: 500; }
+
+        .task-action {
+            width: 28px; height: 28px;
             border-radius: 50%;
             background: #F2F2F7;
+            display: flex; align-items: center; justify-content: center;
             color: #C7C7CC;
-            font-size: 12px;
-            margin-left: auto;
             transition: all 0.3s;
+            flex-shrink: 0;
+            z-index: 2;
         }
-        .ios-cell.completed .task-status { background: #34C759; color: white; }
-        .ios-cell.verifying .task-status { display: none; }
         
-        /* Spinner */
-        .spinner { width: 20px; height: 20px; border: 2.5px solid #E5E5EA; border-top-color: #007AFF; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; margin-left: auto; }
-        .ios-cell.verifying .spinner { display: block; }
+        /* Task States */
+        .ios-task-item.completed .task-action { background: #34C759; color: white; transform: scale(1.1); }
+        .ios-task-item.verifying .task-action { display: none; }
+        
+        .verify-loader {
+            width: 24px; height: 24px;
+            border: 2.5px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+            margin-left: auto;
+            flex-shrink: 0;
+            z-index: 2;
+        }
+        .ios-task-item.verifying .verify-loader { display: block; }
 
-        /* Floating Button */
-        .fab-container {
+        /* Progress Bar in Task */
+        .task-progress-bar {
+            position: absolute; bottom: 0; left: 0; height: 100%; background: rgba(52, 199, 89, 0.1);
+            width: 0%; transition: width 0.1s linear;
+            z-index: 1;
+        }
+        .ios-task-item.verifying .task-progress-bar { width: 100%; transition: width 3s linear; }
+
+        /* Unlock Button Area */
+        .unlock-area {
             position: fixed; bottom: 0; left: 0; right: 0;
-            padding: 20px 24px 34px;
             background: rgba(255,255,255,0.9);
             backdrop-filter: blur(20px);
             border-top: 1px solid rgba(0,0,0,0.05);
+            padding: 20px 24px 34px;
             z-index: 100;
-            display: flex; flex-direction: column; gap: 10px;
+            max-width: 480px; margin: 0 auto;
+            border-radius: 24px 24px 0 0;
         }
-        @media(min-width: 768px) { .fab-container { position: absolute; } }
         
-        .btn-unlock {
+        .btn-main-unlock {
             width: 100%; height: 56px;
-            border-radius: 16px;
-            background: #007AFF;
-            color: white; font-size: 17px; font-weight: 600;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 4px 12px rgba(0,122,255,0.3);
+            border-radius: 18px;
+            font-size: 17px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: #E5E5EA; color: #8E8E93; cursor: not-allowed;
+            box-shadow: none;
         }
-        .btn-unlock:disabled { background: #E5E5EA; color: #8E8E93; box-shadow: none; transform: scale(0.98); cursor: not-allowed; }
-        .btn-unlock:active:not(:disabled) { transform: scale(0.96); }
-        .btn-unlock.success { background: #34C759; box-shadow: 0 4px 12px rgba(52,199,89,0.3); }
-
-        .progress-track { height: 4px; background: #E5E5EA; border-radius: 2px; overflow: hidden; width: 100%; margin-top: 8px; }
-        .progress-fill { height: 100%; background: #007AFF; width: 0%; transition: width 0.5s ease; }
+        .btn-main-unlock.active {
+            background: linear-gradient(135deg, #007AFF, #0056b3);
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 122, 255, 0.3);
+            cursor: pointer;
+            transform: translateY(-2px);
+        }
+        .btn-main-unlock.active:active { transform: translateY(0) scale(0.98); }
+        .btn-main-unlock.success { background: #34C759; box-shadow: 0 8px 20px rgba(52, 199, 89, 0.3); }
 
         /* Admin Styles */
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: #8E8E93; font-weight: 500; cursor: pointer; margin-bottom: 4px; font-family: 'Outfit', sans-serif; }
@@ -303,7 +338,7 @@
             </div>
         </div>
 
-        <!-- USER VIEW (REDESIGNED) -->
+        <!-- USER VIEW (REDESIGNED V56) -->
         <div id="view-user" class="hidden user-view-container pt-0 px-0 pb-0">
             <div id="u_error_gate" class="hidden fixed inset-0 z-[60] bg-white/90 backdrop-blur-xl flex items-center justify-center p-6">
                 <div class="text-center">
@@ -315,36 +350,52 @@
 
             <div class="user-card-wrapper">
                 <!-- Header -->
-                <div class="text-center pt-10 pb-6 px-6 relative bg-white">
+                <div class="text-center pt-10 pb-8 px-6 relative bg-white border-b border-gray-100">
                     <div class="w-24 h-24 bg-gray-100 rounded-[22px] mx-auto mb-5 flex items-center justify-center text-4xl shadow-sm overflow-hidden border border-gray-100">
                         <i class="fa-brands fa-apple text-gray-400"></i>
                     </div>
-                    <h1 id="u_title" class="text-2xl font-bold text-black mb-2 tracking-tight leading-tight">Loading...</h1>
-                    <p id="u_subtitle" class="text-sm text-gray-500 font-medium max-w-[80%] mx-auto leading-relaxed">Please complete the tasks below</p>
+                    <h1 id="u_title" class="text-[28px] font-bold text-black mb-2 tracking-tight leading-tight">Loading...</h1>
+                    <p id="u_subtitle" class="text-[15px] text-gray-500 font-medium max-w-[80%] mx-auto leading-relaxed">Please complete the tasks below</p>
                     
-                    <div id="u_note_area" class="hidden mt-4 mx-auto max-w-sm bg-yellow-50/80 border border-yellow-100 p-3 rounded-xl text-xs text-yellow-800 text-left flex gap-3 backdrop-blur-sm">
+                    <div id="u_note_area" class="hidden mt-4 mx-auto max-w-sm bg-yellow-50 border border-yellow-100 p-3 rounded-xl text-xs text-yellow-800 text-left flex gap-3">
                         <i class="fa-solid fa-circle-info mt-0.5 text-yellow-600 flex-shrink-0"></i><span class="font-medium leading-relaxed"></span>
+                    </div>
+                </div>
+
+                <!-- AD BANNER (RECOVERED) -->
+                <div class="px-5 py-4 bg-[#F2F2F7]">
+                    <div class="group relative w-full bg-white rounded-[24px] p-5 shadow-sm border border-gray-200 cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98]" onclick="window.open('https://muachungchi.com', '_blank')">
+                        <div class="relative z-10 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center text-white shadow-md">
+                                <i class="fa-solid fa-crown text-xl"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-[16px] text-slate-900 leading-tight">Chứng Chỉ VIP</h3>
+                                <p class="text-[13px] text-slate-500 font-medium mt-0.5">Không Revoke • Bảo hành 1 năm</p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400"><i class="fa-solid fa-chevron-right text-xs"></i></div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Tasks List -->
                 <div class="flex-1 overflow-y-auto px-4 pb-32 bg-[#F2F2F7]">
                     <div class="max-w-md mx-auto">
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-4 mt-2">Steps to unlock</div>
-                        <div id="u_tasks" class="ios-group">
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-4">STEPS TO UNLOCK</div>
+                        <div id="u_tasks" class="ios-list-container">
                             <!-- Tasks will be injected here -->
                         </div>
                     </div>
                 </div>
 
                 <!-- Footer -->
-                <div class="fab-container">
+                <div class="unlock-area">
                     <div id="progressArea" class="hidden mb-3 animate-fade-in">
                         <div class="flex justify-between text-[11px] text-gray-400 font-bold mb-1.5 uppercase tracking-wider"><span>Unlock Progress</span> <span id="progressText">0%</span></div>
-                        <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
+                        <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div id="progressBar" class="h-full bg-[#007AFF] w-0 transition-all duration-500 ease-out"></div></div>
                     </div>
-                    <button id="unlockBtn" onclick="doUnlock()" disabled class="btn-unlock">
-                        <i class="fa-solid fa-lock text-sm"></i> <span>Complete Tasks to Unlock</span>
+                    <button id="unlockBtn" onclick="doUnlock()" disabled class="btn-main-unlock">
+                        <i class="fa-solid fa-lock text-lg"></i> <span>Locked</span>
                     </button>
                     
                     <div id="noteResult" class="hidden mt-4 animate-fade-in bg-white border border-gray-200 rounded-2xl shadow-lg p-1">
@@ -434,7 +485,7 @@
         };
         window.logout = () => signOut(auth).then(() => window.location.reload());
 
-        // EDIT & FORM - SMART ICON LOGIC
+        // EDIT & FORM
         window.selectPlatform = (pf, btn) => {
             document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             ['yt','tg','tk','fb'].forEach(id => document.getElementById(`ftr_${id}`).classList.add('hidden'));
@@ -578,7 +629,7 @@
 
         function getIcon(k) { if(k.includes('yt')) return 'fa-youtube'; if(k.includes('tg')) return 'fa-telegram'; if(k.includes('fb')) return 'fa-facebook'; return 'fa-link'; }
         function getColor(k) { if(k.includes('yt')) return 'text-red-600'; if(k.includes('tg')) return 'text-blue-500'; if(k.includes('fb')) return 'text-blue-700'; return 'text-gray-600'; }
-        function getBg(k) { if(k.includes('yt')) return 'bg-red-50'; if(k.includes('tg')) return 'bg-blue-50'; return 'bg-gray-100'; }
+        function getBg(k) { if(k.includes('yt')) return 'brand-yt'; if(k.includes('tg')) return 'brand-tg'; if(k.includes('fb')) return 'brand-fb'; if(k.includes('tk')) return 'brand-tk'; return 'brand-default'; }
 
         // USER LOGIC
         async function loadUserLink(id) {
@@ -599,21 +650,23 @@
                     Object.entries(d.tasks).forEach(([k, t], i) => {
                         const lbl = typeof t==='string'? 'Task' : t.label;
                         const url = typeof t==='string'? t : t.url;
-                        let icon = 'fa-link';
-                        if(k.includes('yt')) icon='fa-youtube'; if(k.includes('fb')) icon='fa-facebook'; if(k.includes('tg')) icon='fa-telegram'; if(k.includes('tk')) icon='fa-tiktok';
                         
                         // SMART ICON LOGIC FOR USER VIEW
                         const style = getTaskStyle(k, lbl);
-                        icon = style.icon; const color = style.color; const bg = style.bg;
+                        const icon = style.icon; const bg = style.bg;
 
                         window.userTasks.push({ url, done: false });
                         const div = document.createElement('div');
-                        div.className = `ios-cell ${i===0?'':'disabled'}`; div.id = 'tc-'+i;
+                        div.className = `ios-task-item ${i===0?'':'disabled'}`; div.id = 'tc-'+i;
                         div.innerHTML = `
-                            <div class="task-icon-box ${k.substring(0,2)}"><i class="fa-brands ${icon} ${icon.includes('fa-')?'':'fa-solid'}"></i></div>
-                            <div class="flex-1 font-medium text-[15px] truncate">${lbl}</div>
-                            <div class="spinner"></div>
-                            <div class="task-status"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>
+                            <div class="task-progress-bar"></div>
+                            <div class="ios-icon-box ${bg}"><i class="fa-brands ${icon} ${icon.includes('fa-')?'':'fa-solid'}"></i></div>
+                            <div class="task-content">
+                                <div class="task-title">${lbl}</div>
+                                <div class="task-sub">Tap to open</div>
+                            </div>
+                            <div class="task-action"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>
+                            <div class="verify-loader"></div>
                         `;
                         div.onclick = () => doTask(i, url);
                         ul.appendChild(div);
@@ -631,16 +684,21 @@
             window.open(url, '_blank');
             card.classList.add('verifying');
             
+            // Simulating verification time
             setTimeout(() => {
                 card.classList.remove('verifying');
                 card.classList.add('completed');
-                card.querySelector('.task-status').innerHTML = '<i class="fa-solid fa-check"></i>';
+                
+                // Update text
+                card.querySelector('.task-sub').innerText = "Completed";
+                card.querySelector('.task-sub').classList.add('text-green-600', 'font-bold');
+                
                 window.userTasks[i].done = true;
                 
                 if(i+1 < window.userTasks.length) {
                     const next = document.getElementById(`tc-${i+1}`);
                     next.classList.remove('disabled');
-                    next.querySelector('.task-status').innerHTML = '<i class="fa-solid fa-chevron-right text-[#C7C7CC]"></i>';
+                    next.querySelector('.task-action').innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
                 }
                 checkAllDone();
             }, 3000);
@@ -657,16 +715,15 @@
             if(done === total) {
                 const btn = document.getElementById('unlockBtn');
                 btn.disabled = false;
-                btn.classList.remove('unlock-btn-disabled');
-                btn.classList.add('unlock-btn-active');
-                btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Unlock Now';
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i> <span>Unlock Now</span>';
             }
         }
 
         function updateUnlockBtn(d) {
             window.finalDest = d;
             const btn = document.getElementById('unlockBtn');
-            btn.innerHTML = `<i class="fa-solid fa-lock text-sm"></i> <span>${d.destName || 'Unlock'}</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-lock"></i> <span>${d.destName || 'Locked'}</span>`;
         }
 
         window.doUnlock = () => {
@@ -678,18 +735,18 @@
                 document.getElementById('noteContentDisplay').value = L4S_SEC.dec(d.noteContent);
                 const btn = document.getElementById('unlockBtn');
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Opened';
-                btn.classList.remove('unlock-btn-active');
-                btn.classList.add('bg-green-600', 'text-white', 'shadow-none');
+                btn.classList.remove('active');
+                btn.classList.add('success');
             }
         };
 
         function getTaskStyle(id, lblText) {
-            let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
+            let icon = 'fa-link', color = 'text-gray-600', bg = 'brand-default';
             const txt = lblText ? lblText.toLowerCase().trim() : '';
-            if(id.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('comment') || txt.includes('bình luận') || txt.includes('cmt')) icon = 'fa-comment'; }
-            else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
-            else if(id.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; if(txt.includes('like') || txt.includes('tim')) { icon = 'fa-heart'; color = 'text-pink-500'; } }
-            else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-share'; if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; }
+            if(id.includes('yt')) { icon = 'fa-youtube'; bg = 'brand-yt'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('comment') || txt.includes('bình luận') || txt.includes('cmt')) icon = 'fa-comment'; }
+            else if(id.includes('tg')) { icon = 'fa-telegram'; bg = 'brand-tg'; }
+            else if(id.includes('tk')) { icon = 'fa-tiktok'; bg = 'brand-tk'; if(txt.includes('like') || txt.includes('tim')) { icon = 'fa-heart'; } }
+            else if(id.includes('fb')) { icon = 'fa-facebook'; bg = 'brand-fb'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-share'; if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; }
             return { icon, color, bg };
         }
 
