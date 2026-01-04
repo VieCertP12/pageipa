@@ -128,9 +128,15 @@
         .nav-item.active { background: rgba(0,122,255,0.12); color: #007AFF; font-weight: 600; }
         .grp { display: none; } .grp.active { display: block; animation: fadeIn 0.3s; }
         .btn_iftr { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px; background: white; border: 1px solid #E5E5EA; margin: 4px; cursor: pointer; }
-        .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); }
-        .stu_b_ftr { width: 80px; height: 80px; border-radius: 18px; background: white; border: 1px solid #E5E5EA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-size: 11px; cursor: pointer; }
-        .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn_iftr:hover { background: #F9FAFB; border-color: #D1D5DB; }
+        .btn_iftr:active { transform: scale(0.95); }
+        .stu_b_ftr { width: 80px; height: 80px; border-radius: 18px; background: white; border: 1px solid #E5E5EA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-size: 11px; cursor: pointer; transition: all 0.2s; }
+        .stu_b_ftr:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); font-weight: bold; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        
+        /* New Admin Task Row */
+        .admin-task-row { display: grid; grid-template-columns: 40px 1fr 1fr 32px; gap: 8px; align-items: center; background: white; border: 1px solid #E5E5EA; padding: 8px; border-radius: 12px; margin-bottom: 8px; }
+        .admin-task-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -169,7 +175,10 @@
             <div class="flex-1 flex flex-col overflow-hidden relative z-10">
                 <div class="h-20 glass-nav flex items-center justify-between px-10 shrink-0">
                     <h2 class="text-2xl font-bold" id="page-title">Create New Link</h2>
-                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500"><i class="fa-solid fa-user"></i></div>
+                    <!-- NÚT COPY LINK SẼ HIỆN Ở ĐÂY KHI EDIT -->
+                    <div id="header-actions" class="flex gap-2">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500"><i class="fa-solid fa-user"></i></div>
+                    </div>
                 </div>
                 <div class="flex-1 overflow-y-auto p-10">
                     <!-- Dashboard -->
@@ -216,26 +225,26 @@
                                     <button type="button" class="stu_b_ftr" onclick="selectPlatform('tk', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok text-2xl"></i> TikTok</button>
                                     <button type="button" class="stu_b_ftr" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook text-2xl"></i> Facebook</button>
                                 </div>
+                                
+                                <!-- New Task Buttons -->
                                 <div class="p-6 bg-gray-50 rounded-2xl border border-dashed border-gray-300 mb-8 flex flex-wrap gap-3">
                                     <div id="ftr_yt" class="w-full">
-                                        <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Subscribe</button>
-                                        <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like</button>
-                                        <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
-                                        <button type="button" class="btn_iftr btn_add border-dashed border-red-300 text-red-500" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Custom</button>
+                                        <button type="button" class="btn_iftr" onclick="addTask('yt', null, 'Subscribe Channel')" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Subscribe</button>
+                                        <button type="button" class="btn_iftr" onclick="addTask('yt', null, 'Like Video')" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like</button>
+                                        <button type="button" class="btn_iftr" onclick="addTask('yt', null, 'Comment Video')" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
+                                        <button type="button" class="btn_iftr border-dashed border-red-300 text-red-500" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Custom</button>
                                     </div>
-                                    <div id="ftr_tg" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Join</button><button type="button" class="btn_iftr btn_add border-dashed border-blue-300 text-blue-500" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Custom</button></div>
-                                    <div id="ftr_tk" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button><button type="button" class="btn_iftr btn_add border-dashed border-gray-400 text-gray-600" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Custom</button></div>
-                                    <div id="ftr_fb" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button><button type="button" class="btn_iftr btn_add border-dashed border-blue-300 text-blue-500" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_tg" class="w-full hidden"><button type="button" class="btn_iftr" onclick="addTask('tg', null, 'Join Telegram')" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Join</button><button type="button" class="btn_iftr border-dashed border-blue-300 text-blue-500" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_tk" class="w-full hidden"><button type="button" class="btn_iftr" onclick="addTask('tk', null, 'Follow TikTok')" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button><button type="button" class="btn_iftr border-dashed border-gray-400 text-gray-600" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_fb" class="w-full hidden"><button type="button" class="btn_iftr" onclick="addTask('fb', null, 'Follow Facebook')" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button><button type="button" class="btn_iftr border-dashed border-blue-300 text-blue-500" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Custom</button></div>
                                 </div>
+                                
+                                <!-- Dynamic Inputs Area -->
                                 <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="grp" id="grp_yt1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_yt1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent outline-none" value="Đăng ký kênh"><input class="pc-input bg-gray-50" id="i_yt1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_ytl1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_ytl1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent outline-none" value="Like Video"><input class="pc-input bg-gray-50" id="i_ytl1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_ytc1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_ytc1" class="text-xs font-bold text-red-600 mb-1 w-full bg-transparent outline-none" value="Comment Video"><input class="pc-input bg-gray-50" id="i_ytc1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_tg1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_tg1" class="text-xs font-bold text-blue-500 mb-1 w-full bg-transparent outline-none" value="Join Telegram"><input class="pc-input bg-gray-50" id="i_tg1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_tk1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_tk1" class="text-xs font-bold text-black mb-1 w-full bg-transparent outline-none" value="Follow TikTok"><input class="pc-input bg-gray-50" id="i_tk1" placeholder="Link..."></div></div>
-                                    <div class="grp" id="grp_fb1"><div class="bg-white border p-3 rounded-xl shadow-sm"><input type="text" id="lbl_fb1" class="text-xs font-bold text-blue-700 mb-1 w-full bg-transparent outline-none" value="Follow Facebook"><input class="pc-input bg-gray-50" id="i_fb1" placeholder="Link..."></div></div>
+                                    <!-- Tasks will be added here -->
                                 </div>
                             </div>
+                            
                             <div class="flex gap-4 glass-nav p-4 rounded-2xl sticky bottom-4 z-20 border border-white/50 bg-white/90 shadow-xl backdrop-blur-xl">
                                 <button type="button" onclick="resetForm()" class="pc-btn pc-btn-secondary px-8 shadow-sm">Reset</button>
                                 <button type="submit" id="btnAction" class="pc-btn flex-1 shadow-lg shadow-blue-500/20">Create Link</button>
@@ -393,7 +402,7 @@
         };
         window.logout = () => signOut(auth).then(() => window.location.reload());
 
-        // EDIT & FORM
+        // EDIT & FORM - SMART ICON LOGIC
         window.selectPlatform = (pf, btn) => {
             document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             ['yt','tg','tk','fb'].forEach(id => document.getElementById(`ftr_${id}`).classList.add('hidden'));
@@ -412,8 +421,24 @@
         window.addTask = (platform, existingId, label, url) => {
             const id = existingId || `${platform}_custom_${Date.now()}`;
             const div = document.createElement('div'); div.id = `grp_${id}`; div.className = "grp active"; 
-            div.innerHTML = `<div class="bg-white border p-3 rounded-xl relative"><input type="text" id="lbl_${id}" class="text-xs font-bold text-gray-500 mb-1 w-full bg-transparent outline-none" value="${label || 'Task'}"><input class="pc-input bg-gray-50" id="i_${id}" value="${url||''}" placeholder="Link..."><button type="button" onclick="this.closest('.grp').remove()" class="absolute top-2 right-2 text-red-500"><i class="fa-solid fa-xmark"></i></button></div>`;
+            div.innerHTML = `
+                <div class="admin-task-row">
+                    <div class="admin-task-icon" id="icon_prev_${id}"></div>
+                    <input type="text" id="lbl_${id}" class="text-xs font-bold text-gray-700 bg-transparent outline-none w-full" value="${label || 'Task'}" oninput="updateTaskPreview('${id}', '${platform}')">
+                    <input class="pc-input bg-gray-50 h-8 text-xs" id="i_${id}" value="${url||''}" placeholder="Link...">
+                    <button type="button" onclick="this.closest('.grp').remove()" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            `;
             document.getElementById('dynamic_inputs').appendChild(div);
+            updateTaskPreview(id, platform, label); // Init icon
+        };
+        
+        window.updateTaskPreview = (id, plat, val) => {
+             const lbl = val || document.getElementById(`lbl_${id}`).value;
+             const style = getTaskStyle(plat, lbl);
+             const div = document.getElementById(`icon_prev_${id}`);
+             div.className = `admin-task-icon ${style.bg} ${style.color}`;
+             div.innerHTML = `<i class="fa-brands ${style.icon} ${style.icon.includes('fa-')?'':'fa-solid'}"></i>`;
         };
         
         window.resetForm = (force) => {
@@ -422,6 +447,8 @@
             document.getElementById('edit_doc_id').value = "";
             document.getElementById('btnAction').innerHTML = 'Create Link';
             document.getElementById('editModeBadge').classList.add('hidden');
+            document.getElementById('header-actions').innerHTML = '<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500"><i class="fa-solid fa-user"></i></div>';
+            
             document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
             document.querySelectorAll('.grp.active').forEach(e => e.classList.remove('active'));
             document.querySelectorAll('.btn_iftr.active').forEach(e => e.classList.remove('active'));
@@ -446,6 +473,10 @@
                     document.getElementById('i_user_note').value = data.userNote || '';
                     document.getElementById('i_dest_name').value = data.destName;
                     
+                    // Show Copy Button in Header
+                    const link = window.location.origin + window.location.pathname + "?id=" + id;
+                    document.getElementById('header-actions').innerHTML = `<button onclick="copyToClip('${link}')" class="pc-btn pc-btn-secondary h-10 px-4 text-xs font-bold"><i class="fa-regular fa-copy"></i> Copy Link</button><div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 ml-2"><i class="fa-solid fa-user"></i></div>`;
+                    
                     const type = data.type || 'link';
                     document.querySelector(`input[name="destType"][value="${type}"]`).checked = true;
                     window.toggleDestType();
@@ -454,16 +485,10 @@
 
                     if(data.tasks) {
                         for(const [k, v] of Object.entries(data.tasks)) {
-                            const btn = document.querySelector(`button[onclick*="'${k}'"]`);
                             const lbl = typeof v === 'string' ? 'Task' : v.label;
                             const url = typeof v === 'string' ? v : v.url;
-                            if(btn) {
-                                window.toggleInput(k, btn);
-                                document.getElementById(`i_${k}`).value = url;
-                                document.getElementById(`lbl_${k}`).value = lbl;
-                            } else {
-                                window.addTask(k.substring(0,2), k, lbl, url);
-                            }
+                            const plat = k.substring(0, 2);
+                            window.addTask(plat, k, lbl, url);
                         }
                     }
                 } else { showToast("Link not found!", "error"); }
@@ -481,11 +506,15 @@
             
             const tasks = {};
             document.querySelectorAll('.grp').forEach(g => {
-                if(!g.classList.contains('active') && !g.id.includes('custom')) return;
+                if(!g.classList.contains('active')) return;
                 const kid = g.id.replace('grp_', '');
                 const u = g.querySelector('input.pc-input').value;
                 const l = g.querySelector('input[type="text"]').value;
-                if(u) tasks[kid] = { url: u, label: l, icon: getIcon(kid), color: getColor(kid), bg: getBg(kid) };
+                const plat = kid.substring(0, 2);
+                if(u) {
+                    const style = getTaskStyle(plat, l);
+                    tasks[kid] = { url: u, label: l, icon: style.icon, color: style.color, bg: style.bg };
+                }
             });
 
             document.getElementById('global-loader').classList.remove('hidden');
@@ -542,10 +571,14 @@
                         let icon = 'fa-link';
                         if(k.includes('yt')) icon='fa-youtube'; if(k.includes('fb')) icon='fa-facebook'; if(k.includes('tg')) icon='fa-telegram'; if(k.includes('tk')) icon='fa-tiktok';
                         
+                        // SMART ICON LOGIC FOR USER VIEW
+                        const style = getTaskStyle(k, lbl);
+                        icon = style.icon; const color = style.color; const bg = style.bg;
+
                         window.userTasks.push({ url, done: false });
                         const div = document.createElement('div');
                         div.className = `task-card cursor-pointer ${i===0?'':'disabled'}`; div.id = 'tc-'+i;
-                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon-wrapper bg-gray-100 text-blue-600"><i class="fa-brands ${icon}"></i></div><div class="flex-1 font-bold text-sm ml-3">${lbl}</div><div class="mini-loader"></div><div class="task-status-icon text-gray-300"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
+                        div.innerHTML = `<div class="verify-bar"></div><div class="task-icon-wrapper ${bg} ${color}"><i class="fa-brands ${icon} ${icon.includes('fa-')?'':'fa-solid'}"></i></div><div class="flex-1 font-bold text-sm ml-3">${lbl}</div><div class="mini-loader"></div><div class="task-status-icon text-gray-300"><i class="fa-solid ${i===0?'fa-chevron-right':'fa-lock'}"></i></div>`;
                         div.onclick = () => doTask(i, url);
                         ul.appendChild(div);
                     });
@@ -613,6 +646,16 @@
                 btn.classList.add('bg-green-600', 'text-white', 'shadow-none');
             }
         };
+
+        function getTaskStyle(id, lblText) {
+            let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
+            const txt = lblText ? lblText.toLowerCase().trim() : '';
+            if(id.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('comment') || txt.includes('bình luận') || txt.includes('cmt')) icon = 'fa-comment'; }
+            else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
+            else if(id.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; if(txt.includes('like') || txt.includes('tim')) { icon = 'fa-heart'; color = 'text-pink-500'; } }
+            else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-share'; if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; }
+            return { icon, color, bg };
+        }
 
         initApp();
     </script>
