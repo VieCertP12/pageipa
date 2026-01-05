@@ -215,197 +215,319 @@
 
     <!-- LOGIC -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, query, writeBatch } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, query, writeBatch } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        window.smartParseIcon = (s) => {
-            if (!s) return ''; s = s.trim();
-            if (s.startsWith('<svg') || s.startsWith('<i ') || s.startsWith('<img') || s.startsWith('<wa-icon')) return s;
-            if (s.startsWith('http')) return `<img src="${s}" alt="icon">`;
-            const matchName = s.match(/\[['"]([^'"]+)['"]\]/);
-            if (matchName && matchName[1]) {
-                const matchPrefix = s.match(/byPrefixAndName\.([a-z]+)/);
-                return `<i class="${matchPrefix ? matchPrefix[1] : 'fas'} fa-${matchName[1]}"></i>`;
-            }
-            const matchWa = s.match(/name=["']([^"']+)["']/);
-            if (matchWa && matchWa[1]) return `<i class="fas fa-${matchWa[1]}"></i>`;
-            return `<i class="${s}"></i>`;
+    const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    
+    // --- TIỆN ÍCH ---
+    window.showToast = (msg, type = 'success') => {
+        const container = document.getElementById('toast-container');
+        const div = document.createElement('div');
+        const color = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+        div.className = `${color} text-white px-6 py-3 rounded-xl shadow-xl font-bold text-sm flex items-center gap-3 animation-slide-in transform transition-all`;
+        div.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+        container.appendChild(div);
+        setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 3000);
+    }
+
+    window.smartParseIcon = (s) => {
+        if (!s) return ''; s = s.trim();
+        if (s.startsWith('<svg') || s.startsWith('<i ') || s.startsWith('<img') || s.startsWith('<wa-icon')) return s;
+        if (s.startsWith('http')) return `<img src="${s}" alt="icon">`;
+        const matchName = s.match(/\[['"]([^'"]+)['"]\]/);
+        if (matchName && matchName[1]) {
+            const matchPrefix = s.match(/byPrefixAndName\.([a-z]+)/);
+            return `<i class="${matchPrefix ? matchPrefix[1] : 'fas'} fa-${matchName[1]}"></i>`;
         }
-        
-        onAuthStateChanged(auth, async (u) => {
-            if(u) {
-                document.getElementById('login-box').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                loadConfig(); load(); switchTab('esign');
-            } else {
-                document.getElementById('login-box').classList.remove('hidden');
-                document.getElementById('dashboard').classList.add('hidden');
-            }
-        });
-        document.getElementById('btn-login').addEventListener('click', () => {
-            signInWithEmailAndPassword(auth, document.getElementById('adm-email').value, document.getElementById('adm-pass').value).catch(() => alert("Sai thông tin!"));
-        });
-        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+        const matchWa = s.match(/name=["']([^"']+)["']/);
+        if (matchWa && matchWa[1]) return `<i class="fas fa-${matchWa[1]}"></i>`;
+        return `<i class="${s}"></i>`;
+    }
+    
+    // --- AUTH ---
+    onAuthStateChanged(auth, async (u) => {
+        if(u) {
+            document.getElementById('login-box').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            loadConfig(); load(); switchTab('esign');
+        } else {
+            document.getElementById('login-box').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+    });
+    document.getElementById('btn-login').addEventListener('click', () => {
+        signInWithEmailAndPassword(auth, document.getElementById('adm-email').value, document.getElementById('adm-pass').value)
+            .catch((e) => { document.getElementById('err-msg').innerText = "Sai tài khoản hoặc mật khẩu!"; document.getElementById('err-msg').classList.remove('hidden'); });
+    });
+    document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-        // --- Config Logic (Cập nhật Load/Save 3 màu) ---
-        async function loadConfig() {
-            try {
-                const s = await getDoc(doc(db, "settings", "general"));
-                if(s.exists()) {
-                    const d = s.data();
-                    document.getElementById('cfg-title').value = d.title || "";
-                    document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
-                    document.getElementById('cfg-subtitle').value = d.subtitle || "";
-                    document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
-                    
-                    const btns = d.heroButtons || [{}, {}, {}];
-                    for(let i=0; i<3; i++) {
-                        const idx = i+1;
-                        document.getElementById(`btn${idx}-text`).value = btns[i]?.text || "";
-                        document.getElementById(`btn${idx}-url`).value = btns[i]?.url || "";
-                        const iconVal = btns[i]?.icon || "";
-                        document.getElementById(`btn${idx}-icon`).value = iconVal;
-                        
-                        // Load Colors (Default Fallbacks)
-                        document.getElementById(`btn${idx}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
-                        document.getElementById(`btn${idx}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
-                        document.getElementById(`btn${idx}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
-                        
-                        window.previewHeroIcon(idx, iconVal);
-                    }
+    // --- CONFIG LOGIC ---
+    async function loadConfig() {
+        try {
+            const s = await getDoc(doc(db, "settings", "general"));
+            if(s.exists()) {
+                const d = s.data();
+                document.getElementById('cfg-title').value = d.title || "";
+                document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
+                document.getElementById('cfg-subtitle').value = d.subtitle || "";
+                document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
+                
+                const btns = d.heroButtons || [{}, {}, {}];
+                for(let i=0; i<3; i++) {
+                    const idx = i+1;
+                    document.getElementById(`btn${idx}-text`).value = btns[i]?.text || "";
+                    document.getElementById(`btn${idx}-url`).value = btns[i]?.url || "";
+                    const iconVal = btns[i]?.icon || "";
+                    document.getElementById(`btn${idx}-icon`).value = iconVal;
+                    document.getElementById(`btn${idx}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
+                    document.getElementById(`btn${idx}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
+                    document.getElementById(`btn${idx}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
+                    window.previewHeroIcon(idx, iconVal);
                 }
-            } catch(e) {}
-        }
-        
-        window.saveConfig = async () => {
-            const btn = document.getElementById('btn-save-cfg');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
-            try {
-                const heroButtons = [];
-                for(let i=1; i<=3; i++) {
-                    heroButtons.push({
-                        text: document.getElementById(`btn${i}-text`).value,
-                        url: document.getElementById(`btn${i}-url`).value,
-                        icon: document.getElementById(`btn${i}-icon`).value,
-                        bgColor: document.getElementById(`btn${i}-bg-color`).value,
-                        textColor: document.getElementById(`btn${i}-text-color`).value,
-                        iconColor: document.getElementById(`btn${i}-icon-color`).value
-                    });
-                }
-                await setDoc(doc(db, "settings", "general"), {
-                    title: document.getElementById('cfg-title').value,
-                    titleColor: document.getElementById('cfg-title-color').value,
-                    subtitle: document.getElementById('cfg-subtitle').value,
-                    subtitleColor: document.getElementById('cfg-subtitle-color').value,
-                    heroButtons: heroButtons
-                }, { merge: true });
-                alert("Đã lưu cấu hình!");
-            } catch(e) { alert(e.message); }
-            btn.innerHTML = '<i class="fas fa-save"></i> Lưu Cấu Hình';
-        }
-
-        window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
-
-        // --- App Logic ---
-        let curType = 'esign'; let allData = [];
-        async function load() {
-            const s = await getDocs(query(collection(db, "apps")));
-            allData = []; s.forEach(d => allData.push({id: d.id, ...d.data()}));
-            allData.sort((a,b) => (a.order || 9999) - (b.order || 9999));
-            render();
-        }
-        function render() {
-            const term = document.getElementById('search-app').value.toLowerCase();
-            const list = allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
-            document.getElementById('count-badge').innerText = `${list.length} App`;
-            document.getElementById('list-data').innerHTML = list.map((i, idx) => `
-                <div draggable="true" class="draggable-item bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-md transition-all cursor-move" data-id="${i.id}">
-                    <div class="text-slate-300 px-2 cursor-grab"><i class="fas fa-grip-vertical"></i></div>
-                    <div class="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border icon-preview-box">
-                        ${window.smartParseIcon(i.icon) || '<img src="https://placehold.co/100">'}
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2">
-                            <h4 class="font-bold text-slate-800 truncate">${i.name}</h4>
-                            ${i.status==='hidden' ? '<span class="text-[10px] bg-slate-200 px-1 rounded">ẨN</span>' : ''}
-                        </div>
-                        <p class="text-xs text-slate-500 truncate">${i.desc || ''}</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="window.edit('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-indigo-600 hover:bg-indigo-600 hover:text-white"><i class="fas fa-pen text-xs"></i></button>
-                        <button onclick="window.del('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-red-500 hover:bg-red-500 hover:text-white"><i class="fas fa-trash text-xs"></i></button>
-                    </div>
-                </div>
-            `).join('');
-            addDragEvents();
-        }
-        function addDragEvents() {
-            const container = document.getElementById('list-data');
-            document.querySelectorAll('.draggable-item').forEach(d => {
-                d.addEventListener('dragstart', () => d.classList.add('dragging'));
-                d.addEventListener('dragend', async () => {
-                    d.classList.remove('dragging');
-                    await saveOrder();
+            }
+        } catch(e) {}
+    }
+    
+    window.saveConfig = async () => {
+        const btn = document.getElementById('btn-save-cfg');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+        try {
+            const heroButtons = [];
+            for(let i=1; i<=3; i++) {
+                heroButtons.push({
+                    text: document.getElementById(`btn${i}-text`).value,
+                    url: document.getElementById(`btn${i}-url`).value,
+                    icon: document.getElementById(`btn${i}-icon`).value,
+                    bgColor: document.getElementById(`btn${i}-bg-color`).value,
+                    textColor: document.getElementById(`btn${i}-text-color`).value,
+                    iconColor: document.getElementById(`btn${i}-icon-color`).value
                 });
+            }
+            await setDoc(doc(db, "settings", "general"), {
+                title: document.getElementById('cfg-title').value,
+                titleColor: document.getElementById('cfg-title-color').value,
+                subtitle: document.getElementById('cfg-subtitle').value,
+                subtitleColor: document.getElementById('cfg-subtitle-color').value,
+                heroButtons: heroButtons
+            }, { merge: true });
+            showToast("Đã lưu cấu hình giao diện!");
+        } catch(e) { alert(e.message); }
+        btn.innerHTML = '<i class="fas fa-save"></i> Lưu Cấu Hình';
+    }
+
+    window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
+
+    // --- APP LOGIC ---
+    let curType = 'esign'; let allData = [];
+    
+    async function load() {
+        const s = await getDocs(query(collection(db, "apps")));
+        allData = []; s.forEach(d => allData.push({id: d.id, ...d.data()}));
+        // Sắp xếp theo order, nếu không có order thì để cuối cùng (9999)
+        allData.sort((a,b) => (a.order !== undefined ? a.order : 9999) - (b.order !== undefined ? b.order : 9999));
+        render();
+    }
+    
+    function render() {
+        const term = document.getElementById('search-app').value.toLowerCase();
+        // Lọc theo loại và từ khóa
+        const list = allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
+        
+        document.getElementById('count-badge').innerText = `${list.length} App`;
+        document.getElementById('list-data').innerHTML = list.map((i, idx) => `
+            <div draggable="true" class="draggable-item bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-md transition-all cursor-move select-none" data-id="${i.id}">
+                <div class="text-slate-300 px-2 cursor-grab active:cursor-grabbing"><i class="fas fa-grip-vertical"></i></div>
+                <div class="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border icon-preview-box">
+                    ${window.smartParseIcon(i.icon) || '<img src="https://placehold.co/100">'}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h4 class="font-bold text-slate-800 truncate">${i.name}</h4>
+                        ${i.status==='hidden' ? '<span class="text-[10px] bg-slate-200 px-1 rounded">ẨN</span>' : ''}
+                    </div>
+                    <p class="text-xs text-slate-500 truncate">${i.desc || ''}</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.edit('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition"><i class="fas fa-pen text-xs"></i></button>
+                    <button onclick="window.del('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-red-500 hover:bg-red-500 hover:text-white transition"><i class="fas fa-trash text-xs"></i></button>
+                </div>
+            </div>
+        `).join('');
+        addDragEvents();
+    }
+    
+    function addDragEvents() {
+        const container = document.getElementById('list-data');
+        const draggables = document.querySelectorAll('.draggable-item');
+        
+        draggables.forEach(d => {
+            d.addEventListener('dragstart', () => d.classList.add('dragging'));
+            d.addEventListener('dragend', async () => {
+                d.classList.remove('dragging');
+                await saveOrder(); // Lưu ngay khi thả chuột
             });
-            container.addEventListener('dragover', e => {
-                e.preventDefault();
-                const afterElement = getDragAfterElement(container, e.clientY);
-                const draggable = document.querySelector('.dragging');
-                if (!afterElement) container.appendChild(draggable); else container.insertBefore(draggable, afterElement);
-            });
-        }
-        function getDragAfterElement(container, y) {
-            return [...container.querySelectorAll('.draggable-item:not(.dragging)')].reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                return offset < 0 && offset > closest.offset ? { offset: offset, element: child } : closest;
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-        async function saveOrder() {
-            const batch = writeBatch(db);
-            document.querySelectorAll('.draggable-item').forEach((item, index) => {
-                const id = item.dataset.id;
-                const d = allData.find(x => x.id === id); if(d) d.order = index;
-                batch.update(doc(db, "apps", id), { order: index });
-            });
-            try { await batch.commit(); } catch(e){}
-        }
-        document.getElementById('search-app').addEventListener('input', render);
-        window.switchTab = (t) => {
-            curType = t;
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = (btn.dataset.tab === t) ? "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 text-white shadow-lg transition-all" : "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-white text-slate-500 hover:bg-slate-50 transition-all";
-            });
-            document.getElementById('div-tag').classList.toggle('hidden', t !== 'mods'); render();
-        }
-        window.previewIcon = (val) => { document.getElementById('icon-preview').innerHTML = window.smartParseIcon(val); }
-        window.openModal = () => {
-            document.getElementById('edit-id').value = ''; document.getElementById('inp-name').value = ''; document.getElementById('inp-desc').value = ''; document.getElementById('inp-url').value = ''; document.getElementById('inp-icon').value = ''; document.getElementById('icon-preview').innerHTML = ''; document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`; document.getElementById('modal').classList.remove('hidden');
-        };
-        window.closeModal = () => document.getElementById('modal').classList.add('hidden');
-        window.edit = (id) => {
-            const item = allData.find(x => x.id === id); if(!item) return;
-            document.getElementById('edit-id').value = id; document.getElementById('inp-name').value = item.name; document.getElementById('inp-desc').value = item.desc; document.getElementById('inp-url').value = item.url; document.getElementById('inp-icon').value = item.icon; 
-            document.getElementById('icon-preview').innerHTML = window.smartParseIcon(item.icon);
-            document.getElementById('inp-badge').value = item.badge || ''; document.getElementById('inp-status').value = item.status || 'active'; document.getElementById('modal-title').innerText = `Chỉnh Sửa App`; document.getElementById('modal').classList.remove('hidden');
-        };
-        window.del = async (id) => { if(confirm("Xóa nhé?")) { await deleteDoc(doc(db, "apps", id)); load(); } };
-        document.getElementById('btn-save').addEventListener('click', async () => {
-            const id = document.getElementById('edit-id').value; const name = document.getElementById('inp-name').value;
-            if(!name) return alert("Nhập tên đi!");
-            const btn = document.getElementById('btn-save'); btn.innerHTML = 'Lưu...'; btn.disabled = true;
-            const data = { type: curType, name: name, desc: document.getElementById('inp-desc').value, url: document.getElementById('inp-url').value, icon: document.getElementById('inp-icon').value, badge: document.getElementById('inp-badge').value, status: document.getElementById('inp-status').value, tag: document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire', updatedAt: new Date().toISOString() };
-            if(!id) { data.downloads = 0; data.order = allData.length + 1; }
-            try { await setDoc(doc(db, "apps", id || (curType[0] + Date.now())), data, { merge: true }); closeModal(); load(); } catch(e) { alert(e.message); }
-            btn.innerHTML = 'Lưu'; btn.disabled = false;
         });
-    </script>
+        
+        container.addEventListener('dragover', e => {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(container, e.clientY);
+            const draggable = document.querySelector('.dragging');
+            if (draggable) {
+                if (!afterElement) container.appendChild(draggable); 
+                else container.insertBefore(draggable, afterElement);
+            }
+        });
+    }
+    
+    function getDragAfterElement(container, y) {
+        return [...container.querySelectorAll('.draggable-item:not(.dragging)')].reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            return offset < 0 && offset > closest.offset ? { offset: offset, element: child } : closest;
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+    
+    // --- HÀM LƯU THỨ TỰ (ĐÃ SỬA) ---
+    async function saveOrder() {
+        const batch = writeBatch(db);
+        let hasChanges = false;
+        
+        document.querySelectorAll('.draggable-item').forEach((item, index) => {
+            const id = item.dataset.id;
+            // 1. Cập nhật vào DB
+            batch.update(doc(db, "apps", id), { order: index });
+            
+            // 2. Cập nhật ngay vào biến tạm allData để không bị nhảy lại
+            const d = allData.find(x => x.id === id); 
+            if(d) {
+                if(d.order !== index) hasChanges = true;
+                d.order = index;
+            }
+        });
+
+        try { 
+            await batch.commit(); 
+            // 3. Sắp xếp lại allData theo thứ tự mới
+            allData.sort((a,b) => (a.order || 0) - (b.order || 0));
+            if(hasChanges) showToast("Đã cập nhật vị trí!", "success");
+        } catch(e){
+            console.error(e);
+            showToast("Lỗi khi lưu vị trí: " + e.message, "error");
+        }
+    }
+    
+    document.getElementById('search-app').addEventListener('input', render);
+    
+    window.switchTab = (t) => {
+        curType = t;
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.className = (btn.dataset.tab === t) 
+                ? "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 text-white shadow-lg transition-all" 
+                : "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-white text-slate-500 hover:bg-slate-50 transition-all";
+        });
+        document.getElementById('div-tag').classList.toggle('hidden', t !== 'mods'); 
+        render();
+    }
+    
+    window.previewIcon = (val) => { document.getElementById('icon-preview').innerHTML = window.smartParseIcon(val); }
+    
+    window.openModal = () => {
+        document.getElementById('edit-id').value = ''; 
+        document.getElementById('inp-name').value = ''; 
+        document.getElementById('inp-desc').value = ''; 
+        document.getElementById('inp-url').value = ''; 
+        document.getElementById('inp-icon').value = ''; 
+        document.getElementById('icon-preview').innerHTML = ''; 
+        document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`; 
+        document.getElementById('modal').classList.remove('hidden');
+    };
+    
+    window.closeModal = () => document.getElementById('modal').classList.add('hidden');
+    
+    window.edit = (id) => {
+        const item = allData.find(x => x.id === id); if(!item) return;
+        document.getElementById('edit-id').value = id; 
+        document.getElementById('inp-name').value = item.name; 
+        document.getElementById('inp-desc').value = item.desc; 
+        document.getElementById('inp-url').value = item.url; 
+        document.getElementById('inp-icon').value = item.icon; 
+        document.getElementById('icon-preview').innerHTML = window.smartParseIcon(item.icon);
+        document.getElementById('inp-badge').value = item.badge || ''; 
+        document.getElementById('inp-status').value = item.status || 'active'; 
+        document.getElementById('modal-title').innerText = `Chỉnh Sửa App`; 
+        document.getElementById('modal').classList.remove('hidden');
+    };
+    
+    window.del = async (id) => { 
+        if(confirm("Xóa nhé?")) { 
+            try {
+                await deleteDoc(doc(db, "apps", id)); 
+                // Xóa khỏi mảng allData luôn để đỡ phải load lại
+                allData = allData.filter(x => x.id !== id);
+                render();
+                showToast("Đã xóa ứng dụng!");
+            } catch(e) { alert(e.message); }
+        } 
+    };
+    
+    document.getElementById('btn-save').addEventListener('click', async () => {
+        const id = document.getElementById('edit-id').value; 
+        const name = document.getElementById('inp-name').value;
+        if(!name) return alert("Nhập tên đi!");
+        
+        const btn = document.getElementById('btn-save'); 
+        btn.innerHTML = 'Lưu...'; btn.disabled = true;
+        
+        // Tính order: nếu là mới thì cho xuống cuối
+        let newOrder = 9999;
+        if (!id) {
+            const currentMax = allData.reduce((max, p) => p.order > max ? p.order : max, 0);
+            newOrder = currentMax + 1;
+        }
+
+        const data = { 
+            type: curType, 
+            name: name, 
+            desc: document.getElementById('inp-desc').value, 
+            url: document.getElementById('inp-url').value, 
+            icon: document.getElementById('inp-icon').value, 
+            badge: document.getElementById('inp-badge').value, 
+            status: document.getElementById('inp-status').value, 
+            tag: document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire', 
+            updatedAt: new Date().toISOString() 
+        };
+        
+        if(!id) { 
+            data.downloads = 0; 
+            data.order = newOrder; 
+        }
+        
+        try { 
+            const docRef = doc(db, "apps", id || (curType[0] + Date.now()));
+            await setDoc(docRef, data, { merge: true }); 
+            
+            // Cập nhật lại allData thủ công để đỡ tốn read
+            if(id) {
+                const idx = allData.findIndex(x => x.id === id);
+                if(idx > -1) allData[idx] = { ...allData[idx], ...data };
+            } else {
+                allData.push({ id: docRef.id, ...data });
+            }
+            // Sắp xếp lại
+            allData.sort((a,b) => (a.order || 9999) - (b.order || 9999));
+
+            closeModal(); 
+            render(); 
+            showToast("Đã lưu thành công!");
+        } catch(e) { alert(e.message); }
+        
+        btn.innerHTML = 'Lưu'; btn.disabled = false;
+    });
+</script>
 </body>
 </html>
