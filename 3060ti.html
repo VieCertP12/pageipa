@@ -82,42 +82,55 @@
                         </div>
                     </div>
                     
-                    <!-- Config 3 Nút Hero (CÓ CHỈNH MÀU) -->
+                    <!-- Config 3 Nút Hero (Đã chuyển sang HTML tĩnh cho ổn định) -->
                     <div class="border-t border-slate-100 pt-4">
                         <h4 class="font-bold text-sm text-slate-600 mb-4 uppercase">Cấu hình 3 Nút Chức Năng (Text - Màu - Icon)</h4>
                         <div class="grid md:grid-cols-3 gap-4">
-                            <!-- Helper tạo ô input cho từng nút -->
-                            <script>
-                                const labels = ["Nút 1 (Trái)", "Nút 2 (Giữa)", "Nút 3 (Phải)"];
-                                for(let i=1; i<=3; i++) {
-                                    document.write(`
-                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
-                                        <div class="flex justify-between items-center">
-                                            <div class="text-xs font-bold text-indigo-600 uppercase">${labels[i-1]}</div>
-                                            <div id="btn${i}-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
-                                        </div>
-                                        <input id="btn${i}-text" class="w-full p-2 rounded border text-sm" placeholder="Nhập tên nút...">
-                                        <input id="btn${i}-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://link...">
-                                        <input id="btn${i}-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-home)" oninput="previewHeroIcon(${i}, this.value)">
-                                        
-                                        <div class="grid grid-cols-3 gap-2 mt-1">
-                                            <div class="text-center">
-                                                <label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label>
-                                                <input type="color" id="btn${i}-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff">
-                                            </div>
-                                            <div class="text-center">
-                                                <label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label>
-                                                <input type="color" id="btn${i}-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#334155">
-                                            </div>
-                                            <div class="text-center">
-                                                <label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label>
-                                                <input type="color" id="btn${i}-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#6366f1">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    `);
-                                }
-                            </script>
+                            <!-- NÚT 1 -->
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nút 1 (Trái)</div>
+                                    <div id="btn1-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
+                                </div>
+                                <input id="btn1-text" class="w-full p-2 rounded border text-sm" placeholder="Tên nút...">
+                                <input id="btn1-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://...">
+                                <input id="btn1-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-home)" oninput="previewHeroIcon(1, this.value)">
+                                <div class="grid grid-cols-3 gap-2 mt-1">
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label><input type="color" id="btn1-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#0f172a"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label><input type="color" id="btn1-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn1-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
+                                </div>
+                            </div>
+                            <!-- NÚT 2 -->
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nút 2 (Giữa)</div>
+                                    <div id="btn2-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
+                                </div>
+                                <input id="btn2-text" class="w-full p-2 rounded border text-sm" placeholder="Tên nút...">
+                                <input id="btn2-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://...">
+                                <input id="btn2-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-download)" oninput="previewHeroIcon(2, this.value)">
+                                <div class="grid grid-cols-3 gap-2 mt-1">
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label><input type="color" id="btn2-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label><input type="color" id="btn2-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#334155"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn2-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#6366f1"></div>
+                                </div>
+                            </div>
+                            <!-- NÚT 3 -->
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nút 3 (Phải)</div>
+                                    <div id="btn3-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
+                                </div>
+                                <input id="btn3-text" class="w-full p-2 rounded border text-sm" placeholder="Tên nút...">
+                                <input id="btn3-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://...">
+                                <input id="btn3-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-star)" oninput="previewHeroIcon(3, this.value)">
+                                <div class="grid grid-cols-3 gap-2 mt-1">
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label><input type="color" id="btn3-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label><input type="color" id="btn3-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#334155"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn3-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#6366f1"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -242,71 +255,60 @@
 
         // --- Config Logic (Cập nhật Load/Save 3 màu) ---
         async function loadConfig() {
-    try {
-        const s = await getDoc(doc(db, "settings", "general"));
-        if(s.exists()) {
-            const d = s.data();
-            // Load Title & Subtitle
-            document.getElementById('cfg-title').value = d.title || "";
-            document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
-            document.getElementById('cfg-subtitle').value = d.subtitle || "";
-            document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
-            
-            // Load 3 Buttons
-            const btns = d.heroButtons || [{}, {}, {}];
-            for(let i=0; i<3; i++) {
-                const idx = i + 1;
-                // Load Text & URL & Icon
-                document.getElementById(`btn${idx}-text`).value = btns[i]?.text || "";
-                document.getElementById(`btn${idx}-url`).value = btns[i]?.url || "";
-                document.getElementById(`btn${idx}-icon`).value = btns[i]?.icon || "";
-                
-                // Load Colors (Quan trọng: Phải set giá trị mặc định nếu chưa có)
-                document.getElementById(`btn${idx}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
-                document.getElementById(`btn${idx}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
-                document.getElementById(`btn${idx}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
-                
-                // Preview Icon
-                window.previewHeroIcon(idx, btns[i]?.icon || "");
-            }
+            try {
+                const s = await getDoc(doc(db, "settings", "general"));
+                if(s.exists()) {
+                    const d = s.data();
+                    document.getElementById('cfg-title').value = d.title || "";
+                    document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
+                    document.getElementById('cfg-subtitle').value = d.subtitle || "";
+                    document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
+                    
+                    const btns = d.heroButtons || [{}, {}, {}];
+                    for(let i=0; i<3; i++) {
+                        const idx = i+1;
+                        document.getElementById(`btn${idx}-text`).value = btns[i]?.text || "";
+                        document.getElementById(`btn${idx}-url`).value = btns[i]?.url || "";
+                        const iconVal = btns[i]?.icon || "";
+                        document.getElementById(`btn${idx}-icon`).value = iconVal;
+                        
+                        // Load Colors (Default Fallbacks)
+                        document.getElementById(`btn${idx}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
+                        document.getElementById(`btn${idx}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
+                        document.getElementById(`btn${idx}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
+                        
+                        window.previewHeroIcon(idx, iconVal);
+                    }
+                }
+            } catch(e) {}
         }
-    } catch(e) { console.error("Lỗi load config:", e); }
-}
         
         window.saveConfig = async () => {
-    const btn = document.getElementById('btn-save-cfg');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
-    
-    try {
-        const heroButtons = [];
-        for(let i=1; i<=3; i++) {
-            heroButtons.push({
-                text: document.getElementById(`btn${i}-text`).value,
-                url: document.getElementById(`btn${i}-url`).value,
-                icon: document.getElementById(`btn${i}-icon`).value,
-                // Lấy đúng ID của các ô chọn màu
-                bgColor: document.getElementById(`btn${i}-bg-color`).value,
-                textColor: document.getElementById(`btn${i}-text-color`).value,
-                iconColor: document.getElementById(`btn${i}-icon-color`).value
-            });
+            const btn = document.getElementById('btn-save-cfg');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+            try {
+                const heroButtons = [];
+                for(let i=1; i<=3; i++) {
+                    heroButtons.push({
+                        text: document.getElementById(`btn${i}-text`).value,
+                        url: document.getElementById(`btn${i}-url`).value,
+                        icon: document.getElementById(`btn${i}-icon`).value,
+                        bgColor: document.getElementById(`btn${i}-bg-color`).value,
+                        textColor: document.getElementById(`btn${i}-text-color`).value,
+                        iconColor: document.getElementById(`btn${i}-icon-color`).value
+                    });
+                }
+                await setDoc(doc(db, "settings", "general"), {
+                    title: document.getElementById('cfg-title').value,
+                    titleColor: document.getElementById('cfg-title-color').value,
+                    subtitle: document.getElementById('cfg-subtitle').value,
+                    subtitleColor: document.getElementById('cfg-subtitle-color').value,
+                    heroButtons: heroButtons
+                }, { merge: true });
+                alert("Đã lưu cấu hình!");
+            } catch(e) { alert(e.message); }
+            btn.innerHTML = '<i class="fas fa-save"></i> Lưu Cấu Hình';
         }
-        
-        await setDoc(doc(db, "settings", "general"), {
-            title: document.getElementById('cfg-title').value,
-            titleColor: document.getElementById('cfg-title-color').value,
-            subtitle: document.getElementById('cfg-subtitle').value,
-            subtitleColor: document.getElementById('cfg-subtitle-color').value,
-            heroButtons: heroButtons
-        }, { merge: true });
-        
-        // Hiển thị thông báo Toast thay vì Alert cho đẹp (nếu có toast) hoặc alert thường
-        alert("Đã lưu cấu hình giao diện & màu sắc!");
-    } catch(e) { 
-        alert("Lỗi: " + e.message); 
-    }
-    btn.innerHTML = originalText;
-}
 
         window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
 
