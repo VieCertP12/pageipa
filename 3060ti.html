@@ -1,523 +1,293 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - ThaiSonCert Pro</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://cdnjs.cloudflare.com https://fonts.gstatic.com;">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Esign iPa Miễn Phí</title>
+    <link rel="icon" href="https://i.imgur.com/L6HpZa6.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Outfit"', 'sans-serif'] }, animation: { 'slide-in': 'slideIn 0.3s ease-out forwards' }, keyframes: { slideIn: { '0%': { transform: 'translateX(100%)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } } } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Outfit"', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+                    animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards' },
+                    keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'scale(0.98)' }, '100%': { opacity: '1', transform: 'scale(1)' } } }
+                }
+            }
+        }
     </script>
-    <style> 
-        .hidden { display: none !important; } 
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        .draggable-item.dragging { opacity: 0.5; border: 2px dashed #6366f1; background: #eef2ff; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .icon-preview-box svg { width: 100%; height: 100%; fill: currentColor; }
-        .icon-preview-box img { width: 100%; height: 100%; object-fit: cover; }
-        .icon-preview-box i { font-size: 1.25rem; }
+    <style>
+        body { background-color: #ffffff; color: #1e293b; min-height: 100vh; background-image: radial-gradient(circle 600px at 0% 0%, #d5c5ff, transparent), radial-gradient(circle 600px at 100% 0%, #d5c5ff, transparent); background-attachment: fixed; -webkit-user-select: none; user-select: none; }
+        .glass-nav { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+        .glass-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glass-card:hover { background: rgba(255, 255, 255, 0.9); transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border-color: rgba(99, 102, 241, 0.3); }
+        .tab-btn.active { background-color: #ffffff; color: #4f46e5; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .tab-btn:not(.active) { color: #64748b; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .hidden { display: none !important; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800">
+<body class="font-sans antialiased">
 
-    <div id="toast-container" class="fixed top-20 right-5 z-[100] flex flex-col gap-3 pointer-events-none"></div>
-
-    <div id="login-box" class="fixed inset-0 z-50 flex items-center justify-center bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80');">
-        <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-md"></div>
-        <div class="relative w-full max-w-md p-8 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Admin<span class="text-indigo-600">Portal</span></h2>
-            </div>
-            <div class="space-y-5">
-                <input type="email" id="adm-email" placeholder="Email" class="w-full p-4 rounded-xl border border-slate-200 outline-none">
-                <input type="password" id="adm-pass" placeholder="Password" class="w-full p-4 rounded-xl border border-slate-200 outline-none">
-                <button id="btn-login" class="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl shadow-xl">ĐĂNG NHẬP</button>
-            </div>
-            <p id="err-msg" class="text-red-500 text-center mt-6 text-sm font-bold hidden"></p>
-        </div>
-    </div>
-
-    <div id="dashboard" class="hidden min-h-screen pb-20">
-        <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 shadow-sm">
-            <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <nav class="fixed top-0 w-full z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
-                    <span class="font-bold text-xl tracking-tight text-slate-800">ThaiSon<span class="text-indigo-600">Admin</span></span>
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <i class="fa-brands fa-apple text-white"></i>
+                    </div>
+                    <span class="font-bold text-lg tracking-tight text-slate-800">ThaiSon<span class="text-indigo-600">Cert</span></span>
                 </div>
-                <button id="btn-logout" class="text-sm font-bold text-slate-500 hover:text-red-500"><i class="fas fa-power-off"></i> Thoát</button>
-            </div>
-        </nav>
-
-        <div class="max-w-6xl mx-auto px-4 mt-8 space-y-8">
-            
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center justify-between cursor-pointer" onclick="document.getElementById('config-body').classList.toggle('hidden');">
-                    <h3 class="font-bold text-slate-700"><i class="fas fa-palette text-indigo-500"></i> Cấu Hình Giao Diện & Màu Sắc</h3>
-                    <i class="fas fa-chevron-down text-slate-400"></i>
-                </div>
-                <div id="config-body" class="p-6 hidden space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Tiêu đề chính (H1)</label>
-                            <div class="flex gap-2">
-                                <input id="cfg-title" type="text" class="flex-1 p-3 border rounded-xl" placeholder="Tiêu đề...">
-                                <input id="cfg-title-color" type="color" class="w-12 h-12 p-1 border rounded-xl cursor-pointer bg-white">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Mô tả phụ (Subtitle)</label>
-                            <div class="flex gap-2">
-                                <textarea id="cfg-subtitle" rows="1" class="flex-1 p-3 border rounded-xl resize-none" placeholder="Mô tả..."></textarea>
-                                <input id="cfg-subtitle-color" type="color" class="w-12 h-12 p-1 border rounded-xl cursor-pointer bg-white">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="border-t border-slate-100 pt-4">
-                        <h4 class="font-bold text-sm text-slate-600 mb-4 uppercase">Cấu hình 3 Nút Chức Năng (Text - Màu - Icon)</h4>
-                        <div class="grid md:grid-cols-3 gap-4">
-                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
-                                <div class="flex justify-between items-center">
-                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nút 1 (Trái)</div>
-                                    <div id="btn1-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
-                                </div>
-                                <input id="btn1-text" class="w-full p-2 rounded border text-sm" placeholder="Tên nút...">
-                                <input id="btn1-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://...">
-                                <input id="btn1-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-home)" oninput="previewHeroIcon(1, this.value)">
-                                <div class="grid grid-cols-3 gap-2 mt-1">
-                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label><input type="color" id="btn1-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#0f172a"></div>
-                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label><input type="color" id="btn1-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
-                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn1-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
-                                </div>
-                            </div>
-                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
-                                <div class="flex justify-between items-center">
-                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nút 2 (Giữa)</div>
-                                    <div id="btn2-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
-                                </div>
-                                <input id="btn2-text" class="w-full p-2 rounded border text-sm" placeholder="Tên nút...">
-                                <input id="btn2-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://...">
-                                <input id="btn2-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-download)" oninput="previewHeroIcon(2, this.value)">
-                                <div class="grid grid-cols-3 gap-2 mt-1">
-                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label><input type="color" id="btn2-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
-                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label><input type="color" id="btn2-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#334155"></div>
-                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn2-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#6366f1"></div>
-                                </div>
-                            </div>
-                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
-                                <div class="flex justify-between items-center">
-                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nút 3 (Phải)</div>
-                                    <div id="btn3-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
-                                </div>
-                                <input id="btn3-text" class="w-full p-2 rounded border text-sm" placeholder="Tên nút...">
-                                <input id="btn3-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://...">
-                                <input id="btn3-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-star)" oninput="previewHeroIcon(3, this.value)">
-                                <div class="grid grid-cols-3 gap-2 mt-1">
-                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label><input type="color" id="btn3-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
-                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label><input type="color" id="btn3-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#334155"></div>
-                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn3-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#6366f1"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end pt-2">
-                        <button onclick="saveConfig()" id="btn-save-cfg" class="bg-slate-800 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-900 transition"><i class="fas fa-save"></i> Lưu Cấu Hình</button>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="flex justify-center mb-8">
-                    <div class="bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200 inline-flex gap-1">
-                        <button class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all" data-tab="esign" onclick="switchTab('esign')">ESign</button>
-                        <button class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all" data-tab="cert" onclick="switchTab('cert')">Cert</button>
-                        <button class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all" data-tab="mods" onclick="switchTab('mods')">Mods</button>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between mb-6 gap-4">
-                    <div class="flex items-center gap-3">
-                        <h2 class="text-2xl font-black text-slate-800">Quản Lý</h2>
-                        <span id="count-badge" class="text-xs bg-indigo-100 text-indigo-700 font-bold px-2.5 py-1 rounded-lg">0 App</span>
-                    </div>
-                    <div class="flex gap-3">
-                        <input type="text" id="search-app" placeholder="Tìm kiếm..." class="pl-4 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm outline-none w-48 focus:w-64 transition-all">
-                        <button onclick="openModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap"><i class="fas fa-plus"></i> Thêm</button>
-                    </div>
-                </div>
-
-                <div class="mb-2 text-xs text-slate-400 italic text-right">* Kéo thả các thẻ bên dưới để sắp xếp vị trí hiển thị</div>
-                <div id="list-data" class="grid gap-3"></div>
+                <a href="javascript:void(0)" onclick="window.open('https://t.me/ias_xxx', '_blank')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-white flex items-center justify-center transition-all border border-slate-200 shadow-sm text-indigo-500 hover:text-indigo-600"><i class="fa-brands fa-telegram"></i></a>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <div id="modal" class="fixed inset-0 z-[60] hidden">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div class="flex items-center justify-center min-h-screen px-4">
-            <div class="relative bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
-                <div class="bg-slate-50 px-6 py-4 flex justify-between items-center border-b border-slate-100">
-                    <h3 class="font-bold text-slate-800" id="modal-title"></h3>
-                    <button onclick="closeModal()"><i class="fas fa-times text-slate-400"></i></button>
+    <main class="relative z-10 pt-32 pb-12 px-4 sm:px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-16 animate-fade-in relative">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-[100px] -z-10"></div>
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-indigo-100 text-indigo-600 text-xs font-bold mb-8 shadow-sm cursor-default">
+                <span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span></span> Anti-Revoke Protected
+            </div>
+            
+            <h1 id="site-title" class="text-5xl md:text-8xl font-black mb-6 tracking-tighter text-slate-900 leading-[1.1]"><span class="text-indigo-600">SHARE CERTIFICATE</span></h1>
+            <p id="site-subtitle" class="text-slate-500 max-w-2xl mx-auto text-base md:text-lg leading-relaxed mb-10 font-medium">Kho tàng chứng chỉ ESign & IPA Mods miễn phí tốt nhất Việt Nam.</p>
+            
+            <div id="hero-buttons" class="flex flex-wrap justify-center gap-4">
+                <div class="animate-pulse flex gap-2"><div class="h-10 w-32 bg-slate-200 rounded-full"></div></div>
+            </div>
+        </div>
+
+        <div class="flex justify-center mb-10">
+            <div class="p-1.5 bg-slate-100/80 border border-slate-200 rounded-2xl backdrop-blur-xl inline-flex relative shadow-inner">
+                <div id="tab-indicator" class="absolute h-[calc(100%-12px)] top-1.5 rounded-xl bg-white shadow-md transition-all duration-300 ease-out z-0" style="width: 33%; left: 6px;"></div>
+                <button class="tab-btn relative z-10 px-6 py-2.5 text-sm font-bold rounded-xl transition-all w-28 md:w-32 active" data-tab="esign">ESign</button>
+                <button class="tab-btn relative z-10 px-6 py-2.5 text-sm font-bold rounded-xl transition-all w-28 md:w-32" data-tab="cert">Cert</button>
+                <button class="tab-btn relative z-10 px-6 py-2.5 text-sm font-bold rounded-xl transition-all w-28 md:w-32" data-tab="mods">Mods</button>
+            </div>
+        </div>
+
+        <div id="search-container" class="hidden mb-10 max-w-md mx-auto animate-fade-in">
+            <div class="relative group">
+                <div class="relative flex items-center bg-white rounded-xl border border-slate-200 shadow-sm">
+                    <i class="fas fa-search absolute left-4 text-slate-400"></i>
+                    <input type="text" id="mods-search" class="w-full bg-transparent py-3.5 pl-11 pr-4 text-sm text-slate-800 placeholder-slate-400 focus:outline-none font-medium" placeholder="Tìm kiếm ứng dụng...">
                 </div>
-                <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-                    <input type="hidden" id="edit-id">
-                    
-                    <input id="inp-name" type="text" class="w-full p-3 border rounded-xl" placeholder="Tên App">
-                    
-                    <input id="inp-desc" type="text" class="w-full p-3 border rounded-xl" placeholder="Mô tả">
-                    
-                    <input id="inp-url" type="text" class="w-full p-3 border rounded-xl" placeholder="Link Tải">
+            </div>
+        </div>
 
-                    <div class="relative">
-                        <label class="absolute -top-2 left-3 bg-white px-1 text-xs font-bold text-indigo-600">Lượt Tải (Fake)</label>
-                        <input id="inp-downloads" type="number" class="w-full p-3 border rounded-xl border-indigo-200" placeholder="0">
+        <div id="main-loader" class="text-center"><div class="loader"></div></div>
+        <div class="min-h-[400px]">
+            <div id="esign-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in hidden"></div>
+            <div id="cert-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden animate-fade-in"></div>
+            <div id="mods-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden animate-fade-in">
+                 <div id="no-results" class="hidden col-span-full py-12 text-center text-slate-400"><p>Không tìm thấy ứng dụng</p></div>
+            </div>
+        </div>
+
+        <footer class="mt-16 pt-8 border-t border-slate-200 text-center select-none">
+            <p class="text-slate-400 text-xs font-medium cursor-pointer" id="admin-trigger">Copyright © 2025 SHARECHUNGCHI. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <div id="esign-popup" class="fixed inset-0 z-[9999] hidden">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" id="popup-overlay"></div>
+            <div class="relative bg-white rounded-[2rem] p-6 max-w-[380px] w-full animate-fade-in scale-95 shadow-2xl overflow-hidden">
+                <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center z-10" id="close-popup"><i class="fas fa-times text-sm"></i></button>
+                <div class="flex gap-4 mb-5">
+                    <div class="w-[5.5rem] h-[5.5rem] flex-shrink-0 rounded-[1.25rem] border border-slate-100 shadow-sm overflow-hidden">
+                        <img src="https://i.imgur.com/hPj8ui8.png" alt="ESign" class="w-full h-full object-cover">
                     </div>
-                    
-                    <div class="flex gap-2">
-                        <input id="inp-icon" type="text" class="flex-1 p-3 border rounded-xl" placeholder="Link Icon / SVG / Class" oninput="previewIcon(this.value)">
-                        <div id="icon-preview" class="icon-preview-box w-12 h-12 rounded-lg border bg-slate-100 overflow-hidden flex items-center justify-center"></div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <select id="inp-badge" class="w-full p-3 border rounded-xl">
-                            <option value="">Không Badge</option>
-                            <option value="HOT">HOT</option>
-                            <option value="NEW">NEW</option>
-                        </select>
-                        <select id="inp-status" class="w-full p-3 border rounded-xl">
-                            <option value="active">Hiện</option>
-                            <option value="hidden">Ẩn</option>
-                        </select>
-                    </div>
-                    
-                    <div id="div-tag" class="hidden p-3 bg-orange-50 rounded-xl border border-orange-100">
-                        <div class="text-xs font-bold text-orange-600 mb-2">Icon Tag (Mods only)</div>
-                        <div class="flex gap-4">
-                            <label><input type="radio" name="tag_icon" value="fire" checked> <i class="fas fa-fire text-orange-500"></i></label>
-                            <label><input type="radio" name="tag_icon" value="bolt"> <i class="fas fa-bolt text-yellow-500"></i></label>
-                            <label><input type="radio" name="tag_icon" value="star"> <i class="fas fa-star text-purple-500"></i></label>
+                    <div class="flex flex-col justify-between py-1 min-w-0">
+                        <div>
+                            <h3 class="font-bold text-xl text-slate-900 leading-tight truncate" id="popup-cert-name">ESign</h3>
+                            <p class="text-xs text-slate-500 mt-1 line-clamp-2">Công cụ ký & quản lý IPA tốt nhất cho iOS</p>
+                        </div>
+                        <div class="flex items-center gap-3 mt-auto">
+                            <a id="popup-install-btn" href="#" target="_blank" class="px-6 py-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold uppercase tracking-wide shadow-blue-500/30 shadow-lg">NHẬN</a>
                         </div>
                     </div>
                 </div>
-                <div class="bg-slate-50 px-6 py-4 flex justify-end gap-3 border-t border-slate-100">
-                    <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-slate-500 font-bold">Hủy</button>
-                    <button id="btn-save" class="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold">Lưu</button>
+                <div class="grid grid-cols-3 py-4 border-t border-slate-100 mb-2 select-none">
+                    <div class="flex flex-col items-center border-r border-slate-100/80"><span class="text-[10px] font-semibold text-slate-400 mb-1">XẾP HẠNG</span><div class="text-2xl font-bold text-slate-600">4.8</div><div class="text-[9px] text-slate-300 mt-0.5 font-medium">99K+ Đánh giá</div></div>
+                    <div class="flex flex-col items-center border-r border-slate-100/80"><span class="text-[10px] font-semibold text-slate-400 mb-1">TUỔI</span><div class="text-2xl font-bold text-slate-600">17+</div><span class="text-[10px] text-slate-400 font-medium mt-0.5">Năm Tuổi</span></div>
+                    <div class="flex flex-col items-center"><span class="text-[10px] font-semibold text-slate-400 mb-1">DEV</span><div class="h-8 flex items-center justify-center"><i class="fas fa-user-shield text-xl text-slate-600"></i></div><span class="text-[10px] text-slate-400 font-medium mt-0.5">ThaiSon</span></div>
                 </div>
+                <div class="flex flex-col gap-4 mt-4 px-1">
+                     <div class="flex gap-4 items-start"><div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500"><i class="fas fa-check-circle"></i></div><div><h4 class="font-bold text-sm">Chính hãng</h4><p class="text-xs text-slate-500">Chứng chỉ Apple an toàn.</p></div></div>
+                     <div class="flex gap-4 items-start"><div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500"><i class="fas fa-shield-alt"></i></div><div><h4 class="font-bold text-sm">Uy tín</h4><p class="text-xs text-slate-500">Hệ thống tự động 24/7.</p></div></div>
+                 </div>
+                <div class="mt-4 text-center"><p class="text-[9px] text-slate-400 font-medium">Tự động đóng sau <span id="countdown" class="font-bold text-slate-500">30</span>s</p></div>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, query, writeBatch } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        // QUAN TRỌNG: Thêm 'orderBy' vào đây
+        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
-        
-        // --- TIỆN ÍCH ---
-        window.showToast = (msg, type = 'success') => {
-            const container = document.getElementById('toast-container');
-            const div = document.createElement('div');
-            const color = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-            div.className = `${color} text-white px-6 py-3 rounded-xl shadow-xl font-bold text-sm flex items-center gap-3 animation-slide-in transform transition-all`;
-            div.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
-            container.appendChild(div);
-            setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 3000);
-        }
 
-        window.smartParseIcon = (s) => {
-            if (!s) return ''; s = s.trim();
-            if (s.startsWith('<svg') || s.startsWith('<i ') || s.startsWith('<img') || s.startsWith('<wa-icon')) return s;
-            if (s.startsWith('http')) return `<img src="${s}" alt="icon">`;
-            const matchName = s.match(/\[['"]([^'"]+)['"]\]/);
-            if (matchName && matchName[1]) {
-                const matchPrefix = s.match(/byPrefixAndName\.([a-z]+)/);
-                return `<i class="${matchPrefix ? matchPrefix[1] : 'fas'} fa-${matchName[1]}"></i>`;
-            }
-            const matchWa = s.match(/name=["']([^"']+)["']/);
-            if (matchWa && matchWa[1]) return `<i class="fas fa-${matchWa[1]}"></i>`;
-            return `<i class="${s}"></i>`;
-        }
-        
-        // --- AUTH ---
-        onAuthStateChanged(auth, async (u) => {
-            if(u) {
-                document.getElementById('login-box').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                loadConfig(); load(); switchTab('esign');
-            } else {
-                document.getElementById('login-box').classList.remove('hidden');
-                document.getElementById('dashboard').classList.add('hidden');
-            }
-        });
-        document.getElementById('btn-login').addEventListener('click', () => {
-            signInWithEmailAndPassword(auth, document.getElementById('adm-email').value, document.getElementById('adm-pass').value)
-                .catch((e) => { document.getElementById('err-msg').innerText = "Sai tài khoản hoặc mật khẩu!"; document.getElementById('err-msg').classList.remove('hidden'); });
-        });
-        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+        const escapeHtml = (unsafe) => { if (typeof unsafe !== 'string') return unsafe; return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
-        // --- CONFIG LOGIC ---
-        async function loadConfig() {
+        async function fetchSettings() {
             try {
-                const s = await getDoc(doc(db, "settings", "general"));
-                if(s.exists()) {
-                    const d = s.data();
-                    document.getElementById('cfg-title').value = d.title || "";
-                    document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
-                    document.getElementById('cfg-subtitle').value = d.subtitle || "";
-                    document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
+                const docSnap = await getDoc(doc(db, "settings", "general"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if(data.title) { document.getElementById('site-title').innerHTML = data.title; document.getElementById('site-title').style.color = data.titleColor; }
+                    if(data.subtitle) { document.getElementById('site-subtitle').innerText = data.subtitle; document.getElementById('site-subtitle').style.color = data.subtitleColor; }
                     
-                    const btns = d.heroButtons || [{}, {}, {}];
-                    for(let i=0; i<3; i++) {
-                        const idx = i+1;
-                        document.getElementById(`btn${idx}-text`).value = btns[i]?.text || "";
-                        document.getElementById(`btn${idx}-url`).value = btns[i]?.url || "";
-                        const iconVal = btns[i]?.icon || "";
-                        document.getElementById(`btn${idx}-icon`).value = iconVal;
-                        document.getElementById(`btn${idx}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
-                        document.getElementById(`btn${idx}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
-                        document.getElementById(`btn${idx}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
-                        window.previewHeroIcon(idx, iconVal);
-                    }
+                    const btnContainer = document.getElementById('hero-buttons');
+                    const btns = data.heroButtons || [];
+                    if(btns.length > 0) {
+                        btnContainer.innerHTML = btns.map((btn, i) => {
+                            if(!btn.text) return ''; 
+                            const bgColor = btn.bgColor || (i === 0 ? '#0f172a' : '#ffffff');
+                            const txtColor = btn.textColor || (i === 0 ? '#ffffff' : '#334155');
+                            const iconColor = btn.iconColor || (i === 0 ? '#ffffff' : '#6366f1');
+                            return `<a href="javascript:void(0)" onclick="window.open('${escapeHtml(btn.url)}', '_blank')" class="group relative px-6 py-3 rounded-full font-bold text-sm overflow-hidden transition-all flex items-center gap-2 shadow-md hover:shadow-lg hover:opacity-90 active:scale-95" style="background-color: ${bgColor}; color: ${txtColor}; border: 1px solid ${bgColor === '#ffffff' ? '#e2e8f0' : bgColor}">${btn.icon ? `<i class="${escapeHtml(btn.icon)} transition-transform group-hover:scale-110" style="color: ${iconColor}"></i>` : ''}<span>${escapeHtml(btn.text)}</span></a>`;
+                        }).join('');
+                    } else { btnContainer.innerHTML = `<span class="text-slate-400 text-sm">Đang cập nhật...</span>`; }
                 }
-            } catch(e) {}
+            } catch (e) { console.log(e); }
         }
-        
-        window.saveConfig = async () => {
-            const btn = document.getElementById('btn-save-cfg');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+
+        async function fetchApps() {
             try {
-                const heroButtons = [];
-                for(let i=1; i<=3; i++) {
-                    heroButtons.push({
-                        text: document.getElementById(`btn${i}-text`).value,
-                        url: document.getElementById(`btn${i}-url`).value,
-                        icon: document.getElementById(`btn${i}-icon`).value,
-                        bgColor: document.getElementById(`btn${i}-bg-color`).value,
-                        textColor: document.getElementById(`btn${i}-text-color`).value,
-                        iconColor: document.getElementById(`btn${i}-icon-color`).value
-                    });
-                }
-                await setDoc(doc(db, "settings", "general"), {
-                    title: document.getElementById('cfg-title').value,
-                    titleColor: document.getElementById('cfg-title-color').value,
-                    subtitle: document.getElementById('cfg-subtitle').value,
-                    subtitleColor: document.getElementById('cfg-subtitle-color').value,
-                    heroButtons: heroButtons
-                }, { merge: true });
-                showToast("Đã lưu cấu hình giao diện!");
-            } catch(e) { alert(e.message); }
-            btn.innerHTML = '<i class="fas fa-save"></i> Lưu Cấu Hình';
+                // QUAN TRỌNG: Thêm orderBy("order", "asc") để lấy dữ liệu ĐÃ SẮP XẾP từ DB
+                // Nếu Console báo lỗi "requires an index", hãy click vào link trong console để tạo Index trên Firebase
+                const q = query(collection(db, "apps"), orderBy("order", "asc")); 
+                const snapshot = await getDocs(q);
+                const apps = [];
+                snapshot.forEach(doc => { if(doc.data().status !== 'hidden') apps.push({ id: doc.id, ...doc.data() }); });
+                
+                // Fallback sort client-side (phòng trường hợp DB chưa có field order cũ)
+                apps.sort((a,b) => (a.order || 9999) - (b.order || 9999));
+
+                renderUI(apps);
+            } catch (e) { 
+                console.error("Lỗi fetch apps:", e);
+                // Nếu lỗi do thiếu Index, fetch thường rồi sort
+                const qBackup = query(collection(db, "apps"));
+                const snapBackup = await getDocs(qBackup);
+                const appsBackup = [];
+                snapBackup.forEach(doc => { if(doc.data().status !== 'hidden') appsBackup.push({ id: doc.id, ...doc.data() }); });
+                appsBackup.sort((a,b) => (a.order || 9999) - (b.order || 9999));
+                renderUI(appsBackup);
+            }
         }
 
-        window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
-
-        // --- APP LOGIC ---
-        let curType = 'esign'; let allData = [];
-        
-        async function load() {
-            const s = await getDocs(query(collection(db, "apps")));
-            allData = []; s.forEach(d => allData.push({id: d.id, ...d.data()}));
-            allData.sort((a,b) => (a.order !== undefined ? a.order : 9999) - (b.order !== undefined ? b.order : 9999));
-            render();
-        }
-        
-        function render() {
-            const term = document.getElementById('search-app').value.toLowerCase();
-            const list = allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
+        function renderUI(apps) {
+            document.getElementById('main-loader').classList.add('hidden');
             
-            document.getElementById('count-badge').innerText = `${list.length} App`;
-            document.getElementById('list-data').innerHTML = list.map((i, idx) => `
-                <div draggable="true" class="draggable-item bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-md transition-all cursor-move select-none" data-id="${i.id}">
-                    <div class="text-slate-300 px-2 cursor-grab active:cursor-grabbing"><i class="fas fa-grip-vertical"></i></div>
-                    <div class="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border icon-preview-box">
-                        ${window.smartParseIcon(i.icon) || '<img src="https://placehold.co/100">'}
+            // Helper function để vẽ card, tránh lặp code
+            const createCard = (item, type) => {
+                const isMod = type === 'mods';
+                const isEsign = type === 'esign';
+                const badgeHtml = item.badge ? `<span class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-md">${escapeHtml(item.badge)}</span>` : '';
+                const iconHtml = `<img src="${escapeHtml(item.icon)}" class="w-full h-full object-cover ${isMod ? 'transform group-hover:scale-110 transition-transform duration-500' : 'rounded-xl'}" onerror="this.src='https://placehold.co/100?text=No+Icon'">`;
+                
+                let btnHtml = '';
+                if(isEsign) {
+                    btnHtml = `<button class="esign-download-btn w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-all border border-indigo-100 hover:shadow-lg hover:scale-110" data-name="${escapeHtml(item.name)}" data-url="${escapeHtml(item.url)}" data-id="${item.id}"><i class="fas fa-arrow-down"></i></button>`;
+                } else if (isMod) {
+                    btnHtml = `<a href="${escapeHtml(item.url)}" target="_blank" class="download-counter w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all" data-id="${item.id}"><i class="fas fa-download text-xs"></i></a>`;
+                } else {
+                    btnHtml = `<a href="${escapeHtml(item.url)}" target="_blank" class="download-counter px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-600 text-purple-600 hover:text-white text-xs font-bold transition-all border border-purple-200" data-id="${item.id}">Tải Về</a>`;
+                }
+
+                return `
+                <div class="glass-card rounded-2xl p-4 flex items-center gap-4 group ${isMod ? 'app-card-mod' : ''}">
+                    <div class="relative w-16 h-16 rounded-xl ${isMod ? 'overflow-hidden' : ''} border border-slate-200 group-hover:border-indigo-300 transition-colors shadow-sm bg-white">
+                        ${iconHtml} ${badgeHtml}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2">
-                            <h4 class="font-bold text-slate-800 truncate">${i.name}</h4>
-                            ${i.status==='hidden' ? '<span class="text-[10px] bg-slate-200 px-1 rounded">ẨN</span>' : ''}
-                        </div>
-                        <p class="text-xs text-slate-500 truncate">${i.desc || ''} - <span class="text-indigo-600 font-bold"><i class="fas fa-download"></i> ${i.downloads || 0}</span></p>
+                        <h3 class="font-bold text-base truncate text-slate-800 ${isMod?'app-title':''}">${escapeHtml(item.name)}</h3>
+                        <p class="text-xs ${isMod ? 'text-indigo-600' : 'text-slate-500'} mt-1 truncate font-medium">${escapeHtml(item.desc)}</p>
+                        <div class="flex items-center gap-3 mt-3"><span class="text-[10px] text-slate-500 flex items-center gap-1 font-semibold bg-slate-100 px-2 py-0.5 rounded-md"><i class="fas fa-download ${isMod ? 'text-orange-500' : 'text-indigo-500'}"></i><span>${item.downloads || 0}</span></span></div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="window.edit('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition"><i class="fas fa-pen text-xs"></i></button>
-                        <button onclick="window.del('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-red-500 hover:bg-red-500 hover:text-white transition"><i class="fas fa-trash text-xs"></i></button>
-                    </div>
-                </div>
-            `).join('');
-            addDragEvents();
+                    ${btnHtml}
+                </div>`;
+            };
+
+            document.getElementById('esign-list').innerHTML = apps.filter(a => a.type === 'esign').map(i => createCard(i, 'esign')).join('');
+            document.getElementById('cert-list').innerHTML = apps.filter(a => a.type === 'cert').map(i => createCard(i, 'cert')).join('');
+            document.getElementById('mods-list').innerHTML += apps.filter(a => a.type === 'mods').map(i => createCard(i, 'mods')).join('');
+
+            // Mở tab đầu tiên có dữ liệu hoặc mặc định Esign
+            document.getElementById('esign-list').classList.remove('hidden');
+            attachEvents();
         }
-        
-        function addDragEvents() {
-            const container = document.getElementById('list-data');
-            const draggables = document.querySelectorAll('.draggable-item');
-            
-            draggables.forEach(d => {
-                d.addEventListener('dragstart', () => d.classList.add('dragging'));
-                d.addEventListener('dragend', async () => {
-                    d.classList.remove('dragging');
-                    await saveOrder();
+
+        function attachEvents() {
+            document.querySelectorAll('.esign-download-btn, .download-counter').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    incrementDownload(btn.dataset.id);
+                    if(btn.classList.contains('esign-download-btn')) {
+                        e.preventDefault();
+                        openESignPopup(btn.dataset.name, btn.dataset.url);
+                    }
                 });
             });
-            
-            container.addEventListener('dragover', e => {
-                e.preventDefault();
-                const afterElement = getDragAfterElement(container, e.clientY);
-                const draggable = document.querySelector('.dragging');
-                if (draggable) {
-                    if (!afterElement) container.appendChild(draggable); 
-                    else container.insertBefore(draggable, afterElement);
-                }
-            });
         }
-        
-        function getDragAfterElement(container, y) {
-            return [...container.querySelectorAll('.draggable-item:not(.dragging)')].reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                return offset < 0 && offset > closest.offset ? { offset: offset, element: child } : closest;
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-        
-        async function saveOrder() {
-            const batch = writeBatch(db);
-            let hasChanges = false;
-            document.querySelectorAll('.draggable-item').forEach((item, index) => {
-                const id = item.dataset.id;
-                batch.update(doc(db, "apps", id), { order: index });
-                const d = allData.find(x => x.id === id); 
-                if(d) {
-                    if(d.order !== index) hasChanges = true;
-                    d.order = index;
-                }
-            });
-            try { 
-                await batch.commit(); 
-                allData.sort((a,b) => (a.order || 0) - (b.order || 0));
-                if(hasChanges) showToast("Đã cập nhật vị trí!", "success");
-            } catch(e){
-                console.error(e);
-                showToast("Lỗi khi lưu vị trí", "error");
-            }
-        }
-        
-        document.getElementById('search-app').addEventListener('input', render);
-        
-        window.switchTab = (t) => {
-            curType = t;
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = (btn.dataset.tab === t) 
-                    ? "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 text-white shadow-lg transition-all" 
-                    : "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-white text-slate-500 hover:bg-slate-50 transition-all";
-            });
-            document.getElementById('div-tag').classList.toggle('hidden', t !== 'mods'); 
-            render();
-        }
-        
-        window.previewIcon = (val) => { document.getElementById('icon-preview').innerHTML = window.smartParseIcon(val); }
-        
-        window.openModal = () => {
-            document.getElementById('edit-id').value = ''; 
-            document.getElementById('inp-name').value = ''; 
-            document.getElementById('inp-desc').value = ''; 
-            document.getElementById('inp-url').value = ''; 
-            document.getElementById('inp-icon').value = ''; 
-            document.getElementById('inp-downloads').value = '0'; // Reset về 0 khi thêm mới
-            document.getElementById('icon-preview').innerHTML = ''; 
-            document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`; 
-            document.getElementById('modal').classList.remove('hidden');
-        };
-        
-        window.closeModal = () => document.getElementById('modal').classList.add('hidden');
-        
-        window.edit = (id) => {
-            const item = allData.find(x => x.id === id); if(!item) return;
-            document.getElementById('edit-id').value = id; 
-            document.getElementById('inp-name').value = item.name; 
-            document.getElementById('inp-desc').value = item.desc; 
-            document.getElementById('inp-url').value = item.url; 
-            document.getElementById('inp-icon').value = item.icon; 
-            document.getElementById('inp-downloads').value = item.downloads || 0; // Load số lượt tải hiện tại vào input
-            document.getElementById('icon-preview').innerHTML = window.smartParseIcon(item.icon);
-            document.getElementById('inp-badge').value = item.badge || ''; 
-            document.getElementById('inp-status').value = item.status || 'active'; 
-            document.getElementById('modal-title').innerText = `Chỉnh Sửa App`; 
-            document.getElementById('modal').classList.remove('hidden');
-        };
-        
-        window.del = async (id) => { 
-            if(confirm("Xóa nhé?")) { 
-                try {
-                    await deleteDoc(doc(db, "apps", id)); 
-                    allData = allData.filter(x => x.id !== id);
-                    render();
-                    showToast("Đã xóa ứng dụng!");
-                } catch(e) { alert(e.message); }
-            } 
-        };
-        
-        document.getElementById('btn-save').addEventListener('click', async () => {
-            const id = document.getElementById('edit-id').value; 
-            const name = document.getElementById('inp-name').value;
-            if(!name) return alert("Nhập tên đi!");
-            
-            const btn = document.getElementById('btn-save'); 
-            btn.innerHTML = 'Lưu...'; btn.disabled = true;
-            
-            let newOrder = 9999;
-            if (!id) {
-                const currentMax = allData.reduce((max, p) => p.order > max ? p.order : max, 0);
-                newOrder = currentMax + 1;
-            }
+        async function incrementDownload(id) { try { await updateDoc(doc(db, "apps", id), { downloads: increment(1) }); } catch(e){} }
 
-            const data = { 
-                type: curType, 
-                name: name, 
-                desc: document.getElementById('inp-desc').value, 
-                url: document.getElementById('inp-url').value, 
-                icon: document.getElementById('inp-icon').value, 
-                badge: document.getElementById('inp-badge').value, 
-                status: document.getElementById('inp-status').value, 
-                // Lấy giá trị lượt tải từ ô input, chuyển thành số
-                downloads: Number(document.getElementById('inp-downloads').value) || 0,
-                tag: document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire', 
-                updatedAt: new Date().toISOString() 
-            };
-            
-            if(!id) { 
-                data.order = newOrder; 
-            }
-            
-            try { 
-                const docRef = doc(db, "apps", id || (curType[0] + Date.now()));
-                await setDoc(docRef, data, { merge: true }); 
-                
-                if(id) {
-                    const idx = allData.findIndex(x => x.id === id);
-                    if(idx > -1) allData[idx] = { ...allData[idx], ...data };
-                } else {
-                    allData.push({ id: docRef.id, ...data });
-                }
-                allData.sort((a,b) => (a.order || 9999) - (b.order || 9999));
+        // Popup Logic
+        const popup = document.getElementById('esign-popup');
+        const countdownEl = document.getElementById('countdown');
+        let countdownTimer;
 
-                closeModal(); 
-                render(); 
-                showToast("Đã lưu thành công!");
-            } catch(e) { alert(e.message); }
-            
-            btn.innerHTML = 'Lưu'; btn.disabled = false;
+        function openESignPopup(name, url) {
+            document.getElementById('popup-cert-name').textContent = `ESign ${name}`; 
+            document.getElementById('popup-install-btn').href = url;
+            popup.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            let time = 30; countdownEl.textContent = time; clearInterval(countdownTimer);
+            countdownTimer = setInterval(() => { time--; countdownEl.textContent = time; if (time <= 0) closeESignPopup(); }, 1000);
+        }
+        function closeESignPopup() { popup.classList.add('hidden'); document.body.style.overflow = ''; clearInterval(countdownTimer); }
+        
+        ['close-popup', 'popup-overlay', 'popup-install-btn'].forEach(id => document.getElementById(id).addEventListener('click', closeESignPopup));
+        window.addEventListener("load", () => { fetchSettings(); fetchApps(); });
+
+        // Tab Logic
+        document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.classList.add('text-slate-400'); });
+                btn.classList.add('active'); btn.classList.remove('text-slate-400');
+                const tab = btn.dataset.tab;
+                document.getElementById('tab-indicator').style.left = (window.innerWidth >= 768) ? `${(index * 132) + 6}px` : (index===0 ? '6px' : `${index * 33.33}%`);
+                ['esign', 'cert', 'mods'].forEach(t => document.getElementById(`${t}-list`).classList.add('hidden'));
+                document.getElementById(`${tab}-list`).classList.remove('hidden');
+                document.getElementById('search-container').classList.toggle('hidden', tab !== 'mods');
+            });
         });
+
+        // Search Logic
+        document.getElementById('mods-search').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('#mods-list .app-card-mod');
+            let hasResult = false;
+            items.forEach(item => {
+                if(item.querySelector('.app-title').innerText.toLowerCase().includes(term)) { item.style.display = 'flex'; hasResult = true; } else item.style.display = 'none';
+            });
+            const noRes = document.getElementById('no-results');
+            if(noRes) { if(!hasResult) noRes.classList.remove('hidden'); else noRes.classList.add('hidden'); }
+        });
+
+        let count = 0;
+        document.getElementById('admin-trigger')?.addEventListener('click', () => { count++; if(count === 5) window.location.href = 'admin.html'; setTimeout(() => count = 0, 2000); });
     </script>
 </body>
 </html>
