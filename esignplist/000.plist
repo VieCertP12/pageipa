@@ -11,19 +11,19 @@
 					<key>kind</key>
 					<string>software-package</string>
 					<key>url</key>
-					<string>https://github.com/VieCertP12/pageipa/releases/download/esignipa/1767604211_signed.ipa</string>
+					<string>https://github.com/VieCertP12/pageipa/releases/download/esignipa/1767607919_signed.ipa</string>
 				</dict>
 				<dict>
 					<key>kind</key>
 					<string>display-image</string>
 					<key>url</key>
-					<string>https://github.com/VieCertP12/pageipa/releases/download/esignipa/icon_1767604210.png</string>
+					<string>https://github.com/VieCertP12/pageipa/releases/download/esignipa/icon_1767607918.png</string>
 				</dict>
 				<dict>
 					<key>kind</key>
 					<string>full-size-image</string>
 					<key>url</key>
-					<string>https://github.com/VieCertP12/pageipa/releases/download/esignipa/icon_1767604210.png</string>
+					<string>https://github.com/VieCertP12/pageipa/releases/download/esignipa/icon_1767607918.png</string>
 				</dict>
 			</array>
 			<key>metadata</key>
@@ -35,7 +35,7 @@
 				<key>kind</key>
 				<string>software</string>
 				<key>title</key>
-				<string>1234</string>
+				<string>12344324</string>
 			</dict>
 		</dict>
 	</array>
