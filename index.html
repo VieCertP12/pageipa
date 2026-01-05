@@ -338,44 +338,54 @@
 
         // --- FETCH SETTINGS (Title, Color, Buttons) ---
         async function fetchSettings() {
-            try {
-                const docSnap = await getDoc(doc(db, "settings", "general"));
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
+    try {
+        const docSnap = await getDoc(doc(db, "settings", "general"));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            
+            // 1. Set Title & Color
+            const titleEl = document.getElementById('site-title');
+            if(data.title) titleEl.innerHTML = data.title;
+            if(data.titleColor) titleEl.style.color = data.titleColor;
+
+            // 2. Set Subtitle & Color
+            const subEl = document.getElementById('site-subtitle');
+            if(data.subtitle) subEl.innerText = data.subtitle;
+            if(data.subtitleColor) subEl.style.color = data.subtitleColor;
+
+            // 3. Render Hero Buttons (PHẦN QUAN TRỌNG NHẤT)
+            const btnContainer = document.getElementById('hero-buttons');
+            const btns = data.heroButtons || [];
+            
+            if(btns.length > 0) {
+                btnContainer.innerHTML = btns.map((btn, index) => {
+                    if(!btn.text) return ''; 
                     
-                    // Set Title & Color
-                    const titleEl = document.getElementById('site-title');
-                    if(data.title) titleEl.innerHTML = data.title;
-                    if(data.titleColor) titleEl.style.color = data.titleColor;
-
-                    // Set Subtitle & Color
-                    const subEl = document.getElementById('site-subtitle');
-                    if(data.subtitle) subEl.innerText = data.subtitle;
-                    if(data.subtitleColor) subEl.style.color = data.subtitleColor;
-
-                    // Render Hero Buttons
-                    const btnContainer = document.getElementById('hero-buttons');
-                    const btns = data.heroButtons || [];
-                    if(btns.length > 0) {
-                        btnContainer.innerHTML = btns.map((btn, index) => {
-                            if(!btn.text) return ''; 
-                            let btnClass = "";
-                            if(index === 0) btnClass = "bg-slate-900 text-white hover:scale-105 shadow-lg shadow-slate-900/20";
-                            else btnClass = "bg-white border border-slate-200 hover:border-indigo-300 text-slate-700 hover:shadow-md";
-
-                            return `
-                                <a href="javascript:void(0)" onclick="window.open('${escapeHtml(btn.url)}', '_blank')" class="group relative px-6 py-3 rounded-full font-bold text-sm overflow-hidden transition-all ${btnClass} flex items-center gap-2">
-                                    ${btn.icon ? `<i class="${escapeHtml(btn.icon)} ${index===0?'group-hover:text-white':'text-indigo-500 group-hover:scale-110'} transition-transform"></i>` : ''}
-                                    <span>${escapeHtml(btn.text)}</span>
-                                </a>
-                            `;
-                        }).join('');
-                    } else {
-                        btnContainer.innerHTML = `<span class="text-slate-400 text-sm">Đang cập nhật...</span>`;
-                    }
-                }
-            } catch (e) { console.log(e); }
+                    // Lấy màu từ Admin, nếu không có thì dùng màu mặc định
+                    const bgColor = btn.bgColor || (index === 0 ? '#0f172a' : '#ffffff');
+                    const txtColor = btn.textColor || (index === 0 ? '#ffffff' : '#334155');
+                    const iconColor = btn.iconColor || (index === 0 ? '#ffffff' : '#6366f1');
+                    
+                    // Style inline để áp dụng mã màu chính xác
+                    // Thêm hover:opacity-90 để có hiệu ứng khi di chuột
+                    return `
+                        <a href="javascript:void(0)" 
+                           onclick="window.open('${escapeHtml(btn.url)}', '_blank')" 
+                           class="group relative px-6 py-3 rounded-full font-bold text-sm overflow-hidden transition-all flex items-center gap-2 shadow-md hover:shadow-lg hover:opacity-90 active:scale-95"
+                           style="background-color: ${bgColor}; color: ${txtColor}; border: 1px solid ${bgColor === '#ffffff' ? '#e2e8f0' : bgColor}">
+                           
+                            ${btn.icon ? `<i class="${escapeHtml(btn.icon)} transition-transform group-hover:scale-110" style="color: ${iconColor}"></i>` : ''}
+                            
+                            <span>${escapeHtml(btn.text)}</span>
+                        </a>
+                    `;
+                }).join('');
+            } else {
+                btnContainer.innerHTML = `<span class="text-slate-400 text-sm">Đang cập nhật...</span>`;
+            }
         }
+    } catch (e) { console.log(e); }
+}
 
         async function fetchApps() {
             try {
