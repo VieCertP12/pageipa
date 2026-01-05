@@ -242,57 +242,71 @@
 
         // --- Config Logic (Cập nhật Load/Save 3 màu) ---
         async function loadConfig() {
-            try {
-                const s = await getDoc(doc(db, "settings", "general"));
-                if(s.exists()) {
-                    const d = s.data();
-                    document.getElementById('cfg-title').value = d.title || "";
-                    document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
-                    document.getElementById('cfg-subtitle').value = d.subtitle || "";
-                    document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
-                    const btns = d.heroButtons || [{}, {}, {}];
-                    for(let i=0; i<3; i++) {
-                        document.getElementById(`btn${i+1}-text`).value = btns[i]?.text || "";
-                        document.getElementById(`btn${i+1}-url`).value = btns[i]?.url || "";
-                        const iconVal = btns[i]?.icon || "";
-                        document.getElementById(`btn${i+1}-icon`).value = iconVal;
-                        // Load Colors (Default Fallbacks)
-                        document.getElementById(`btn${i+1}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
-                        document.getElementById(`btn${i+1}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
-                        document.getElementById(`btn${i+1}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
-                        
-                        window.previewHeroIcon(i+1, iconVal);
-                    }
-                }
-            } catch(e) {}
+    try {
+        const s = await getDoc(doc(db, "settings", "general"));
+        if(s.exists()) {
+            const d = s.data();
+            // Load Title & Subtitle
+            document.getElementById('cfg-title').value = d.title || "";
+            document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
+            document.getElementById('cfg-subtitle').value = d.subtitle || "";
+            document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
+            
+            // Load 3 Buttons
+            const btns = d.heroButtons || [{}, {}, {}];
+            for(let i=0; i<3; i++) {
+                const idx = i + 1;
+                // Load Text & URL & Icon
+                document.getElementById(`btn${idx}-text`).value = btns[i]?.text || "";
+                document.getElementById(`btn${idx}-url`).value = btns[i]?.url || "";
+                document.getElementById(`btn${idx}-icon`).value = btns[i]?.icon || "";
+                
+                // Load Colors (Quan trọng: Phải set giá trị mặc định nếu chưa có)
+                document.getElementById(`btn${idx}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
+                document.getElementById(`btn${idx}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
+                document.getElementById(`btn${idx}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
+                
+                // Preview Icon
+                window.previewHeroIcon(idx, btns[i]?.icon || "");
+            }
         }
+    } catch(e) { console.error("Lỗi load config:", e); }
+}
         
         window.saveConfig = async () => {
-            const btn = document.getElementById('btn-save-cfg');
-            btn.innerHTML = 'Đang lưu...';
-            try {
-                const heroButtons = [];
-                for(let i=1; i<=3; i++) {
-                    heroButtons.push({
-                        text: document.getElementById(`btn${i}-text`).value,
-                        url: document.getElementById(`btn${i}-url`).value,
-                        icon: document.getElementById(`btn${i}-icon`).value,
-                        bgColor: document.getElementById(`btn${i}-bg-color`).value,
-                        textColor: document.getElementById(`btn${i}-text-color`).value,
-                        iconColor: document.getElementById(`btn${i}-icon-color`).value
-                    });
-                }
-                await setDoc(doc(db, "settings", "general"), {
-                    title: document.getElementById('cfg-title').value,
-                    titleColor: document.getElementById('cfg-title-color').value,
-                    subtitle: document.getElementById('cfg-subtitle').value,
-                    subtitleColor: document.getElementById('cfg-subtitle-color').value,
-                    heroButtons: heroButtons
-                }, { merge: true });
-                alert("Đã lưu cấu hình!");
-            } catch(e) { alert(e.message); }
-            btn.innerHTML = '<i class="fas fa-save"></i> Lưu Cấu Hình';
+    const btn = document.getElementById('btn-save-cfg');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+    
+    try {
+        const heroButtons = [];
+        for(let i=1; i<=3; i++) {
+            heroButtons.push({
+                text: document.getElementById(`btn${i}-text`).value,
+                url: document.getElementById(`btn${i}-url`).value,
+                icon: document.getElementById(`btn${i}-icon`).value,
+                // Lấy đúng ID của các ô chọn màu
+                bgColor: document.getElementById(`btn${i}-bg-color`).value,
+                textColor: document.getElementById(`btn${i}-text-color`).value,
+                iconColor: document.getElementById(`btn${i}-icon-color`).value
+            });
         }
+        
+        await setDoc(doc(db, "settings", "general"), {
+            title: document.getElementById('cfg-title').value,
+            titleColor: document.getElementById('cfg-title-color').value,
+            subtitle: document.getElementById('cfg-subtitle').value,
+            subtitleColor: document.getElementById('cfg-subtitle-color').value,
+            heroButtons: heroButtons
+        }, { merge: true });
+        
+        // Hiển thị thông báo Toast thay vì Alert cho đẹp (nếu có toast) hoặc alert thường
+        alert("Đã lưu cấu hình giao diện & màu sắc!");
+    } catch(e) { 
+        alert("Lỗi: " + e.message); 
+    }
+    btn.innerHTML = originalText;
+}
 
         window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
 
