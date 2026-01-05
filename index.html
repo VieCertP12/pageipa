@@ -53,7 +53,6 @@
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
             position: relative;
-            /* Background hiệu ứng từ Code 1 */
             background-image: 
                 linear-gradient(to right, #f0f0f0 1px, transparent 1px),
                 linear-gradient(to bottom, #f0f0f0 1px, transparent 1px),
@@ -303,7 +302,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        // --- SỬA 1: THÊM orderBy VÀO ĐÂY ---
+        // ĐÃ THÊM orderBy VÀO IMPORT
         import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
@@ -313,24 +312,21 @@
         document.addEventListener('contextmenu', event => event.preventDefault());
         const escapeHtml = (unsafe) => { if (typeof unsafe !== 'string') return unsafe; return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
-        // --- FETCH SETTINGS (Title, Color, Buttons) ---
+        // --- FETCH SETTINGS ---
         async function fetchSettings() {
     try {
         const docSnap = await getDoc(doc(db, "settings", "general"));
         if (docSnap.exists()) {
             const data = docSnap.data();
             
-            // 1. Set Title & Color
             const titleEl = document.getElementById('site-title');
             if(data.title) titleEl.innerHTML = data.title;
             if(data.titleColor) titleEl.style.color = data.titleColor;
 
-            // 2. Set Subtitle & Color
             const subEl = document.getElementById('site-subtitle');
             if(data.subtitle) subEl.innerText = data.subtitle;
             if(data.subtitleColor) subEl.style.color = data.subtitleColor;
 
-            // 3. Render Hero Buttons (PHẦN QUAN TRỌNG NHẤT)
             const btnContainer = document.getElementById('hero-buttons');
             const btns = data.heroButtons || [];
             
@@ -338,13 +334,10 @@
                 btnContainer.innerHTML = btns.map((btn, index) => {
                     if(!btn.text) return ''; 
                     
-                    // Lấy màu từ Admin, nếu không có thì dùng màu mặc định
                     const bgColor = btn.bgColor || (index === 0 ? '#0f172a' : '#ffffff');
                     const txtColor = btn.textColor || (index === 0 ? '#ffffff' : '#334155');
                     const iconColor = btn.iconColor || (index === 0 ? '#ffffff' : '#6366f1');
                     
-                    // Style inline để áp dụng mã màu chính xác
-                    // Thêm hover:opacity-90 để có hiệu ứng khi di chuột
                     return `
                         <a href="javascript:void(0)" 
                            onclick="window.open('${escapeHtml(btn.url)}', '_blank')" 
@@ -366,18 +359,17 @@
 
         async function fetchApps() {
             try {
-                // --- SỬA 2: THÊM orderBy("order", "asc") ---
-                // Điều này giúp lấy danh sách đã sắp xếp từ DB
+                // ĐÃ SỬA: THÊM orderBy("order", "asc") ĐỂ SẮP XẾP ĐÚNG VỚI DATABASE
                 const q = query(collection(db, "apps"), orderBy("order", "asc"));
                 const snapshot = await getDocs(q);
                 const apps = [];
                 snapshot.forEach(doc => { if(doc.data().status !== 'hidden') apps.push({ id: doc.id, ...doc.data() }); });
                 
-                // Backup phòng khi DB chưa có field order
-                apps.sort((a,b) => (a.order || 9999) - (b.order || 9999));
-
                 renderUI(apps);
-            } catch (e) { console.error(e); }
+            } catch (e) { 
+                console.error("LỖI LẤY DỮ LIỆU:", e);
+                // Nếu lỗi index, nó sẽ hiện trong console (F12)
+            }
         }
 
         function renderUI(apps) {
