@@ -328,14 +328,12 @@
     async function load() {
         const s = await getDocs(query(collection(db, "apps")));
         allData = []; s.forEach(d => allData.push({id: d.id, ...d.data()}));
-        // Sắp xếp theo order, nếu không có order thì để cuối cùng (9999)
         allData.sort((a,b) => (a.order !== undefined ? a.order : 9999) - (b.order !== undefined ? b.order : 9999));
         render();
     }
     
     function render() {
         const term = document.getElementById('search-app').value.toLowerCase();
-        // Lọc theo loại và từ khóa
         const list = allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
         
         document.getElementById('count-badge').innerText = `${list.length} App`;
@@ -350,7 +348,7 @@
                         <h4 class="font-bold text-slate-800 truncate">${i.name}</h4>
                         ${i.status==='hidden' ? '<span class="text-[10px] bg-slate-200 px-1 rounded">ẨN</span>' : ''}
                     </div>
-                    <p class="text-xs text-slate-500 truncate">${i.desc || ''}</p>
+                    <p class="text-xs text-slate-500 truncate">${i.desc || ''} - <span class="text-indigo-600 font-bold"><i class="fas fa-download"></i> ${i.downloads || 0}</span></p>
                 </div>
                 <div class="flex gap-2">
                     <button onclick="window.edit('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition"><i class="fas fa-pen text-xs"></i></button>
@@ -369,7 +367,7 @@
             d.addEventListener('dragstart', () => d.classList.add('dragging'));
             d.addEventListener('dragend', async () => {
                 d.classList.remove('dragging');
-                await saveOrder(); // Lưu ngay khi thả chuột
+                await saveOrder();
             });
         });
         
@@ -392,32 +390,25 @@
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
     
-    // --- HÀM LƯU THỨ TỰ (ĐÃ SỬA) ---
     async function saveOrder() {
         const batch = writeBatch(db);
         let hasChanges = false;
-        
         document.querySelectorAll('.draggable-item').forEach((item, index) => {
             const id = item.dataset.id;
-            // 1. Cập nhật vào DB
             batch.update(doc(db, "apps", id), { order: index });
-            
-            // 2. Cập nhật ngay vào biến tạm allData để không bị nhảy lại
             const d = allData.find(x => x.id === id); 
             if(d) {
                 if(d.order !== index) hasChanges = true;
                 d.order = index;
             }
         });
-
         try { 
             await batch.commit(); 
-            // 3. Sắp xếp lại allData theo thứ tự mới
             allData.sort((a,b) => (a.order || 0) - (b.order || 0));
             if(hasChanges) showToast("Đã cập nhật vị trí!", "success");
         } catch(e){
             console.error(e);
-            showToast("Lỗi khi lưu vị trí: " + e.message, "error");
+            showToast("Lỗi khi lưu vị trí", "error");
         }
     }
     
@@ -442,6 +433,7 @@
         document.getElementById('inp-desc').value = ''; 
         document.getElementById('inp-url').value = ''; 
         document.getElementById('inp-icon').value = ''; 
+        document.getElementById('inp-downloads').value = '0'; // Reset về 0 khi thêm mới
         document.getElementById('icon-preview').innerHTML = ''; 
         document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`; 
         document.getElementById('modal').classList.remove('hidden');
@@ -456,6 +448,7 @@
         document.getElementById('inp-desc').value = item.desc; 
         document.getElementById('inp-url').value = item.url; 
         document.getElementById('inp-icon').value = item.icon; 
+        document.getElementById('inp-downloads').value = item.downloads || 0; // Load số lượt tải hiện tại vào input
         document.getElementById('icon-preview').innerHTML = window.smartParseIcon(item.icon);
         document.getElementById('inp-badge').value = item.badge || ''; 
         document.getElementById('inp-status').value = item.status || 'active'; 
@@ -467,7 +460,6 @@
         if(confirm("Xóa nhé?")) { 
             try {
                 await deleteDoc(doc(db, "apps", id)); 
-                // Xóa khỏi mảng allData luôn để đỡ phải load lại
                 allData = allData.filter(x => x.id !== id);
                 render();
                 showToast("Đã xóa ứng dụng!");
@@ -483,7 +475,6 @@
         const btn = document.getElementById('btn-save'); 
         btn.innerHTML = 'Lưu...'; btn.disabled = true;
         
-        // Tính order: nếu là mới thì cho xuống cuối
         let newOrder = 9999;
         if (!id) {
             const currentMax = allData.reduce((max, p) => p.order > max ? p.order : max, 0);
@@ -498,12 +489,13 @@
             icon: document.getElementById('inp-icon').value, 
             badge: document.getElementById('inp-badge').value, 
             status: document.getElementById('inp-status').value, 
+            // Lấy giá trị lượt tải từ ô input, chuyển thành số
+            downloads: Number(document.getElementById('inp-downloads').value) || 0,
             tag: document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire', 
             updatedAt: new Date().toISOString() 
         };
         
         if(!id) { 
-            data.downloads = 0; 
             data.order = newOrder; 
         }
         
@@ -511,14 +503,12 @@
             const docRef = doc(db, "apps", id || (curType[0] + Date.now()));
             await setDoc(docRef, data, { merge: true }); 
             
-            // Cập nhật lại allData thủ công để đỡ tốn read
             if(id) {
                 const idx = allData.findIndex(x => x.id === id);
                 if(idx > -1) allData[idx] = { ...allData[idx], ...data };
             } else {
                 allData.push({ id: docRef.id, ...data });
             }
-            // Sắp xếp lại
             allData.sort((a,b) => (a.order || 9999) - (b.order || 9999));
 
             closeModal(); 
