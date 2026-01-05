@@ -28,7 +28,6 @@
 
     <div id="toast-container" class="fixed top-20 right-5 z-[100] flex flex-col gap-3 pointer-events-none"></div>
 
-    <!-- LOGIN SCREEN -->
     <div id="login-box" class="fixed inset-0 z-50 flex items-center justify-center bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80');">
         <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-md"></div>
         <div class="relative w-full max-w-md p-8 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20">
@@ -44,7 +43,6 @@
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD -->
     <div id="dashboard" class="hidden min-h-screen pb-20">
         <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -57,14 +55,12 @@
 
         <div class="max-w-6xl mx-auto px-4 mt-8 space-y-8">
             
-            <!-- SECTION 1: CẤU HÌNH WEB -->
             <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center justify-between cursor-pointer" onclick="document.getElementById('config-body').classList.toggle('hidden');">
                     <h3 class="font-bold text-slate-700"><i class="fas fa-palette text-indigo-500"></i> Cấu Hình Giao Diện & Màu Sắc</h3>
                     <i class="fas fa-chevron-down text-slate-400"></i>
                 </div>
                 <div id="config-body" class="p-6 hidden space-y-6">
-                    <!-- Config Màu Tiêu Đề -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Tiêu đề chính (H1)</label>
@@ -82,11 +78,9 @@
                         </div>
                     </div>
                     
-                    <!-- Config 3 Nút Hero (Đã chuyển sang HTML tĩnh cho ổn định) -->
                     <div class="border-t border-slate-100 pt-4">
                         <h4 class="font-bold text-sm text-slate-600 mb-4 uppercase">Cấu hình 3 Nút Chức Năng (Text - Màu - Icon)</h4>
                         <div class="grid md:grid-cols-3 gap-4">
-                            <!-- NÚT 1 -->
                             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
                                 <div class="flex justify-between items-center">
                                     <div class="text-xs font-bold text-indigo-600 uppercase">Nút 1 (Trái)</div>
@@ -101,7 +95,6 @@
                                     <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn1-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
                                 </div>
                             </div>
-                            <!-- NÚT 2 -->
                             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
                                 <div class="flex justify-between items-center">
                                     <div class="text-xs font-bold text-indigo-600 uppercase">Nút 2 (Giữa)</div>
@@ -116,7 +109,6 @@
                                     <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn2-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#6366f1"></div>
                                 </div>
                             </div>
-                            <!-- NÚT 3 -->
                             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
                                 <div class="flex justify-between items-center">
                                     <div class="text-xs font-bold text-indigo-600 uppercase">Nút 3 (Phải)</div>
@@ -140,7 +132,6 @@
                 </div>
             </div>
 
-            <!-- SECTION 2: QUẢN LÝ APP -->
             <div>
                 <div class="flex justify-center mb-8">
                     <div class="bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200 inline-flex gap-1">
@@ -167,7 +158,6 @@
         </div>
     </div>
 
-    <!-- MODAL EDIT/ADD -->
     <div id="modal" class="fixed inset-0 z-[60] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
         <div class="flex items-center justify-center min-h-screen px-4">
@@ -178,13 +168,23 @@
                 </div>
                 <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
                     <input type="hidden" id="edit-id">
+                    
                     <input id="inp-name" type="text" class="w-full p-3 border rounded-xl" placeholder="Tên App">
+                    
                     <input id="inp-desc" type="text" class="w-full p-3 border rounded-xl" placeholder="Mô tả">
+                    
                     <input id="inp-url" type="text" class="w-full p-3 border rounded-xl" placeholder="Link Tải">
+
+                    <div class="relative">
+                        <label class="absolute -top-2 left-3 bg-white px-1 text-xs font-bold text-indigo-600">Lượt Tải (Fake)</label>
+                        <input id="inp-downloads" type="number" class="w-full p-3 border rounded-xl border-indigo-200" placeholder="0">
+                    </div>
+                    
                     <div class="flex gap-2">
                         <input id="inp-icon" type="text" class="flex-1 p-3 border rounded-xl" placeholder="Link Icon / SVG / Class" oninput="previewIcon(this.value)">
                         <div id="icon-preview" class="icon-preview-box w-12 h-12 rounded-lg border bg-slate-100 overflow-hidden flex items-center justify-center"></div>
                     </div>
+                    
                     <div class="grid grid-cols-2 gap-4">
                         <select id="inp-badge" class="w-full p-3 border rounded-xl">
                             <option value="">Không Badge</option>
@@ -196,6 +196,7 @@
                             <option value="hidden">Ẩn</option>
                         </select>
                     </div>
+                    
                     <div id="div-tag" class="hidden p-3 bg-orange-50 rounded-xl border border-orange-100">
                         <div class="text-xs font-bold text-orange-600 mb-2">Icon Tag (Mods only)</div>
                         <div class="flex gap-4">
@@ -213,311 +214,310 @@
         </div>
     </div>
 
-    <!-- LOGIC -->
     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, query, writeBatch } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, query, writeBatch } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-    const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    
-    // --- TIỆN ÍCH ---
-    window.showToast = (msg, type = 'success') => {
-        const container = document.getElementById('toast-container');
-        const div = document.createElement('div');
-        const color = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-        div.className = `${color} text-white px-6 py-3 rounded-xl shadow-xl font-bold text-sm flex items-center gap-3 animation-slide-in transform transition-all`;
-        div.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
-        container.appendChild(div);
-        setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 3000);
-    }
-
-    window.smartParseIcon = (s) => {
-        if (!s) return ''; s = s.trim();
-        if (s.startsWith('<svg') || s.startsWith('<i ') || s.startsWith('<img') || s.startsWith('<wa-icon')) return s;
-        if (s.startsWith('http')) return `<img src="${s}" alt="icon">`;
-        const matchName = s.match(/\[['"]([^'"]+)['"]\]/);
-        if (matchName && matchName[1]) {
-            const matchPrefix = s.match(/byPrefixAndName\.([a-z]+)/);
-            return `<i class="${matchPrefix ? matchPrefix[1] : 'fas'} fa-${matchName[1]}"></i>`;
-        }
-        const matchWa = s.match(/name=["']([^"']+)["']/);
-        if (matchWa && matchWa[1]) return `<i class="fas fa-${matchWa[1]}"></i>`;
-        return `<i class="${s}"></i>`;
-    }
-    
-    // --- AUTH ---
-    onAuthStateChanged(auth, async (u) => {
-        if(u) {
-            document.getElementById('login-box').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            loadConfig(); load(); switchTab('esign');
-        } else {
-            document.getElementById('login-box').classList.remove('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
-        }
-    });
-    document.getElementById('btn-login').addEventListener('click', () => {
-        signInWithEmailAndPassword(auth, document.getElementById('adm-email').value, document.getElementById('adm-pass').value)
-            .catch((e) => { document.getElementById('err-msg').innerText = "Sai tài khoản hoặc mật khẩu!"; document.getElementById('err-msg').classList.remove('hidden'); });
-    });
-    document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
-
-    // --- CONFIG LOGIC ---
-    async function loadConfig() {
-        try {
-            const s = await getDoc(doc(db, "settings", "general"));
-            if(s.exists()) {
-                const d = s.data();
-                document.getElementById('cfg-title').value = d.title || "";
-                document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
-                document.getElementById('cfg-subtitle').value = d.subtitle || "";
-                document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
-                
-                const btns = d.heroButtons || [{}, {}, {}];
-                for(let i=0; i<3; i++) {
-                    const idx = i+1;
-                    document.getElementById(`btn${idx}-text`).value = btns[i]?.text || "";
-                    document.getElementById(`btn${idx}-url`).value = btns[i]?.url || "";
-                    const iconVal = btns[i]?.icon || "";
-                    document.getElementById(`btn${idx}-icon`).value = iconVal;
-                    document.getElementById(`btn${idx}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
-                    document.getElementById(`btn${idx}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
-                    document.getElementById(`btn${idx}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
-                    window.previewHeroIcon(idx, iconVal);
-                }
-            }
-        } catch(e) {}
-    }
-    
-    window.saveConfig = async () => {
-        const btn = document.getElementById('btn-save-cfg');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
-        try {
-            const heroButtons = [];
-            for(let i=1; i<=3; i++) {
-                heroButtons.push({
-                    text: document.getElementById(`btn${i}-text`).value,
-                    url: document.getElementById(`btn${i}-url`).value,
-                    icon: document.getElementById(`btn${i}-icon`).value,
-                    bgColor: document.getElementById(`btn${i}-bg-color`).value,
-                    textColor: document.getElementById(`btn${i}-text-color`).value,
-                    iconColor: document.getElementById(`btn${i}-icon-color`).value
-                });
-            }
-            await setDoc(doc(db, "settings", "general"), {
-                title: document.getElementById('cfg-title').value,
-                titleColor: document.getElementById('cfg-title-color').value,
-                subtitle: document.getElementById('cfg-subtitle').value,
-                subtitleColor: document.getElementById('cfg-subtitle-color').value,
-                heroButtons: heroButtons
-            }, { merge: true });
-            showToast("Đã lưu cấu hình giao diện!");
-        } catch(e) { alert(e.message); }
-        btn.innerHTML = '<i class="fas fa-save"></i> Lưu Cấu Hình';
-    }
-
-    window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
-
-    // --- APP LOGIC ---
-    let curType = 'esign'; let allData = [];
-    
-    async function load() {
-        const s = await getDocs(query(collection(db, "apps")));
-        allData = []; s.forEach(d => allData.push({id: d.id, ...d.data()}));
-        allData.sort((a,b) => (a.order !== undefined ? a.order : 9999) - (b.order !== undefined ? b.order : 9999));
-        render();
-    }
-    
-    function render() {
-        const term = document.getElementById('search-app').value.toLowerCase();
-        const list = allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
+        const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
         
-        document.getElementById('count-badge').innerText = `${list.length} App`;
-        document.getElementById('list-data').innerHTML = list.map((i, idx) => `
-            <div draggable="true" class="draggable-item bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-md transition-all cursor-move select-none" data-id="${i.id}">
-                <div class="text-slate-300 px-2 cursor-grab active:cursor-grabbing"><i class="fas fa-grip-vertical"></i></div>
-                <div class="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border icon-preview-box">
-                    ${window.smartParseIcon(i.icon) || '<img src="https://placehold.co/100">'}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2">
-                        <h4 class="font-bold text-slate-800 truncate">${i.name}</h4>
-                        ${i.status==='hidden' ? '<span class="text-[10px] bg-slate-200 px-1 rounded">ẨN</span>' : ''}
-                    </div>
-                    <p class="text-xs text-slate-500 truncate">${i.desc || ''} - <span class="text-indigo-600 font-bold"><i class="fas fa-download"></i> ${i.downloads || 0}</span></p>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="window.edit('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition"><i class="fas fa-pen text-xs"></i></button>
-                    <button onclick="window.del('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-red-500 hover:bg-red-500 hover:text-white transition"><i class="fas fa-trash text-xs"></i></button>
-                </div>
-            </div>
-        `).join('');
-        addDragEvents();
-    }
-    
-    function addDragEvents() {
-        const container = document.getElementById('list-data');
-        const draggables = document.querySelectorAll('.draggable-item');
-        
-        draggables.forEach(d => {
-            d.addEventListener('dragstart', () => d.classList.add('dragging'));
-            d.addEventListener('dragend', async () => {
-                d.classList.remove('dragging');
-                await saveOrder();
-            });
-        });
-        
-        container.addEventListener('dragover', e => {
-            e.preventDefault();
-            const afterElement = getDragAfterElement(container, e.clientY);
-            const draggable = document.querySelector('.dragging');
-            if (draggable) {
-                if (!afterElement) container.appendChild(draggable); 
-                else container.insertBefore(draggable, afterElement);
-            }
-        });
-    }
-    
-    function getDragAfterElement(container, y) {
-        return [...container.querySelectorAll('.draggable-item:not(.dragging)')].reduce((closest, child) => {
-            const box = child.getBoundingClientRect();
-            const offset = y - box.top - box.height / 2;
-            return offset < 0 && offset > closest.offset ? { offset: offset, element: child } : closest;
-        }, { offset: Number.NEGATIVE_INFINITY }).element;
-    }
-    
-    async function saveOrder() {
-        const batch = writeBatch(db);
-        let hasChanges = false;
-        document.querySelectorAll('.draggable-item').forEach((item, index) => {
-            const id = item.dataset.id;
-            batch.update(doc(db, "apps", id), { order: index });
-            const d = allData.find(x => x.id === id); 
-            if(d) {
-                if(d.order !== index) hasChanges = true;
-                d.order = index;
-            }
-        });
-        try { 
-            await batch.commit(); 
-            allData.sort((a,b) => (a.order || 0) - (b.order || 0));
-            if(hasChanges) showToast("Đã cập nhật vị trí!", "success");
-        } catch(e){
-            console.error(e);
-            showToast("Lỗi khi lưu vị trí", "error");
+        // --- TIỆN ÍCH ---
+        window.showToast = (msg, type = 'success') => {
+            const container = document.getElementById('toast-container');
+            const div = document.createElement('div');
+            const color = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            div.className = `${color} text-white px-6 py-3 rounded-xl shadow-xl font-bold text-sm flex items-center gap-3 animation-slide-in transform transition-all`;
+            div.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+            container.appendChild(div);
+            setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 3000);
         }
-    }
-    
-    document.getElementById('search-app').addEventListener('input', render);
-    
-    window.switchTab = (t) => {
-        curType = t;
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.className = (btn.dataset.tab === t) 
-                ? "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 text-white shadow-lg transition-all" 
-                : "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-white text-slate-500 hover:bg-slate-50 transition-all";
+
+        window.smartParseIcon = (s) => {
+            if (!s) return ''; s = s.trim();
+            if (s.startsWith('<svg') || s.startsWith('<i ') || s.startsWith('<img') || s.startsWith('<wa-icon')) return s;
+            if (s.startsWith('http')) return `<img src="${s}" alt="icon">`;
+            const matchName = s.match(/\[['"]([^'"]+)['"]\]/);
+            if (matchName && matchName[1]) {
+                const matchPrefix = s.match(/byPrefixAndName\.([a-z]+)/);
+                return `<i class="${matchPrefix ? matchPrefix[1] : 'fas'} fa-${matchName[1]}"></i>`;
+            }
+            const matchWa = s.match(/name=["']([^"']+)["']/);
+            if (matchWa && matchWa[1]) return `<i class="fas fa-${matchWa[1]}"></i>`;
+            return `<i class="${s}"></i>`;
+        }
+        
+        // --- AUTH ---
+        onAuthStateChanged(auth, async (u) => {
+            if(u) {
+                document.getElementById('login-box').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadConfig(); load(); switchTab('esign');
+            } else {
+                document.getElementById('login-box').classList.remove('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
+            }
         });
-        document.getElementById('div-tag').classList.toggle('hidden', t !== 'mods'); 
-        render();
-    }
-    
-    window.previewIcon = (val) => { document.getElementById('icon-preview').innerHTML = window.smartParseIcon(val); }
-    
-    window.openModal = () => {
-        document.getElementById('edit-id').value = ''; 
-        document.getElementById('inp-name').value = ''; 
-        document.getElementById('inp-desc').value = ''; 
-        document.getElementById('inp-url').value = ''; 
-        document.getElementById('inp-icon').value = ''; 
-        document.getElementById('inp-downloads').value = '0'; // Reset về 0 khi thêm mới
-        document.getElementById('icon-preview').innerHTML = ''; 
-        document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`; 
-        document.getElementById('modal').classList.remove('hidden');
-    };
-    
-    window.closeModal = () => document.getElementById('modal').classList.add('hidden');
-    
-    window.edit = (id) => {
-        const item = allData.find(x => x.id === id); if(!item) return;
-        document.getElementById('edit-id').value = id; 
-        document.getElementById('inp-name').value = item.name; 
-        document.getElementById('inp-desc').value = item.desc; 
-        document.getElementById('inp-url').value = item.url; 
-        document.getElementById('inp-icon').value = item.icon; 
-        document.getElementById('inp-downloads').value = item.downloads || 0; // Load số lượt tải hiện tại vào input
-        document.getElementById('icon-preview').innerHTML = window.smartParseIcon(item.icon);
-        document.getElementById('inp-badge').value = item.badge || ''; 
-        document.getElementById('inp-status').value = item.status || 'active'; 
-        document.getElementById('modal-title').innerText = `Chỉnh Sửa App`; 
-        document.getElementById('modal').classList.remove('hidden');
-    };
-    
-    window.del = async (id) => { 
-        if(confirm("Xóa nhé?")) { 
+        document.getElementById('btn-login').addEventListener('click', () => {
+            signInWithEmailAndPassword(auth, document.getElementById('adm-email').value, document.getElementById('adm-pass').value)
+                .catch((e) => { document.getElementById('err-msg').innerText = "Sai tài khoản hoặc mật khẩu!"; document.getElementById('err-msg').classList.remove('hidden'); });
+        });
+        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+
+        // --- CONFIG LOGIC ---
+        async function loadConfig() {
             try {
-                await deleteDoc(doc(db, "apps", id)); 
-                allData = allData.filter(x => x.id !== id);
-                render();
-                showToast("Đã xóa ứng dụng!");
+                const s = await getDoc(doc(db, "settings", "general"));
+                if(s.exists()) {
+                    const d = s.data();
+                    document.getElementById('cfg-title').value = d.title || "";
+                    document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
+                    document.getElementById('cfg-subtitle').value = d.subtitle || "";
+                    document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
+                    
+                    const btns = d.heroButtons || [{}, {}, {}];
+                    for(let i=0; i<3; i++) {
+                        const idx = i+1;
+                        document.getElementById(`btn${idx}-text`).value = btns[i]?.text || "";
+                        document.getElementById(`btn${idx}-url`).value = btns[i]?.url || "";
+                        const iconVal = btns[i]?.icon || "";
+                        document.getElementById(`btn${idx}-icon`).value = iconVal;
+                        document.getElementById(`btn${idx}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
+                        document.getElementById(`btn${idx}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
+                        document.getElementById(`btn${idx}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
+                        window.previewHeroIcon(idx, iconVal);
+                    }
+                }
+            } catch(e) {}
+        }
+        
+        window.saveConfig = async () => {
+            const btn = document.getElementById('btn-save-cfg');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+            try {
+                const heroButtons = [];
+                for(let i=1; i<=3; i++) {
+                    heroButtons.push({
+                        text: document.getElementById(`btn${i}-text`).value,
+                        url: document.getElementById(`btn${i}-url`).value,
+                        icon: document.getElementById(`btn${i}-icon`).value,
+                        bgColor: document.getElementById(`btn${i}-bg-color`).value,
+                        textColor: document.getElementById(`btn${i}-text-color`).value,
+                        iconColor: document.getElementById(`btn${i}-icon-color`).value
+                    });
+                }
+                await setDoc(doc(db, "settings", "general"), {
+                    title: document.getElementById('cfg-title').value,
+                    titleColor: document.getElementById('cfg-title-color').value,
+                    subtitle: document.getElementById('cfg-subtitle').value,
+                    subtitleColor: document.getElementById('cfg-subtitle-color').value,
+                    heroButtons: heroButtons
+                }, { merge: true });
+                showToast("Đã lưu cấu hình giao diện!");
             } catch(e) { alert(e.message); }
-        } 
-    };
-    
-    document.getElementById('btn-save').addEventListener('click', async () => {
-        const id = document.getElementById('edit-id').value; 
-        const name = document.getElementById('inp-name').value;
-        if(!name) return alert("Nhập tên đi!");
-        
-        const btn = document.getElementById('btn-save'); 
-        btn.innerHTML = 'Lưu...'; btn.disabled = true;
-        
-        let newOrder = 9999;
-        if (!id) {
-            const currentMax = allData.reduce((max, p) => p.order > max ? p.order : max, 0);
-            newOrder = currentMax + 1;
+            btn.innerHTML = '<i class="fas fa-save"></i> Lưu Cấu Hình';
         }
 
-        const data = { 
-            type: curType, 
-            name: name, 
-            desc: document.getElementById('inp-desc').value, 
-            url: document.getElementById('inp-url').value, 
-            icon: document.getElementById('inp-icon').value, 
-            badge: document.getElementById('inp-badge').value, 
-            status: document.getElementById('inp-status').value, 
-            // Lấy giá trị lượt tải từ ô input, chuyển thành số
-            downloads: Number(document.getElementById('inp-downloads').value) || 0,
-            tag: document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire', 
-            updatedAt: new Date().toISOString() 
+        window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
+
+        // --- APP LOGIC ---
+        let curType = 'esign'; let allData = [];
+        
+        async function load() {
+            const s = await getDocs(query(collection(db, "apps")));
+            allData = []; s.forEach(d => allData.push({id: d.id, ...d.data()}));
+            allData.sort((a,b) => (a.order !== undefined ? a.order : 9999) - (b.order !== undefined ? b.order : 9999));
+            render();
+        }
+        
+        function render() {
+            const term = document.getElementById('search-app').value.toLowerCase();
+            const list = allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
+            
+            document.getElementById('count-badge').innerText = `${list.length} App`;
+            document.getElementById('list-data').innerHTML = list.map((i, idx) => `
+                <div draggable="true" class="draggable-item bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-md transition-all cursor-move select-none" data-id="${i.id}">
+                    <div class="text-slate-300 px-2 cursor-grab active:cursor-grabbing"><i class="fas fa-grip-vertical"></i></div>
+                    <div class="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border icon-preview-box">
+                        ${window.smartParseIcon(i.icon) || '<img src="https://placehold.co/100">'}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h4 class="font-bold text-slate-800 truncate">${i.name}</h4>
+                            ${i.status==='hidden' ? '<span class="text-[10px] bg-slate-200 px-1 rounded">ẨN</span>' : ''}
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">${i.desc || ''} - <span class="text-indigo-600 font-bold"><i class="fas fa-download"></i> ${i.downloads || 0}</span></p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="window.edit('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition"><i class="fas fa-pen text-xs"></i></button>
+                        <button onclick="window.del('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-red-500 hover:bg-red-500 hover:text-white transition"><i class="fas fa-trash text-xs"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            addDragEvents();
+        }
+        
+        function addDragEvents() {
+            const container = document.getElementById('list-data');
+            const draggables = document.querySelectorAll('.draggable-item');
+            
+            draggables.forEach(d => {
+                d.addEventListener('dragstart', () => d.classList.add('dragging'));
+                d.addEventListener('dragend', async () => {
+                    d.classList.remove('dragging');
+                    await saveOrder();
+                });
+            });
+            
+            container.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(container, e.clientY);
+                const draggable = document.querySelector('.dragging');
+                if (draggable) {
+                    if (!afterElement) container.appendChild(draggable); 
+                    else container.insertBefore(draggable, afterElement);
+                }
+            });
+        }
+        
+        function getDragAfterElement(container, y) {
+            return [...container.querySelectorAll('.draggable-item:not(.dragging)')].reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                return offset < 0 && offset > closest.offset ? { offset: offset, element: child } : closest;
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        async function saveOrder() {
+            const batch = writeBatch(db);
+            let hasChanges = false;
+            document.querySelectorAll('.draggable-item').forEach((item, index) => {
+                const id = item.dataset.id;
+                batch.update(doc(db, "apps", id), { order: index });
+                const d = allData.find(x => x.id === id); 
+                if(d) {
+                    if(d.order !== index) hasChanges = true;
+                    d.order = index;
+                }
+            });
+            try { 
+                await batch.commit(); 
+                allData.sort((a,b) => (a.order || 0) - (b.order || 0));
+                if(hasChanges) showToast("Đã cập nhật vị trí!", "success");
+            } catch(e){
+                console.error(e);
+                showToast("Lỗi khi lưu vị trí", "error");
+            }
+        }
+        
+        document.getElementById('search-app').addEventListener('input', render);
+        
+        window.switchTab = (t) => {
+            curType = t;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = (btn.dataset.tab === t) 
+                    ? "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 text-white shadow-lg transition-all" 
+                    : "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-white text-slate-500 hover:bg-slate-50 transition-all";
+            });
+            document.getElementById('div-tag').classList.toggle('hidden', t !== 'mods'); 
+            render();
+        }
+        
+        window.previewIcon = (val) => { document.getElementById('icon-preview').innerHTML = window.smartParseIcon(val); }
+        
+        window.openModal = () => {
+            document.getElementById('edit-id').value = ''; 
+            document.getElementById('inp-name').value = ''; 
+            document.getElementById('inp-desc').value = ''; 
+            document.getElementById('inp-url').value = ''; 
+            document.getElementById('inp-icon').value = ''; 
+            document.getElementById('inp-downloads').value = '0'; // Reset về 0 khi thêm mới
+            document.getElementById('icon-preview').innerHTML = ''; 
+            document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`; 
+            document.getElementById('modal').classList.remove('hidden');
         };
         
-        if(!id) { 
-            data.order = newOrder; 
-        }
+        window.closeModal = () => document.getElementById('modal').classList.add('hidden');
         
-        try { 
-            const docRef = doc(db, "apps", id || (curType[0] + Date.now()));
-            await setDoc(docRef, data, { merge: true }); 
+        window.edit = (id) => {
+            const item = allData.find(x => x.id === id); if(!item) return;
+            document.getElementById('edit-id').value = id; 
+            document.getElementById('inp-name').value = item.name; 
+            document.getElementById('inp-desc').value = item.desc; 
+            document.getElementById('inp-url').value = item.url; 
+            document.getElementById('inp-icon').value = item.icon; 
+            document.getElementById('inp-downloads').value = item.downloads || 0; // Load số lượt tải hiện tại vào input
+            document.getElementById('icon-preview').innerHTML = window.smartParseIcon(item.icon);
+            document.getElementById('inp-badge').value = item.badge || ''; 
+            document.getElementById('inp-status').value = item.status || 'active'; 
+            document.getElementById('modal-title').innerText = `Chỉnh Sửa App`; 
+            document.getElementById('modal').classList.remove('hidden');
+        };
+        
+        window.del = async (id) => { 
+            if(confirm("Xóa nhé?")) { 
+                try {
+                    await deleteDoc(doc(db, "apps", id)); 
+                    allData = allData.filter(x => x.id !== id);
+                    render();
+                    showToast("Đã xóa ứng dụng!");
+                } catch(e) { alert(e.message); }
+            } 
+        };
+        
+        document.getElementById('btn-save').addEventListener('click', async () => {
+            const id = document.getElementById('edit-id').value; 
+            const name = document.getElementById('inp-name').value;
+            if(!name) return alert("Nhập tên đi!");
             
-            if(id) {
-                const idx = allData.findIndex(x => x.id === id);
-                if(idx > -1) allData[idx] = { ...allData[idx], ...data };
-            } else {
-                allData.push({ id: docRef.id, ...data });
+            const btn = document.getElementById('btn-save'); 
+            btn.innerHTML = 'Lưu...'; btn.disabled = true;
+            
+            let newOrder = 9999;
+            if (!id) {
+                const currentMax = allData.reduce((max, p) => p.order > max ? p.order : max, 0);
+                newOrder = currentMax + 1;
             }
-            allData.sort((a,b) => (a.order || 9999) - (b.order || 9999));
 
-            closeModal(); 
-            render(); 
-            showToast("Đã lưu thành công!");
-        } catch(e) { alert(e.message); }
-        
-        btn.innerHTML = 'Lưu'; btn.disabled = false;
-    });
-</script>
+            const data = { 
+                type: curType, 
+                name: name, 
+                desc: document.getElementById('inp-desc').value, 
+                url: document.getElementById('inp-url').value, 
+                icon: document.getElementById('inp-icon').value, 
+                badge: document.getElementById('inp-badge').value, 
+                status: document.getElementById('inp-status').value, 
+                // Lấy giá trị lượt tải từ ô input, chuyển thành số
+                downloads: Number(document.getElementById('inp-downloads').value) || 0,
+                tag: document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire', 
+                updatedAt: new Date().toISOString() 
+            };
+            
+            if(!id) { 
+                data.order = newOrder; 
+            }
+            
+            try { 
+                const docRef = doc(db, "apps", id || (curType[0] + Date.now()));
+                await setDoc(docRef, data, { merge: true }); 
+                
+                if(id) {
+                    const idx = allData.findIndex(x => x.id === id);
+                    if(idx > -1) allData[idx] = { ...allData[idx], ...data };
+                } else {
+                    allData.push({ id: docRef.id, ...data });
+                }
+                allData.sort((a,b) => (a.order || 9999) - (b.order || 9999));
+
+                closeModal(); 
+                render(); 
+                showToast("Đã lưu thành công!");
+            } catch(e) { alert(e.message); }
+            
+            btn.innerHTML = 'Lưu'; btn.disabled = false;
+        });
+    </script>
 </body>
 </html>
