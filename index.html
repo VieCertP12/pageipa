@@ -375,11 +375,18 @@
         function renderUI(apps) {
             document.getElementById('main-loader').classList.add('hidden');
 
+            // Link ảnh logo mặc định của ESign (lấy từ Popup)
+            const defaultEsignIcon = "https://i.imgur.com/hPj8ui8.png";
+
             const esign = apps.filter(a => a.type === 'esign');
             document.getElementById('esign-list').innerHTML = esign.map(item => `
                 <div class="glass-card rounded-2xl p-4 flex items-center gap-4 group">
                     <div class="relative w-16 h-16 rounded-xl border border-slate-200 group-hover:border-indigo-300 transition-colors shadow-sm bg-white">
-                        <img src="${escapeHtml(item.icon)}" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/100'">
+                        
+                        <img src="${item.icon ? escapeHtml(item.icon) : defaultEsignIcon}" 
+                             class="w-full h-full object-cover rounded-xl" 
+                             onerror="this.src='${defaultEsignIcon}'">
+
                         ${item.badge ? `<span class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-md">${escapeHtml(item.badge)}</span>` : ''}
                     </div>
                     <div class="flex-1 min-w-0">
