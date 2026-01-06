@@ -453,7 +453,19 @@
         let countdownTimer;
 
         function openESignPopup(nameKey, url) {
-            document.getElementById('popup-cert-name').textContent = `ESign ${nameKey}`; 
+            // --- BẮT ĐẦU SỬA LOGIC TÊN ---
+            
+            // 1. Kiểm tra xem tên app (nameKey) có chứa chữ "esign" không (không phân biệt hoa thường)
+            if (nameKey.toLowerCase().includes('esign')) {
+                // Nếu ĐÃ CÓ chữ esign (ví dụ: "Esign 1"), thì giữ nguyên
+                document.getElementById('popup-cert-name').textContent = nameKey;
+            } else {
+                // Nếu CHƯA CÓ (ví dụ: "2"), thì thêm chữ "ESign " vào đằng trước
+                document.getElementById('popup-cert-name').textContent = `ESign ${nameKey}`;
+            }
+
+            // --- KẾT THÚC SỬA LOGIC TÊN ---
+
             document.getElementById('popup-install-btn').href = url;
             popup.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Khóa cuộn trang
