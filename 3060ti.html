@@ -328,16 +328,23 @@
         
         async function load() {
             try {
-                // --- ĐÃ SỬA: LẤY DỮ LIỆU CÓ SẮP XẾP ORDER ---
-                const q = query(collection(db, "apps"), orderBy("order", "asc"));
+                // --- SỬA: Lấy dữ liệu bình thường, không cần orderBy order ở query nữa ---
+                const q = query(collection(db, "apps")); 
                 const s = await getDocs(q);
-                allData = []; s.forEach(d => allData.push({id: d.id, ...d.data()}));
+                allData = []; 
+                s.forEach(d => allData.push({id: d.id, ...d.data()}));
                 
-                // Backup phòng khi dữ liệu cũ chưa có order
-                allData.sort((a,b) => (a.order !== undefined ? a.order : 9999) - (b.order !== undefined ? b.order : 9999));
+                // --- SỬA: LOGIC SẮP XẾP MỚI (TIME) ---
+                // Sắp xếp theo updatedAt giảm dần (Mới nhất lên đầu)
+                allData.sort((a, b) => {
+                    const timeA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+                    const timeB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+                    return timeB - timeA; // B - A: Mới nhất lên trên
+                });
+
                 render();
             } catch(e) {
-                console.error("Lỗi lấy dữ liệu (Nếu lỗi index, xem console):", e);
+                console.error("Lỗi lấy dữ liệu:", e);
             }
         }
         
