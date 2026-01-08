@@ -359,16 +359,29 @@
 
         async function fetchApps() {
             try {
-                // ĐÃ SỬA: THÊM orderBy("order", "asc") ĐỂ SẮP XẾP ĐÚNG VỚI DATABASE
-                const q = query(collection(db, "apps"), orderBy("order", "asc"));
+                // 1. Lấy dữ liệu (Bỏ orderBy order để tránh lỗi index nếu chưa tạo)
+                const q = query(collection(db, "apps"));
                 const snapshot = await getDocs(q);
-                const apps = [];
-                snapshot.forEach(doc => { if(doc.data().status !== 'hidden') apps.push({ id: doc.id, ...doc.data() }); });
                 
+                const apps = [];
+                snapshot.forEach(doc => { 
+                    const d = doc.data();
+                    // Chỉ lấy app không bị ẩn
+                    if(d.status !== 'hidden') {
+                        apps.push({ id: doc.id, ...d });
+                    }
+                });
+                
+                // 2. SẮP XẾP: MỚI NHẤT LÊN ĐẦU (Dựa vào updatedAt)
+                apps.sort((a, b) => {
+                    const timeA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+                    const timeB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+                    return timeB - timeA; // B lớn hơn (mới hơn) thì xếp trước
+                });
+
                 renderUI(apps);
             } catch (e) { 
                 console.error("LỖI LẤY DỮ LIỆU:", e);
-                // Nếu lỗi index, nó sẽ hiện trong console (F12)
             }
         }
 
