@@ -336,11 +336,13 @@
                 
                 // --- SỬA: LOGIC SẮP XẾP MỚI (TIME) ---
                 // Sắp xếp theo updatedAt giảm dần (Mới nhất lên đầu)
-                allData.sort((a, b) => {
-                    const timeA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
-                    const timeB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
-                    return timeB - timeA; // B - A: Mới nhất lên trên
-                });
+                // Luôn sắp xếp theo Order tăng dần
+// Vì App mới thêm ta đã cho order là số âm (nhỏ nhất) nên nó sẽ tự động lên đầu
+data.sort((a, b) => {
+    const orderA = (a.order !== undefined && a.order !== null) ? a.order : 9999;
+    const orderB = (b.order !== undefined && b.order !== null) ? b.order : 9999;
+    return orderA - orderB; 
+});
 
                 render();
             } catch(e) {
