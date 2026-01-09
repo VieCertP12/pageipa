@@ -339,7 +339,7 @@
 
         // --- APP LOGIC ---
         let curType = 'esign'; 
-        window.allData = []; // Biến toàn cục để lưu data
+        window.allData = []; 
         
         async function load() {
             try {
@@ -348,8 +348,7 @@
                 window.allData = []; 
                 s.forEach(d => window.allData.push({id: d.id, ...d.data()}));
                 
-                // --- QUAN TRỌNG: SẮP XẾP THEO ORDER (Nhỏ nhất lên đầu) ---
-                // Những app mới thêm sẽ có order nhỏ nhất nên sẽ lên đầu
+                // Sort theo Order
                 window.allData.sort((a, b) => {
                     const orderA = (a.order !== undefined && a.order !== null) ? a.order : 999999;
                     const orderB = (b.order !== undefined && b.order !== null) ? b.order : 999999;
@@ -367,8 +366,11 @@
             const list = window.allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
             
             document.getElementById('count-badge').innerText = `${list.length} App`;
+            
+            // --- SỬA Ở ĐÂY: BỎ class transition-all KHỎI DIV KHI RENDER ---
+            // Chỉ giữ lại hover:shadow-md và transition-shadow nếu muốn, bỏ transition-all đi để tránh lag
             document.getElementById('list-data').innerHTML = list.map((i, idx) => `
-                <div draggable="true" class="draggable-item bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-md transition-all cursor-move select-none" data-id="${i.id}">
+                <div draggable="true" class="draggable-item bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-md select-none" data-id="${i.id}">
                     <div class="text-slate-300 px-2 cursor-grab active:cursor-grabbing"><i class="fas fa-grip-vertical"></i></div>
                     <div class="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border icon-preview-box">
                         ${window.smartParseIcon(i.icon) || '<img src="https://placehold.co/100">'}
@@ -389,50 +391,73 @@
             addDragEvents();
         }
         
+        // --- LOGIC KÉO THẢ TỐI ƯU (KHÔNG LAG) ---
         function addDragEvents() {
             const container = document.getElementById('list-data');
             const draggables = document.querySelectorAll('.draggable-item');
             
             draggables.forEach(d => {
-                d.addEventListener('dragstart', () => d.classList.add('dragging'));
+                d.addEventListener('dragstart', () => {
+                    d.classList.add('dragging');
+                    // Tắt hết pointer events của các item khác để tránh sự kiện lung tung
+                    container.classList.add('cursor-grabbing');
+                });
+                
                 d.addEventListener('dragend', async () => {
                     d.classList.remove('dragging');
+                    container.classList.remove('cursor-grabbing');
                     await saveOrder();
                 });
             });
             
             container.addEventListener('dragover', e => {
                 e.preventDefault();
+                
+                const dragging = document.querySelector('.dragging');
+                if(!dragging) return;
+
+                // Tối ưu: Chỉ tính toán khi thực sự cần
                 const afterElement = getDragAfterElement(container, e.clientY);
-                const draggable = document.querySelector('.dragging');
-                if (draggable) {
-                    if (!afterElement) container.appendChild(draggable); 
-                    else container.insertBefore(draggable, afterElement);
+                
+                // Chỉ thực hiện DOM manipulation nếu vị trí thực sự thay đổi
+                // Nếu afterElement là null (cuối cùng) hoặc khác với nextSibling hiện tại
+                const currentNext = dragging.nextElementSibling;
+                
+                if (afterElement !== currentNext) {
+                    if (afterElement == null) {
+                        container.appendChild(dragging);
+                    } else {
+                        container.insertBefore(dragging, afterElement);
+                    }
                 }
             });
         }
         
         function getDragAfterElement(container, y) {
-            return [...container.querySelectorAll('.draggable-item:not(.dragging)')].reduce((closest, child) => {
+            // Chỉ lấy các element không phải là đang kéo
+            const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
                 const box = child.getBoundingClientRect();
                 const offset = y - box.top - box.height / 2;
-                return offset < 0 && offset > closest.offset ? { offset: offset, element: child } : closest;
+                // Tìm element mà chuột đang ở phía trên nó (offset < 0) và gần nhất (offset lớn nhất)
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
         
         async function saveOrder() {
             const batch = writeBatch(db);
             let hasChanges = false;
-            // Duyệt qua DOM để lấy thứ tự mới
             const items = document.querySelectorAll('.draggable-item');
             
-            // Tìm minOrder hiện tại để đảm bảo tính liên tục (không bắt buộc nhưng tốt)
-            // Đơn giản là ta gán lại order từ 0, 1, 2...
-            // Tuy nhiên để hỗ trợ việc "App mới lên đầu" (order âm), ta nên reset lại index
-            
+            // Logic: Cập nhật lại toàn bộ order dựa trên DOM hiện tại
             items.forEach((item, index) => {
                 const id = item.dataset.id;
-                const newOrder = index; // Gán lại thứ tự: 0, 1, 2...
+                const newOrder = index; 
                 
                 batch.update(doc(db, "apps", id), { order: newOrder });
                 
@@ -445,8 +470,9 @@
             
             try { 
                 await batch.commit(); 
-                // Sắp xếp lại mảng dữ liệu gốc
+                // Sort lại biến local để đồng bộ
                 window.allData.sort((a,b) => (a.order || 0) - (b.order || 0));
+                // Không cần reload lại UI vì DOM đã đúng rồi
                 if(hasChanges) showToast("Đã cập nhật vị trí!", "success");
             } catch(e){
                 console.error(e);
@@ -517,14 +543,12 @@
             const btn = document.getElementById('btn-save'); 
             btn.innerHTML = 'Lưu...'; btn.disabled = true;
             
-            // --- LOGIC MỚI: TỰ ĐỘNG LÊN ĐẦU KHI THÊM MỚI ---
+            // Logic thêm mới: Cho lên đầu
             let newOrder = 0;
             if (!id) {
-                // Tìm order nhỏ nhất hiện tại
                 const currentMin = window.allData.length > 0 
                     ? Math.min(...window.allData.map(p => (p.order !== undefined ? p.order : 0)))
                     : 0;
-                // Gán order nhỏ hơn min để nhảy lên đầu
                 newOrder = currentMin - 1;
             }
 
