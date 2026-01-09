@@ -51,7 +51,7 @@
             overflow-x: hidden;
         }
         /* Admin Inputs Exception */
-        .pc-input, textarea, .allow-select, .ql-editor { user-select: text !important; -webkit-user-select: text !important; }
+        .pc-input, textarea, .allow-select, .ql-editor, .note-content-rendered { user-select: text !important; -webkit-user-select: text !important; }
 
         /* GLASSMORPHISM - APPLE STYLE */
         .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
@@ -279,7 +279,7 @@
                             </div>
 
                             <div class="glass-card rounded-2xl p-8 mb-8 bg-white">
-                                <h3 class="text-base font-bold text-slate-800 uppercase mb-6">Tasks Setup</h3>
+                                <h3 class="text-base font-bold text-slate-800 uppercase mb-6">Tasks Setup (Optional)</h3>
                                 <div class="flex gap-3 mb-6 overflow-x-auto pb-2">
                                     <button type="button" class="stu_b_ftr active" onclick="selectPlatform('yt', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i><span>YouTube</span></button>
                                     <button type="button" class="stu_b_ftr" onclick="selectPlatform('tg', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i><span>Telegram</span></button>
@@ -384,7 +384,7 @@
                 </div>
 
                 <div class="flex-1 overflow-y-auto px-4 pb-24 bg-[#F2F2F7]" id="u_tasks_scroll">
-                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-4 mt-2">Required Tasks</div>
+                    <div id="u_tasks_header" class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-4 mt-2">Required Tasks</div>
                     <div id="u_tasks" class="apple-list"></div>
                 </div>
 
@@ -621,7 +621,7 @@
         window.handleSubmitCreate = async () => {
             if (!window.currentUser()) return showToast("Session expired", "error");
             const docId = document.getElementById('edit_doc_id').value;
-            const title = document.getElementById('i_ttl').value || 'Default Title', subtitle = document.getElementById('i_sttl').value || 'Complete tasks...', note = document.getElementById('i_note').value || '', userNote = document.getElementById('i_user_note').value || '', destName = document.getElementById('i_dest_name').value || 'Unlock';
+            const title = document.getElementById('i_ttl').value || 'Default Title', subtitle = document.getElementById('i_sttl').value || 'Complete steps...', note = document.getElementById('i_note').value || '', userNote = document.getElementById('i_user_note').value || '', destName = document.getElementById('i_dest_name').value || 'Unlock';
             const type = document.querySelector('input[name="destType"]:checked').value;
             let destUrl = "", noteContent = "";
             
@@ -646,7 +646,8 @@
                     tasks[id] = { url: inp.value, label: lbl ? lbl.value : 'Task', ...style };
                 }
             });
-            if (Object.keys(tasks).length === 0) return showToast("Add at least 1 task", "error");
+            // REMOVED: if (Object.keys(tasks).length === 0) return showToast("Add at least 1 task", "error");
+            // ALLOWS creating link without tasks (Direct Note/Link)
 
             document.getElementById('global-loader').classList.remove('hidden');
             try {
@@ -818,9 +819,12 @@
             if(data.userNote) { noteArea.innerHTML = `<i class="fa-solid fa-circle-info mt-0.5 text-yellow-600"></i><span class="font-medium">${data.userNote}</span>`; noteArea.classList.remove('hidden'); } else noteArea.classList.add('hidden');
 
             const list = document.getElementById('u_tasks'); list.innerHTML = ''; done = 0; req = 0; tasksList = [];
+            const header = document.getElementById('u_tasks_header');
             
+            // Check if tasks exist
             if(data.tasks && Object.keys(data.tasks).length > 0) {
                 document.getElementById('u_tasks_scroll').classList.remove('hidden'); 
+                header.classList.remove('hidden'); // Show header if tasks exist
                 
                 const entries = Object.entries(data.tasks); req = entries.length;
                 const isCompact = entries.length > 4;
@@ -858,12 +862,24 @@
                     div.onclick = () => doTask(idx, url); list.appendChild(div); tasksList.push({ id: idx, url: url, done: false });
                 });
             } else {
-                document.getElementById('u_tasks_scroll').classList.add('hidden');
+                // NO TASKS MODE
+                document.getElementById('u_tasks_scroll').classList.add('hidden'); // Hide scroll area
+                header.classList.add('hidden'); // Hide "Required Tasks" header
+                req = 0; 
             }
             
             resetLockBtn(data.destName);
             
             if (req === 0) {
+                // If 0 tasks, unlock immediately and customize button
+                const btn = document.getElementById('unlockBtn');
+                btn.disabled = false;
+                btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all text-[15px]";
+                btn.innerHTML = `<i class="fa-solid fa-bolt"></i><span>${data.type === 'note' ? 'Xem Note Ngay' : 'Mở Link Ngay'}</span>`;
+                
+                // Hide progress bar specifically for 0 tasks
+                document.getElementById('progressArea').classList.add('hidden');
+            } else {
                 checkUnlock();
             }
         }
@@ -912,6 +928,8 @@
         }
 
         function checkUnlock() {
+            if(req === 0) return; // Handled in renderUserView for 0 tasks
+            
             const pct = req===0?100:Math.round((done/req)*100);
             document.getElementById('progressArea').classList.remove('hidden'); document.getElementById('progressBar').style.width = `${pct}%`; document.getElementById('progressText').innerText = `${pct}%`;
             if(done >= req) {
