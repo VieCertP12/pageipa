@@ -152,7 +152,7 @@
                     </div>
                 </div>
 
-                <div class="mb-2 text-xs text-slate-400 italic text-right">* Kéo thả các thẻ bên dưới để sắp xếp vị trí hiển thị</div>
+                <div class="mb-2 text-xs text-slate-400 italic text-right">* Kéo thả các thẻ bên dưới để sắp xếp vị trí hiển thị (App mới sẽ tự lên đầu)</div>
                 <div id="list-data" class="grid gap-3"></div>
             </div>
         </div>
@@ -217,8 +217,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-        // --- ĐÃ SỬA: THÊM orderBy VÀO ĐÂY ---
-        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, query, writeBatch, orderBy } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, query, writeBatch } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
         const app = initializeApp(firebaseConfig);
@@ -324,25 +323,23 @@
         window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
 
         // --- APP LOGIC ---
-        let curType = 'esign'; let allData = [];
+        let curType = 'esign'; 
+        window.allData = []; // Biến toàn cục để lưu data
         
         async function load() {
             try {
-                // --- SỬA: Lấy dữ liệu bình thường, không cần orderBy order ở query nữa ---
                 const q = query(collection(db, "apps")); 
                 const s = await getDocs(q);
-                allData = []; 
-                s.forEach(d => allData.push({id: d.id, ...d.data()}));
+                window.allData = []; 
+                s.forEach(d => window.allData.push({id: d.id, ...d.data()}));
                 
-                // --- SỬA: LOGIC SẮP XẾP MỚI (TIME) ---
-                // Sắp xếp theo updatedAt giảm dần (Mới nhất lên đầu)
-                // Luôn sắp xếp theo Order tăng dần
-// Vì App mới thêm ta đã cho order là số âm (nhỏ nhất) nên nó sẽ tự động lên đầu
-data.sort((a, b) => {
-    const orderA = (a.order !== undefined && a.order !== null) ? a.order : 9999;
-    const orderB = (b.order !== undefined && b.order !== null) ? b.order : 9999;
-    return orderA - orderB; 
-});
+                // --- QUAN TRỌNG: SẮP XẾP THEO ORDER (Nhỏ nhất lên đầu) ---
+                // Những app mới thêm sẽ có order nhỏ nhất nên sẽ lên đầu
+                window.allData.sort((a, b) => {
+                    const orderA = (a.order !== undefined && a.order !== null) ? a.order : 999999;
+                    const orderB = (b.order !== undefined && b.order !== null) ? b.order : 999999;
+                    return orderA - orderB; 
+                });
 
                 render();
             } catch(e) {
@@ -352,7 +349,7 @@ data.sort((a, b) => {
         
         function render() {
             const term = document.getElementById('search-app').value.toLowerCase();
-            const list = allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
+            const list = window.allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
             
             document.getElementById('count-badge').innerText = `${list.length} App`;
             document.getElementById('list-data').innerHTML = list.map((i, idx) => `
@@ -411,18 +408,30 @@ data.sort((a, b) => {
         async function saveOrder() {
             const batch = writeBatch(db);
             let hasChanges = false;
-            document.querySelectorAll('.draggable-item').forEach((item, index) => {
+            // Duyệt qua DOM để lấy thứ tự mới
+            const items = document.querySelectorAll('.draggable-item');
+            
+            // Tìm minOrder hiện tại để đảm bảo tính liên tục (không bắt buộc nhưng tốt)
+            // Đơn giản là ta gán lại order từ 0, 1, 2...
+            // Tuy nhiên để hỗ trợ việc "App mới lên đầu" (order âm), ta nên reset lại index
+            
+            items.forEach((item, index) => {
                 const id = item.dataset.id;
-                batch.update(doc(db, "apps", id), { order: index });
-                const d = allData.find(x => x.id === id); 
+                const newOrder = index; // Gán lại thứ tự: 0, 1, 2...
+                
+                batch.update(doc(db, "apps", id), { order: newOrder });
+                
+                const d = window.allData.find(x => x.id === id); 
                 if(d) {
-                    if(d.order !== index) hasChanges = true;
-                    d.order = index;
+                    if(d.order !== newOrder) hasChanges = true;
+                    d.order = newOrder;
                 }
             });
+            
             try { 
                 await batch.commit(); 
-                allData.sort((a,b) => (a.order || 0) - (b.order || 0));
+                // Sắp xếp lại mảng dữ liệu gốc
+                window.allData.sort((a,b) => (a.order || 0) - (b.order || 0));
                 if(hasChanges) showToast("Đã cập nhật vị trí!", "success");
             } catch(e){
                 console.error(e);
@@ -451,7 +460,7 @@ data.sort((a, b) => {
             document.getElementById('inp-desc').value = ''; 
             document.getElementById('inp-url').value = ''; 
             document.getElementById('inp-icon').value = ''; 
-            document.getElementById('inp-downloads').value = '0'; // Reset về 0 khi thêm mới
+            document.getElementById('inp-downloads').value = '0'; 
             document.getElementById('icon-preview').innerHTML = ''; 
             document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`; 
             document.getElementById('modal').classList.remove('hidden');
@@ -460,13 +469,13 @@ data.sort((a, b) => {
         window.closeModal = () => document.getElementById('modal').classList.add('hidden');
         
         window.edit = (id) => {
-            const item = allData.find(x => x.id === id); if(!item) return;
+            const item = window.allData.find(x => x.id === id); if(!item) return;
             document.getElementById('edit-id').value = id; 
             document.getElementById('inp-name').value = item.name; 
             document.getElementById('inp-desc').value = item.desc; 
             document.getElementById('inp-url').value = item.url; 
             document.getElementById('inp-icon').value = item.icon; 
-            document.getElementById('inp-downloads').value = item.downloads || 0; // Load số lượt tải hiện tại vào input
+            document.getElementById('inp-downloads').value = item.downloads || 0;
             document.getElementById('icon-preview').innerHTML = window.smartParseIcon(item.icon);
             document.getElementById('inp-badge').value = item.badge || ''; 
             document.getElementById('inp-status').value = item.status || 'active'; 
@@ -478,7 +487,7 @@ data.sort((a, b) => {
             if(confirm("Xóa nhé?")) { 
                 try {
                     await deleteDoc(doc(db, "apps", id)); 
-                    allData = allData.filter(x => x.id !== id);
+                    window.allData = window.allData.filter(x => x.id !== id);
                     render();
                     showToast("Đã xóa ứng dụng!");
                 } catch(e) { alert(e.message); }
@@ -493,12 +502,16 @@ data.sort((a, b) => {
             const btn = document.getElementById('btn-save'); 
             btn.innerHTML = 'Lưu...'; btn.disabled = true;
             
-            let newOrder = 9999;
+            // --- LOGIC MỚI: TỰ ĐỘNG LÊN ĐẦU KHI THÊM MỚI ---
+            let newOrder = 0;
             if (!id) {
-    // Logic mới: Tìm số nhỏ nhất hiện tại và trừ đi 1 để nhảy lên đầu
-    const currentMin = allData.reduce((min, p) => (p.order !== undefined && p.order < min) ? p.order : min, 0);
-    newOrder = currentMin - 1; 
-}
+                // Tìm order nhỏ nhất hiện tại
+                const currentMin = window.allData.length > 0 
+                    ? Math.min(...window.allData.map(p => (p.order !== undefined ? p.order : 0)))
+                    : 0;
+                // Gán order nhỏ hơn min để nhảy lên đầu
+                newOrder = currentMin - 1;
+            }
 
             const data = { 
                 type: curType, 
@@ -508,7 +521,6 @@ data.sort((a, b) => {
                 icon: document.getElementById('inp-icon').value, 
                 badge: document.getElementById('inp-badge').value, 
                 status: document.getElementById('inp-status').value, 
-                // Lấy giá trị lượt tải từ ô input, chuyển thành số
                 downloads: Number(document.getElementById('inp-downloads').value) || 0,
                 tag: document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire', 
                 updatedAt: new Date().toISOString() 
@@ -523,12 +535,14 @@ data.sort((a, b) => {
                 await setDoc(docRef, data, { merge: true }); 
                 
                 if(id) {
-                    const idx = allData.findIndex(x => x.id === id);
-                    if(idx > -1) allData[idx] = { ...allData[idx], ...data };
+                    const idx = window.allData.findIndex(x => x.id === id);
+                    if(idx > -1) window.allData[idx] = { ...window.allData[idx], ...data };
                 } else {
-                    allData.push({ id: docRef.id, ...data });
+                    window.allData.push({ id: docRef.id, ...data });
                 }
-                allData.sort((a,b) => (a.order || 9999) - (b.order || 9999));
+                
+                // Sort lại ngay lập tức
+                window.allData.sort((a,b) => (a.order || 0) - (b.order || 0));
 
                 closeModal(); 
                 render(); 
