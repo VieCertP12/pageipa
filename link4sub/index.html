@@ -349,12 +349,48 @@
 
             <!-- [NEW] Direct View Container (No Tasks Mode) -->
             <div id="direct-mode-container" class="hidden absolute inset-0 z-50 bg-white flex flex-col items-center justify-center p-6">
-                <h1 id="d_title" class="text-2xl font-bold text-slate-800 mb-8 text-center animate-fade-in"></h1>
-                
-                <div id="d_action_area" class="w-full max-w-xs animate-fade-in text-center">
-                     <button id="d_btn_unlock" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-xl transform transition hover:scale-105 active:scale-95 flex items-center justify-center gap-3 text-lg">
-                        <i class="fa-solid fa-unlock-keyhole"></i> <span id="d_btn_text">Unlock</span>
-                     </button>
+                <!-- 1. Loader for 3s -->
+                <div id="d_loader" class="flex flex-col items-center">
+                    <div class="loader mb-4 border-t-blue-600"></div>
+                    <div class="text-sm font-bold text-gray-400">Please wait...</div>
+                </div>
+
+                <!-- 2. Main Content (Hidden initially) -->
+                <div id="d_main_content" class="hidden w-full max-w-md flex flex-col items-center">
+                    <h1 id="d_title" class="text-2xl font-bold text-slate-800 mb-8 text-center"></h1>
+                    
+                    <!-- INSERTED ADVERTISEMENT BLOCK -->
+                    <div class="w-full px-4 mb-8">
+                        <div class="group relative w-full bg-white rounded-[24px] p-5 shadow-[0_8px_20px_rgba(0,0,0,0.08)] border border-gray-100 cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98]" onclick="window.open('https://muachungchi.com', '_blank')">
+                            <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60 group-hover:bg-blue-100 transition-colors"></div>
+                            <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-purple-50 rounded-full blur-2xl opacity-60 group-hover:bg-purple-100 transition-colors"></div>
+                            
+                            <div class="relative z-10 flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300">
+                                    <i class="fa-solid fa-crown text-2xl"></i>
+                                </div>
+                                
+                                <div class="flex-1 min-w-0 text-left">
+                                    <div class="flex items-center gap-2 mb-0.5">
+                                        <span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded-md">Sponsored</span>
+                                        <span class="text-[10px] text-gray-400 font-medium">QC</span>
+                                    </div>
+                                    <h3 class="font-bold text-[15px] text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">Nâng cấp Chứng Chỉ VIP</h3>
+                                    <p class="text-[12px] text-slate-500 font-medium mt-0.5 truncate">Không Revoke • Bảo hành 1 năm</p>
+                                </div>
+
+                                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
+                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="d_action_area" class="w-full max-w-xs text-center">
+                         <button id="d_btn_unlock" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-xl transform transition hover:scale-105 active:scale-95 flex items-center justify-center gap-3 text-lg">
+                            <i class="fa-solid fa-unlock-keyhole"></i> <span id="d_btn_text">Unlock</span>
+                         </button>
+                    </div>
                 </div>
 
                 <div id="d_result_area" class="hidden w-full max-w-md mt-8 animate-fade-in">
@@ -897,34 +933,39 @@
                     `;
                     div.onclick = () => doTask(idx, url); list.appendChild(div); tasksList.push({ id: idx, url: url, done: false });
                 });
+                resetLockBtn(data.destName);
+                checkUnlock();
+
             } else {
                 // NO TASKS MODE
                 req = 0;
                 document.getElementById('user-card-main').classList.add('hidden'); // Hide Normal Card
-                document.getElementById('direct-mode-container').classList.remove('hidden'); // Show Direct Container
+                const directContainer = document.getElementById('direct-mode-container');
+                directContainer.classList.remove('hidden'); // Show Container
                 
-                // Set Title and Button
+                // [NEW LOGIC] Fake Loading 3s
+                const dLoader = document.getElementById('d_loader');
+                const dMainContent = document.getElementById('d_main_content');
+                
+                // Reset state
+                dLoader.classList.remove('hidden');
+                dMainContent.classList.add('hidden');
+                document.getElementById('d_result_area').classList.add('hidden');
+
+                // Set content
                 document.getElementById('d_title').innerText = data.title || 'Unlock Content';
                 document.getElementById('d_btn_text').innerText = data.destName || 'Unlock Now';
+                
+                // 3s Timer
+                setTimeout(() => {
+                    dLoader.classList.add('hidden');
+                    dMainContent.classList.remove('hidden');
+                    dMainContent.classList.add('animate-fade-in');
+                }, 3000);
                 
                 // Attach Event
                 const btn = document.getElementById('d_btn_unlock');
                 btn.onclick = () => doUnlockDirect();
-            }
-            
-            resetLockBtn(data.destName);
-            
-            if (req === 0) {
-                // If 0 tasks, unlock immediately and customize button
-                const btn = document.getElementById('unlockBtn');
-                btn.disabled = false;
-                btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all text-[15px]";
-                btn.innerHTML = `<i class="fa-solid fa-bolt"></i><span>${data.type === 'note' ? 'Xem Note Ngay' : 'Mở Link Ngay'}</span>`;
-                
-                // Hide progress bar specifically for 0 tasks
-                document.getElementById('progressArea').classList.add('hidden');
-            } else {
-                checkUnlock();
             }
         }
 
@@ -934,7 +975,9 @@
              if(currentLinkId) trackStat(currentLinkId, 'unlocks');
              
              if(finalData.type === 'note') {
-                 document.getElementById('d_action_area').classList.add('hidden');
+                 // Hide Main Button Area
+                 document.getElementById('d_main_content').classList.add('hidden');
+                 
                  document.getElementById('d_result_area').classList.remove('hidden');
                  document.getElementById('d_note_content').innerHTML = L4S_SEC.dec(finalData.noteContent);
                  
