@@ -493,9 +493,10 @@
             
             let newOrder = 9999;
             if (!id) {
-                const currentMax = allData.reduce((max, p) => p.order > max ? p.order : max, 0);
-                newOrder = currentMax + 1;
-            }
+    // Logic mới: Tìm số nhỏ nhất hiện tại và trừ đi 1 để nhảy lên đầu
+    const currentMin = allData.reduce((min, p) => (p.order !== undefined && p.order < min) ? p.order : min, 0);
+    newOrder = currentMin - 1; 
+}
 
             const data = { 
                 type: curType, 
