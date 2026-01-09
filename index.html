@@ -369,10 +369,8 @@
                     }
                 });
                 
-                // --- SỬA LOGIC SẮP XẾP ---
+                // --- SẮP XẾP ---
                 // Sắp xếp theo ORDER tăng dần (Nhỏ nhất lên đầu)
-                // Các App mới sẽ có order thấp (do Admin code gán) nên sẽ lên đầu
-                // Các App cũ chưa có order sẽ bị đẩy xuống dưới (gán 999999)
                 apps.sort((a, b) => {
                     const orderA = (a.order !== undefined && a.order !== null) ? a.order : 999999;
                     const orderB = (b.order !== undefined && b.order !== null) ? b.order : 999999;
