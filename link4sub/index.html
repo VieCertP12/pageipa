@@ -347,7 +347,30 @@
                 </div>
             </div>
 
-            <div class="user-card-wrapper">
+            <!-- [NEW] Direct View Container (No Tasks Mode) -->
+            <div id="direct-mode-container" class="hidden absolute inset-0 z-50 bg-white flex flex-col items-center justify-center p-6">
+                <h1 id="d_title" class="text-2xl font-bold text-slate-800 mb-8 text-center animate-fade-in"></h1>
+                
+                <div id="d_action_area" class="w-full max-w-xs animate-fade-in text-center">
+                     <button id="d_btn_unlock" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-xl transform transition hover:scale-105 active:scale-95 flex items-center justify-center gap-3 text-lg">
+                        <i class="fa-solid fa-unlock-keyhole"></i> <span id="d_btn_text">Unlock</span>
+                     </button>
+                </div>
+
+                <div id="d_result_area" class="hidden w-full max-w-md mt-8 animate-fade-in">
+                    <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
+                        <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Secret Note</span>
+                            <button onclick="copyDirectNote()" class="text-xs font-bold text-blue-600 hover:bg-blue-50 px-2 py-1 rounded">COPY</button>
+                        </div>
+                        <div id="d_note_content" class="p-6 text-sm text-slate-800 overflow-y-auto max-h-[60vh] note-content-rendered leading-relaxed"></div>
+                    </div>
+                    <button onclick="location.reload()" class="mt-6 text-gray-400 hover:text-gray-600 text-sm font-medium mx-auto block">Reload Page</button>
+                </div>
+            </div>
+
+            <!-- Standard User Card (With Tasks) -->
+            <div class="user-card-wrapper" id="user-card-main">
                 <div id="u_header" class="relative pt-12 pb-6 px-6 text-center bg-white border-b border-gray-100">
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold mb-4 uppercase tracking-wide">
                         <i class="fa-brands fa-apple"></i> Secure Link
@@ -591,6 +614,17 @@
             window.getSelection().removeAllRanges();
             showToast("Content Copied!", "success"); 
         }
+        // [NEW] Copy Direct Note
+        function copyDirectNote() {
+            const node = document.getElementById('d_note_content');
+            const range = document.createRange();
+            range.selectNode(node);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            showToast("Copied Note!", "success");
+        }
         window.copyToClip = (text) => {
             if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => showToast("Copied!", "success"));
             else { let ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px"; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); showToast("Copied!", "success"); } catch (e) { showToast("Error", "error"); } document.body.removeChild(ta); }
@@ -614,7 +648,7 @@
             if(id.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; if(id.includes('ytl') || txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(id.includes('ytc') || txt.includes('comment') || txt.includes('bình luận') || txt.includes('cmt')) icon = 'fa-comment'; if(id.includes('yts') || txt.includes('sub') || txt.includes('đăng ký')) icon = 'fa-youtube'; }
             else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
             else if(id.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; if(txt.includes('like') || txt.includes('tim') || txt.includes('heart')) { icon = 'fa-heart'; color = 'text-pink-500'; } if(txt.includes('follow')) icon = 'fa-tiktok'; }
-            else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('follow') || txt.includes('theo dõi')) icon = 'fa-facebook'; if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-share'; if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; }
+            else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('follow') || txt.includes('theo dõi')) icon = 'fa-facebook'; if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-comment'; if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; }
             return { icon, color, bg };
         }
 
@@ -825,6 +859,8 @@
             if(data.tasks && Object.keys(data.tasks).length > 0) {
                 document.getElementById('u_tasks_scroll').classList.remove('hidden'); 
                 header.classList.remove('hidden'); // Show header if tasks exist
+                document.getElementById('user-card-main').classList.remove('hidden');
+                document.getElementById('direct-mode-container').classList.add('hidden');
                 
                 const entries = Object.entries(data.tasks); req = entries.length;
                 const isCompact = entries.length > 4;
@@ -863,9 +899,17 @@
                 });
             } else {
                 // NO TASKS MODE
-                document.getElementById('u_tasks_scroll').classList.add('hidden'); // Hide scroll area
-                header.classList.add('hidden'); // Hide "Required Tasks" header
-                req = 0; 
+                req = 0;
+                document.getElementById('user-card-main').classList.add('hidden'); // Hide Normal Card
+                document.getElementById('direct-mode-container').classList.remove('hidden'); // Show Direct Container
+                
+                // Set Title and Button
+                document.getElementById('d_title').innerText = data.title || 'Unlock Content';
+                document.getElementById('d_btn_text').innerText = data.destName || 'Unlock Now';
+                
+                // Attach Event
+                const btn = document.getElementById('d_btn_unlock');
+                btn.onclick = () => doUnlockDirect();
             }
             
             resetLockBtn(data.destName);
@@ -882,6 +926,35 @@
             } else {
                 checkUnlock();
             }
+        }
+
+        // [NEW] Function for Direct Unlock Mode
+        function doUnlockDirect() {
+             if(!finalData) return;
+             if(currentLinkId) trackStat(currentLinkId, 'unlocks');
+             
+             if(finalData.type === 'note') {
+                 document.getElementById('d_action_area').classList.add('hidden');
+                 document.getElementById('d_result_area').classList.remove('hidden');
+                 document.getElementById('d_note_content').innerHTML = L4S_SEC.dec(finalData.noteContent);
+                 
+                 // Fireworks
+                 var duration = 2 * 1000;
+                 var animationEnd = Date.now() + duration;
+                 var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+                 function random(min, max) { return Math.random() * (max - min) + min; }
+                 var interval = setInterval(function() {
+                    var timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) { return clearInterval(interval); }
+                    var particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.1, 0.3), y: Math.random() - 0.2 } }));
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.7, 0.9), y: Math.random() - 0.2 } }));
+                 }, 250);
+
+             } else if(finalData.destUrl) {
+                 const realUrl = L4S_SEC.dec(finalData.destUrl);
+                 if(realUrl) window.location.replace(realUrl);
+             }
         }
 
         function doTask(idx, url) {
