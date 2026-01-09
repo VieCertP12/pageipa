@@ -302,8 +302,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        // ĐÃ THÊM orderBy VÀO IMPORT
-        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment, query } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
         const app = initializeApp(firebaseConfig);
@@ -314,69 +313,70 @@
 
         // --- FETCH SETTINGS ---
         async function fetchSettings() {
-    try {
-        const docSnap = await getDoc(doc(db, "settings", "general"));
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            
-            const titleEl = document.getElementById('site-title');
-            if(data.title) titleEl.innerHTML = data.title;
-            if(data.titleColor) titleEl.style.color = data.titleColor;
-
-            const subEl = document.getElementById('site-subtitle');
-            if(data.subtitle) subEl.innerText = data.subtitle;
-            if(data.subtitleColor) subEl.style.color = data.subtitleColor;
-
-            const btnContainer = document.getElementById('hero-buttons');
-            const btns = data.heroButtons || [];
-            
-            if(btns.length > 0) {
-                btnContainer.innerHTML = btns.map((btn, index) => {
-                    if(!btn.text) return ''; 
+            try {
+                const docSnap = await getDoc(doc(db, "settings", "general"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
                     
-                    const bgColor = btn.bgColor || (index === 0 ? '#0f172a' : '#ffffff');
-                    const txtColor = btn.textColor || (index === 0 ? '#ffffff' : '#334155');
-                    const iconColor = btn.iconColor || (index === 0 ? '#ffffff' : '#6366f1');
+                    const titleEl = document.getElementById('site-title');
+                    if(data.title) titleEl.innerHTML = data.title;
+                    if(data.titleColor) titleEl.style.color = data.titleColor;
+
+                    const subEl = document.getElementById('site-subtitle');
+                    if(data.subtitle) subEl.innerText = data.subtitle;
+                    if(data.subtitleColor) subEl.style.color = data.subtitleColor;
+
+                    const btnContainer = document.getElementById('hero-buttons');
+                    const btns = data.heroButtons || [];
                     
-                    return `
-                        <a href="javascript:void(0)" 
-                           onclick="window.open('${escapeHtml(btn.url)}', '_blank')" 
-                           class="group relative px-6 py-3 rounded-full font-bold text-sm overflow-hidden transition-all flex items-center gap-2 shadow-md hover:shadow-lg hover:opacity-90 active:scale-95"
-                           style="background-color: ${bgColor}; color: ${txtColor}; border: 1px solid ${bgColor === '#ffffff' ? '#e2e8f0' : bgColor}">
-                           
-                           ${btn.icon ? `<i class="${escapeHtml(btn.icon)} transition-transform group-hover:scale-110" style="color: ${iconColor}"></i>` : ''}
-                           
-                           <span>${escapeHtml(btn.text)}</span>
-                        </a>
-                    `;
-                }).join('');
-            } else {
-                btnContainer.innerHTML = `<span class="text-slate-400 text-sm">Đang cập nhật...</span>`;
-            }
+                    if(btns.length > 0) {
+                        btnContainer.innerHTML = btns.map((btn, index) => {
+                            if(!btn.text) return ''; 
+                            
+                            const bgColor = btn.bgColor || (index === 0 ? '#0f172a' : '#ffffff');
+                            const txtColor = btn.textColor || (index === 0 ? '#ffffff' : '#334155');
+                            const iconColor = btn.iconColor || (index === 0 ? '#ffffff' : '#6366f1');
+                            
+                            return `
+                                <a href="javascript:void(0)" 
+                                   onclick="window.open('${escapeHtml(btn.url)}', '_blank')" 
+                                   class="group relative px-6 py-3 rounded-full font-bold text-sm overflow-hidden transition-all flex items-center gap-2 shadow-md hover:shadow-lg hover:opacity-90 active:scale-95"
+                                   style="background-color: ${bgColor}; color: ${txtColor}; border: 1px solid ${bgColor === '#ffffff' ? '#e2e8f0' : bgColor}">
+                                   
+                                   ${btn.icon ? `<i class="${escapeHtml(btn.icon)} transition-transform group-hover:scale-110" style="color: ${iconColor}"></i>` : ''}
+                                   
+                                   <span>${escapeHtml(btn.text)}</span>
+                                </a>
+                            `;
+                        }).join('');
+                    } else {
+                        btnContainer.innerHTML = `<span class="text-slate-400 text-sm">Đang cập nhật...</span>`;
+                    }
+                }
+            } catch (e) { console.log(e); }
         }
-    } catch (e) { console.log(e); }
-}
 
         async function fetchApps() {
             try {
-                // 1. Lấy dữ liệu (Bỏ orderBy order để tránh lỗi index nếu chưa tạo)
                 const q = query(collection(db, "apps"));
                 const snapshot = await getDocs(q);
                 
                 const apps = [];
                 snapshot.forEach(doc => { 
                     const d = doc.data();
-                    // Chỉ lấy app không bị ẩn
                     if(d.status !== 'hidden') {
                         apps.push({ id: doc.id, ...d });
                     }
                 });
                 
-                // 2. SẮP XẾP: MỚI NHẤT LÊN ĐẦU (Dựa vào updatedAt)
+                // --- SỬA LOGIC SẮP XẾP ---
+                // Sắp xếp theo ORDER tăng dần (Nhỏ nhất lên đầu)
+                // Các App mới sẽ có order thấp (do Admin code gán) nên sẽ lên đầu
+                // Các App cũ chưa có order sẽ bị đẩy xuống dưới (gán 999999)
                 apps.sort((a, b) => {
-                    const timeA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
-                    const timeB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
-                    return timeB - timeA; // B lớn hơn (mới hơn) thì xếp trước
+                    const orderA = (a.order !== undefined && a.order !== null) ? a.order : 999999;
+                    const orderB = (b.order !== undefined && b.order !== null) ? b.order : 999999;
+                    return orderA - orderB; 
                 });
 
                 renderUI(apps);
@@ -388,7 +388,6 @@
         function renderUI(apps) {
             document.getElementById('main-loader').classList.add('hidden');
 
-            // Link ảnh logo mặc định của ESign (lấy từ Popup)
             const defaultEsignIcon = "https://i.imgur.com/hPj8ui8.png";
 
             const esign = apps.filter(a => a.type === 'esign');
@@ -473,22 +472,15 @@
         let countdownTimer;
 
         function openESignPopup(nameKey, url) {
-            // --- BẮT ĐẦU SỬA LOGIC TÊN ---
-            
-            // 1. Kiểm tra xem tên app (nameKey) có chứa chữ "esign" không (không phân biệt hoa thường)
             if (nameKey.toLowerCase().includes('esign')) {
-                // Nếu ĐÃ CÓ chữ esign (ví dụ: "Esign 1"), thì giữ nguyên
                 document.getElementById('popup-cert-name').textContent = nameKey;
             } else {
-                // Nếu CHƯA CÓ (ví dụ: "2"), thì thêm chữ "ESign " vào đằng trước
                 document.getElementById('popup-cert-name').textContent = `ESign ${nameKey}`;
             }
 
-            // --- KẾT THÚC SỬA LOGIC TÊN ---
-
             document.getElementById('popup-install-btn').href = url;
             popup.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Khóa cuộn trang
+            document.body.style.overflow = 'hidden'; 
             
             let time = 30; 
             countdownEl.textContent = time; 
@@ -502,7 +494,7 @@
         
         function closeESignPopup() { 
             popup.classList.add('hidden'); 
-            document.body.style.overflow = ''; // Mở khóa cuộn
+            document.body.style.overflow = ''; 
             clearInterval(countdownTimer); 
         }
         
