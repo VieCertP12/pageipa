@@ -18,6 +18,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -48,7 +51,7 @@
             overflow-x: hidden;
         }
         /* Admin Inputs Exception */
-        .pc-input, textarea, .allow-select { user-select: text !important; -webkit-user-select: text !important; }
+        .pc-input, textarea, .allow-select, .ql-editor { user-select: text !important; -webkit-user-select: text !important; }
 
         /* GLASSMORPHISM - APPLE STYLE */
         .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
@@ -154,6 +157,18 @@
         .country-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #F2F2F7; }
         .progress-bar-bg { height: 6px; background: #F2F2F7; border-radius: 10px; flex: 1; margin: 0 12px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: #007AFF; border-radius: 10px; }
+
+        /* [NEW] QUILL EDITOR STYLES */
+        .ql-toolbar.ql-snow { border: none !important; border-bottom: 1px solid #E5E5EA !important; background: #F9F9FB; }
+        .ql-container.ql-snow { border: none !important; font-family: 'Outfit', sans-serif !important; font-size: 16px; background: white; min-height: 150px; }
+        .ql-editor { min-height: 150px; }
+        
+        /* [NEW] Note Result Styles for User */
+        .note-content-rendered ul { list-style-type: disc; padding-left: 20px; margin: 10px 0; }
+        .note-content-rendered ol { list-style-type: decimal; padding-left: 20px; margin: 10px 0; }
+        .note-content-rendered p { margin-bottom: 10px; }
+        .note-content-rendered a { color: #007AFF; text-decoration: underline; }
+        .note-content-rendered blockquote { border-left: 4px solid #ccc; padding-left: 10px; margin: 10px 0; color: #666; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -244,12 +259,22 @@
                                 <h3 class="text-base font-bold text-slate-800 uppercase mb-6">Destination <span class="text-[10px] text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded ml-2 font-bold">ENCRYPTED</span></h3>
                                 <div class="flex gap-4 mb-6">
                                     <label class="flex items-center gap-3 cursor-pointer bg-gray-50 px-4 py-2 rounded-lg"><input type="radio" name="destType" value="link" checked onchange="toggleDestType()" class="w-4 h-4 text-blue-600"><span class="text-sm font-bold text-gray-700">URL Link</span></label>
-                                    <label class="flex items-center gap-3 cursor-pointer bg-gray-50 px-4 py-2 rounded-lg"><input type="radio" name="destType" value="note" onchange="toggleDestType()" class="w-4 h-4 text-blue-600"><span class="text-sm font-bold text-gray-700">Secret Text/Code</span></label>
+                                    <label class="flex items-center gap-3 cursor-pointer bg-gray-50 px-4 py-2 rounded-lg"><input type="radio" name="destType" value="note" onchange="toggleDestType()" class="w-4 h-4 text-blue-600"><span class="text-sm font-bold text-gray-700">Rich Text Note</span></label>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div><label class="block text-sm font-semibold text-gray-500 mb-2">Unlock Button Text</label><input type="text" id="i_dest_name" class="pc-input" placeholder="Go to Link"></div>
-                                    <div id="dest_container_link"><label class="block text-sm font-semibold text-gray-500 mb-2">Target URL</label><input type="url" id="i_dest_url" class="pc-input" placeholder="https://..."></div>
-                                    <div id="dest_container_note" class="hidden"><label class="block text-sm font-semibold text-gray-500 mb-2">Secret Content</label><textarea id="i_dest_note" class="pc-input h-24 font-mono" placeholder="Key, Code..."></textarea></div>
+                                    
+                                    <div id="dest_container_link">
+                                        <label class="block text-sm font-semibold text-gray-500 mb-2">Target URL</label>
+                                        <input type="url" id="i_dest_url" class="pc-input" placeholder="https://...">
+                                    </div>
+                                    
+                                    <div id="dest_container_note" class="hidden col-span-1 md:col-span-2">
+                                        <label class="block text-sm font-semibold text-gray-500 mb-2">Secret Content (Rich Text)</label>
+                                        <div class="bg-white rounded-xl overflow-hidden border border-gray-200">
+                                            <div id="editor-container"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -375,8 +400,11 @@
 
                     <div id="noteResult" class="hidden mt-4 animate-fade-in">
                         <div class="bg-gray-50 border border-gray-200 rounded-xl p-1">
-                            <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200"><span class="text-[10px] font-bold text-gray-400 uppercase">Secret</span><button onclick="copyNote()" class="text-[10px] text-blue-600 font-bold">COPY</button></div>
-                            <textarea id="noteContentDisplay" readonly class="w-full bg-transparent p-3 text-sm font-mono text-black outline-none resize-none h-20"></textarea>
+                            <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase">Secret Content</span>
+                                <button onclick="copyNote()" class="text-[10px] text-blue-600 font-bold">COPY</button>
+                            </div>
+                            <div id="noteContentDisplay" class="w-full bg-white p-4 text-sm text-black overflow-y-auto max-h-60 note-content-rendered"></div>
                         </div>
                     </div>
                 </div>
@@ -430,6 +458,30 @@
     </script>
 
     <script>
+        // --- [NEW] QUILL INITIALIZATION ---
+        var quill;
+        document.addEventListener('DOMContentLoaded', () => {
+             // Init editor if on admin page (lazy init)
+        });
+
+        function initQuill() {
+            if(document.getElementById('editor-container') && !quill) {
+                quill = new Quill('#editor-container', {
+                    theme: 'snow',
+                    placeholder: 'Type your secret note content here...',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link', 'clean']
+                        ]
+                    }
+                });
+            }
+        }
+
         // --- SECURITY UTILS ---
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
@@ -455,7 +507,11 @@
         function switchView(v) {
             ['view-login','view-admin','view-user'].forEach(id => document.getElementById(id).classList.add('hidden'));
             const t = document.getElementById(`view-${v}`); t.classList.remove('hidden'); 
-            if(v==='admin') { t.classList.add('flex'); document.getElementById('page-title').innerText = "Tạo Liên Kết Mới"; }
+            if(v==='admin') { 
+                t.classList.add('flex'); 
+                document.getElementById('page-title').innerText = "Tạo Liên Kết Mới";
+                setTimeout(initQuill, 500); // Init Quill when switching to admin
+            }
         }
         function switchTab(t) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -483,6 +539,7 @@
             const type = document.querySelector('input[name="destType"]:checked').value;
             document.getElementById('dest_container_link').classList.toggle('hidden', type !== 'link');
             document.getElementById('dest_container_note').classList.toggle('hidden', type === 'link');
+            if(type !== 'link' && !quill) initQuill(); // ensure quill is init
         }
 
         // --- FIXED ADDTASK FUNCTION ---
@@ -496,19 +553,17 @@
             if(existingLabel) label = existingLabel;
 
             const div = document.createElement('div'); div.id = `grp_${id}`; div.className = "grp active"; 
-            // FIX: Removed value="${existingUrl}" from HTML string to prevent syntax errors with special chars
             div.innerHTML = `<div class="bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-400 transition relative"><input type="text" id="lbl_${id}" class="text-xs font-bold ${color} uppercase mb-2 w-full bg-transparent outline-none" value="${label}"><input class="pc-input bg-gray-50" id="i_${id}" type="url" placeholder="Link..."><button type="button" onclick="this.closest('.grp').remove()" class="absolute top-3 right-3 text-gray-300 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button></div>`;
             document.getElementById('dynamic_inputs').appendChild(div);
             
-            // Set value securely via DOM property
             document.getElementById(`i_${id}`).value = existingUrl;
-
             if(!existingId) setTimeout(() => document.getElementById(`i_${id}`).focus(), 100);
         }
 
         function resetForm(force = false) {
             if(!force && !confirm("Clear form?")) return;
             document.getElementById('fgSTU').reset(); 
+            if(quill) quill.setContents([]); // Clear Rich Text Editor
             document.getElementById('edit_doc_id').value = "";
             document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Create Link';
             document.getElementById('formTitle').innerText = "Basic Info"; 
@@ -525,7 +580,17 @@
             document.getElementById('resultArea').classList.add('hidden');
         }
         function copyResult() { document.getElementById('resultLink').select(); document.execCommand('copy'); showToast("Copied!", "success"); }
-        function copyNote() { document.getElementById('noteContentDisplay').select(); document.execCommand('copy'); showToast("Content Copied!", "success"); }
+        // [NEW] Copy Text from DIV
+        function copyNote() { 
+            const node = document.getElementById('noteContentDisplay');
+            const range = document.createRange();
+            range.selectNode(node);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            showToast("Content Copied!", "success"); 
+        }
         window.copyToClip = (text) => {
             if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => showToast("Copied!", "success"));
             else { let ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px"; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); showToast("Copied!", "success"); } catch (e) { showToast("Error", "error"); } document.body.removeChild(ta); }
@@ -559,8 +624,18 @@
             const title = document.getElementById('i_ttl').value || 'Default Title', subtitle = document.getElementById('i_sttl').value || 'Complete tasks...', note = document.getElementById('i_note').value || '', userNote = document.getElementById('i_user_note').value || '', destName = document.getElementById('i_dest_name').value || 'Unlock';
             const type = document.querySelector('input[name="destType"]:checked').value;
             let destUrl = "", noteContent = "";
-            if(type === 'link') { const rawUrl = document.getElementById('i_dest_url').value; if (!rawUrl) return showToast("Missing URL", "error"); destUrl = L4S_SEC.enc(rawUrl); } 
-            else { const rawNote = document.getElementById('i_dest_note').value; if (!rawNote) return showToast("Missing Content", "error"); noteContent = L4S_SEC.enc(rawNote); }
+            
+            if(type === 'link') { 
+                const rawUrl = document.getElementById('i_dest_url').value; 
+                if (!rawUrl) return showToast("Missing URL", "error"); 
+                destUrl = L4S_SEC.enc(rawUrl); 
+            } else { 
+                // [NEW] Get HTML from Quill
+                const rawNote = quill.root.innerHTML; 
+                // Check if empty (Quill leaves <p><br></p> when empty)
+                if (!rawNote || rawNote === '<p><br></p>') return showToast("Missing Content", "error"); 
+                noteContent = L4S_SEC.enc(rawNote); 
+            }
 
             const tasks = {};
             document.querySelectorAll('#dynamic_inputs .grp').forEach(grp => {
@@ -675,9 +750,13 @@
                     if(radio) { radio.checked = true; toggleDestType(); }
                     
                     document.getElementById('i_dest_url').value = L4S_SEC.dec(data.destUrl) || ''; 
-                    document.getElementById('i_dest_note').value = L4S_SEC.dec(data.noteContent) || '';
+                    // [NEW] Set Quill Content
+                    if(quill) {
+                        const decodedNote = L4S_SEC.dec(data.noteContent);
+                        quill.root.innerHTML = decodedNote || '';
+                    }
 
-                    // 5. Fill Tasks (FIXED LOGIC)
+                    // 5. Fill Tasks
                     if(data.tasks) {
                         for (const [key, taskData] of Object.entries(data.tasks)) {
                             const platform = key.substring(0, 2); 
@@ -687,17 +766,15 @@
                             const existingGrp = document.getElementById(`grp_${key}`);
                             
                             if (existingGrp) {
-                                // Task có sẵn (Built-in) -> Bật lên thủ công, không dùng toggle để tránh lỗi
+                                // Task có sẵn
                                 const btn = document.querySelector(`button[onclick*="'${key}'"]`);
                                 if(btn) btn.classList.add('active');
                                 existingGrp.classList.add('active');
-
-                                // Điền dữ liệu an toàn
                                 document.getElementById(`i_${key}`).value = url;
                                 const lblInput = document.getElementById(`lbl_${key}`);
                                 if(lblInput) lblInput.value = label;
                             } else {
-                                // Task Custom -> Tạo mới
+                                // Task Custom
                                 addTask(platform, key, label, url);
                             }
                         }
@@ -742,9 +819,8 @@
 
             const list = document.getElementById('u_tasks'); list.innerHTML = ''; done = 0; req = 0; tasksList = [];
             
-            // --- LOGIC MỚI ĐỂ XỬ LÝ KHÔNG CÓ NHIỆM VỤ ---
             if(data.tasks && Object.keys(data.tasks).length > 0) {
-                document.getElementById('u_tasks_scroll').classList.remove('hidden'); // Hiện danh sách nếu có task
+                document.getElementById('u_tasks_scroll').classList.remove('hidden'); 
                 
                 const entries = Object.entries(data.tasks); req = entries.length;
                 const isCompact = entries.length > 4;
@@ -782,13 +858,11 @@
                     div.onclick = () => doTask(idx, url); list.appendChild(div); tasksList.push({ id: idx, url: url, done: false });
                 });
             } else {
-                // Không có nhiệm vụ -> Ẩn danh sách
                 document.getElementById('u_tasks_scroll').classList.add('hidden');
             }
             
             resetLockBtn(data.destName);
             
-            // --- KÍCH HOẠT MỞ KHÓA NGAY NẾU KHÔNG CÓ TASK ---
             if (req === 0) {
                 checkUnlock();
             }
@@ -801,7 +875,6 @@
             if(currentLinkId) trackStat(currentLinkId, 'clicks');
             window.open(url, '_blank');
             
-            // Start fake verification
             card.classList.add('verifying');
             const statusText = card.querySelector('.status-text');
             statusText.innerText = "Verifying...";
@@ -811,7 +884,6 @@
                 tasksList[idx].done = true; done++;
                 card.classList.remove('verifying');
                 
-                // Success state
                 card.style.background = "rgba(52, 199, 89, 0.1)"; // Green tint
                 card.style.borderColor = "rgba(52, 199, 89, 0.3)";
                 
@@ -822,7 +894,6 @@
                 statusText.innerText = "Completed";
                 statusText.className = "text-[11px] text-green-600 font-bold uppercase tracking-wide status-text";
                 
-                // Unlock next task
                 if (idx + 1 < tasksList.length) {
                     const nextCard = document.getElementById(`task-card-${idx+1}`);
                     nextCard.classList.remove('disabled');
@@ -871,7 +942,9 @@
             if(currentLinkId) trackStat(currentLinkId, 'unlocks');
             const btn = document.getElementById('unlockBtn'); btn.classList.remove('animate-bounce');
             if(finalData.type === 'note') {
-                const noteArea = document.getElementById('noteResult'); document.getElementById('noteContentDisplay').value = L4S_SEC.dec(finalData.noteContent);
+                const noteArea = document.getElementById('noteResult'); 
+                // [NEW] Display HTML Content
+                document.getElementById('noteContentDisplay').innerHTML = L4S_SEC.dec(finalData.noteContent);
                 noteArea.classList.remove('hidden'); noteArea.scrollIntoView({ behavior: 'smooth' });
                 btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Opened</span>`; btn.disabled = true; btn.className = "w-full bg-slate-800 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-default shadow-none";
             } else if(finalData.destUrl) { const realUrl = L4S_SEC.dec(finalData.destUrl); if(realUrl) window.location.replace(realUrl); }
