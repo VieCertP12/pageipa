@@ -1,0 +1,1 @@
+{"headers":[{"source":"/(.*).plist","headers":[{"key":"Content-Type","value":"text/xml"}]},{"source":"/(.*).ipa","headers":[{"key":"Content-Type","value":"application/octet-stream"}]}]}

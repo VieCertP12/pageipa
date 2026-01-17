@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Link4Sub Pro - System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Outfit"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+                    colors: { 
+                        apple: { bg: '#F2F2F7', card: '#FFFFFF', blue: '#007AFF', gray: '#8E8E93', border: '#E5E5EA' },
+                        brand: { primary: '#6366f1', secondary: '#a855f7', gold: '#f59e0b' } 
+                    },
+                    animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards', 'verify': 'verifyRun 3s linear forwards' },
+                    keyframes: { 
+                        fadeIn: { '0%': { opacity: '0', transform: 'scale(0.98)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+                        verifyRun: { '0%': { width: '0%' }, '100%': { width: '100%' } }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* BASE STYLES */
+        body {
+            background-color: #F2F2F7; color: #1C1C1E; -webkit-font-smoothing: antialiased;
+            min-height: 100vh; position: relative;
+            background-image: radial-gradient(circle 800px at 50% -20%, #E0E0FF, transparent);
+            background-attachment: fixed;
+            user-select: none; -webkit-user-select: none;
+            overflow-x: hidden;
+        }
+        /* Admin Inputs Exception */
+        .pc-input, textarea, .allow-select, .ql-editor, .note-content-rendered { user-select: text !important; -webkit-user-select: text !important; }
+
+        /* GLASSMORPHISM - APPLE STYLE */
+        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: saturate(180%) blur(20px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04); transition: all 0.3s; }
+        .glass-card:hover { border-color: rgba(0, 122, 255, 0.3); }
+
+        /* INPUTS & BUTTONS */
+        .pc-input { background: rgba(255, 255, 255, 0.8); border: 1px solid #E5E5EA; border-radius: 12px; padding: 12px 16px; font-size: 15px; width: 100%; transition: all 0.3s; color: #1C1C1E; }
+        .pc-input:focus { background: #fff; border-color: #007AFF; outline: none; box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1); }
+        .pc-btn { background: #007AFF; color: white; border-radius: 14px; font-weight: 600; padding: 12px 24px; transition: all 0.2s; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2); }
+        .pc-btn:hover { background: #0062cc; transform: scale(1.02); }
+        .pc-btn:active { transform: scale(0.98); }
+        .pc-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; background: #8E8E93; box-shadow: none; }
+        .pc-btn-secondary { background: rgba(118, 118, 128, 0.12); border: none; color: #1C1C1E; box-shadow: none; }
+        .pc-btn-secondary:hover { background: rgba(118, 118, 128, 0.2); transform: none; }
+
+        /* NAV */
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: #8E8E93; font-weight: 500; font-size: 15px; transition: all 0.2s; cursor: pointer; margin-bottom: 4px; }
+        .nav-item:hover { background: rgba(0, 122, 255, 0.08); color: #007AFF; }
+        .nav-item.active { background: rgba(0, 122, 255, 0.12); color: #007AFF; font-weight: 600; }
+        .nav-item i { width: 24px; text-align: center; }
+
+        /* SWITCH */
+        .ios-switch { position: relative; display: inline-block; width: 51px; height: 31px; }
+        .ios-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #E9E9EA; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 27px; width: 27px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: #34C759; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* ICONS ADMIN */
+        .stu_b_ftr { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 18px; background: white; color: #8E8E93; border: 1px solid #E5E5EA; font-size: 11px; gap: 6px; cursor: pointer; transition: all 0.3s; }
+        .stu_b_ftr:hover { border-color: #007AFF; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .stu_b_ftr.active { border-color: var(--clr); color: var(--clr); background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.08); font-weight: 600; }
+        .stu_b_ftr i { font-size: 28px; }
+        .btn_iftr { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px; background: white; color: #1C1C1E; font-size: 13px; font-weight: 600; border: 1px solid #E5E5EA; margin: 4px; cursor: pointer; transition: all 0.2s; }
+        .btn_iftr:hover { background: #F2F2F7; transform: translateY(-1px); }
+        .btn_iftr.active { background: var(--clr); color: white; border-color: var(--clr); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn_iftr.active i { color: white; }
+        .btn_add { border: 1px dashed #007AFF; color: #007AFF; background: rgba(0, 122, 255, 0.05); }
+        .grp { display: none; } .grp.active { display: block; animation: fadeIn 0.3s; }
+        
+        .loader { width: 40px; height: 40px; border: 4px solid #E5E5EA; border-top: 4px solid #007AFF; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* USER CARD - APPLE STYLE */
+        .user-view-container { background-color: #F2F2F7; position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow-y: auto; }
+        .user-card-wrapper { 
+            max-width: 480px; margin: 0 auto; 
+            min-height: 100vh;
+            display: flex; flex-direction: column; 
+            background: #F2F2F7; /* iOS Background */
+        }
+        @media(min-width: 768px) { 
+            .user-card-wrapper { 
+                min-height: auto; 
+                margin-top: 5vh; margin-bottom: 5vh; 
+                border-radius: 32px; 
+                overflow: hidden; 
+                border: 8px solid rgba(255,255,255,0.5); 
+                height: 85vh; 
+                background: white;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            } 
+        }
+        
+        /* APPLE TASKS */
+        .apple-list { background: white; border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .task-card { 
+            background: white; 
+            padding: 16px; 
+            display: flex; align-items: center; gap: 16px; 
+            position: relative;
+            transition: background 0.2s;
+            border-bottom: 1px solid #E5E5EA;
+            overflow: hidden;
+        }
+        .task-card:last-child { border-bottom: none; }
+        .task-card:active { background: #F2F2F7; }
+        .task-card.disabled { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
+        
+        /* Compact Mode Styles */
+        .task-card.compact { padding: 10px 16px; gap: 12px; }
+        .task-card.compact .task-icon-wrapper { width: 40px; height: 40px; font-size: 18px; border-radius: 10px; }
+        .task-card.compact h4 { font-size: 14px; }
+        .task-card.compact p { font-size: 10px; }
+
+        .task-icon-wrapper { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; background: #F2F2F7; color: #007AFF; transition: all 0.3s; z-index: 2; }
+        
+        /* Fake Verification Animation */
+        .verifying .verify-bar {
+            position: absolute; top: 0; left: 0; height: 100%; background: rgba(52, 199, 89, 0.1); /* Green tint */
+            z-index: 1;
+            animation: verifyRun 3s linear forwards;
+        }
+        .verifying .task-status-icon { display: none; }
+        .verifying .mini-loader { display: block !important; }
+
+        .mini-loader { width: 18px; height: 18px; border: 2px solid #E5E5EA; border-top-color: #007AFF; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+
+        /* DASHBOARD */
+        .stat-card { background: white; padding: 20px; border-radius: 20px; border: 1px solid #F2F2F7; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .country-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #F2F2F7; }
+        .progress-bar-bg { height: 6px; background: #F2F2F7; border-radius: 10px; flex: 1; margin: 0 12px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: #007AFF; border-radius: 10px; }
+
+        /* [NEW] QUILL EDITOR STYLES */
+        .ql-toolbar.ql-snow { border: none !important; border-bottom: 1px solid #E5E5EA !important; background: #F9F9FB; }
+        .ql-container.ql-snow { border: none !important; font-family: 'Outfit', sans-serif !important; font-size: 16px; background: white; min-height: 150px; }
+        .ql-editor { min-height: 150px; }
+        
+        /* [NEW] Note Result Styles for User */
+        .note-content-rendered ul { list-style-type: disc; padding-left: 20px; margin: 10px 0; }
+        .note-content-rendered ol { list-style-type: decimal; padding-left: 20px; margin: 10px 0; }
+        .note-content-rendered p { margin-bottom: 10px; }
+        .note-content-rendered a { color: #007AFF; text-decoration: underline; }
+        .note-content-rendered blockquote { border-left: 4px solid #ccc; padding-left: 10px; margin: 10px 0; color: #666; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+    <div id="app" class="w-full h-full flex relative">
+        <div id="global-loader" class="absolute inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center hidden backdrop-blur-sm"><div class="loader mb-3"></div><div class="text-sm text-slate-500 font-bold">Đang tải dữ liệu...</div></div>
+        
+        <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="glass-card p-10 rounded-[2rem] w-full max-w-sm animate-fade-in text-center">
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-md border border-gray-100"><i class="fa-brands fa-apple text-black"></i></div>
+                <h1 class="text-2xl font-bold text-black tracking-tight mb-1">Admin Portal</h1>
+                <p class="text-sm text-gray-400 mb-8">Sign in to manage links</p>
+                <div class="space-y-4 text-left">
+                    <input type="email" id="adminEmail" class="pc-input" placeholder="Email">
+                    <input type="password" id="adminPass" class="pc-input" placeholder="Password">
+                    <button onclick="authLogin()" class="pc-btn w-full py-3.5 text-base shadow-none">Sign In</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-admin" class="w-full h-full flex hidden bg-[#F5F5F7]">
+            <div class="w-72 bg-white/80 border-r border-gray-200 flex flex-col flex-shrink-0 z-20 backdrop-blur-xl">
+                <div class="h-20 flex items-center px-8">
+                    <div class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center mr-3 font-bold shadow-sm"><i class="fa-brands fa-apple"></i></div>
+                    <span class="font-bold text-slate-800 text-xl tracking-tight">Link4Sub Pro</span>
+                </div>
+                <div class="p-4 flex-1 overflow-y-auto space-y-1">
+                    <div class="text-[11px] font-bold text-gray-400 uppercase mb-3 px-4 tracking-wider">Menu</div>
+                    <div class="nav-item" onclick="switchTab('dash')" id="btn-tab-dash"><i class="fa-solid fa-chart-simple"></i> Dashboard</div>
+                    <div class="nav-item active" onclick="switchTab('stu')" id="btn-tab-stu"><i class="fa-solid fa-plus"></i> Create Link</div>
+                    <div class="nav-item" onclick="switchTab('manage')" id="btn-tab-manage"><i class="fa-solid fa-list"></i> Manage Links</div>
+                </div>
+                <div class="p-6 border-t border-gray-100"><button onclick="logout()" class="nav-item w-full text-red-500 hover:bg-red-50 hover:text-red-600 justify-center"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button></div>
+            </div>
+
+            <div class="flex-1 flex flex-col overflow-hidden relative z-10">
+                <div class="h-20 glass-nav flex items-center justify-between px-10 shrink-0 sticky top-0">
+                    <div><h2 class="text-2xl font-bold text-slate-800" id="page-title">Create New Link</h2></div>
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500"><i class="fa-solid fa-user"></i></div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-10">
+                    <div id="tab_dashboard" class="hidden max-w-7xl mx-auto animate-fade-in">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="stat-card">
+                                <div class="text-xs font-bold text-gray-400 uppercase mb-2">Today Views</div>
+                                <div class="text-3xl font-bold text-black" id="dash_today_views">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-xs font-bold text-gray-400 uppercase mb-2">Active Links</div>
+                                <div class="text-3xl font-bold text-black" id="dash_active_links">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-xs font-bold text-gray-400 uppercase mb-2">Top Country</div>
+                                <div class="text-3xl font-bold text-black" id="dash_top_country">-</div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div class="stat-card">
+                                <h3 class="font-bold text-slate-800 mb-6 text-lg">Top Performing Links</h3>
+                                <div id="dash_top_links_list" class="space-y-4"></div>
+                            </div>
+                            <div class="stat-card">
+                                <h3 class="font-bold text-slate-800 mb-6 text-lg">Geography</h3>
+                                <div id="dash_country_list" class="space-y-2"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab_create_stu" class="max-w-5xl mx-auto animate-fade-in">
+                        <form id="fgSTU" onsubmit="event.preventDefault(); handleSubmitCreate();">
+                            <input type="hidden" id="edit_doc_id" value="">
+                            
+                            <div class="glass-card rounded-2xl p-8 mb-8 bg-white">
+                                <h3 class="text-base font-bold text-slate-800 uppercase mb-6 flex justify-between items-center">
+                                    <span id="formTitle">Basic Info</span><span id="editModeBadge" class="hidden text-[10px] bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-bold">EDITING</span>
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                                    <div><label class="block text-sm font-semibold text-gray-500 mb-2">Main Title</label><input type="text" id="i_ttl" class="pc-input" placeholder="E.g., Unlock Download"></div>
+                                    <div><label class="block text-sm font-semibold text-gray-500 mb-2">Subtitle</label><input type="text" id="i_sttl" class="pc-input" placeholder="Complete steps below..."></div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div><label class="block text-sm font-semibold text-gray-500 mb-2">Internal Note</label><input type="text" id="i_note" class="pc-input" placeholder="For admin only..."></div>
+                                    <div><label class="block text-sm font-semibold text-blue-500 mb-2">User Alert Message</label><input type="text" id="i_user_note" class="pc-input bg-blue-50 border-blue-100 text-blue-600" placeholder="Warning message for user..."></div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card rounded-2xl p-8 mb-8 bg-white">
+                                <h3 class="text-base font-bold text-slate-800 uppercase mb-6">Destination <span class="text-[10px] text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded ml-2 font-bold">ENCRYPTED</span></h3>
+                                <div class="flex gap-4 mb-6">
+                                    <label class="flex items-center gap-3 cursor-pointer bg-gray-50 px-4 py-2 rounded-lg"><input type="radio" name="destType" value="link" checked onchange="toggleDestType()" class="w-4 h-4 text-blue-600"><span class="text-sm font-bold text-gray-700">URL Link</span></label>
+                                    <label class="flex items-center gap-3 cursor-pointer bg-gray-50 px-4 py-2 rounded-lg"><input type="radio" name="destType" value="note" onchange="toggleDestType()" class="w-4 h-4 text-blue-600"><span class="text-sm font-bold text-gray-700">Rich Text Note</span></label>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div><label class="block text-sm font-semibold text-gray-500 mb-2">Unlock Button Text</label><input type="text" id="i_dest_name" class="pc-input" placeholder="Go to Link"></div>
+                                    
+                                    <div id="dest_container_link">
+                                        <label class="block text-sm font-semibold text-gray-500 mb-2">Target URL</label>
+                                        <input type="url" id="i_dest_url" class="pc-input" placeholder="https://...">
+                                    </div>
+                                    
+                                    <div id="dest_container_note" class="hidden col-span-1 md:col-span-2">
+                                        <label class="block text-sm font-semibold text-gray-500 mb-2">Secret Content (Rich Text)</label>
+                                        <div class="bg-white rounded-xl overflow-hidden border border-gray-200">
+                                            <div id="editor-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card rounded-2xl p-8 mb-8 bg-white">
+                                <h3 class="text-base font-bold text-slate-800 uppercase mb-6">Tasks Setup (Optional)</h3>
+                                <div class="flex gap-3 mb-6 overflow-x-auto pb-2">
+                                    <button type="button" class="stu_b_ftr active" onclick="selectPlatform('yt', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i><span>YouTube</span></button>
+                                    <button type="button" class="stu_b_ftr" onclick="selectPlatform('tg', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i><span>Telegram</span></button>
+                                    <button type="button" class="stu_b_ftr" onclick="selectPlatform('tk', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i><span>TikTok</span></button>
+                                    <button type="button" class="stu_b_ftr" onclick="selectPlatform('fb', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i><span>Facebook</span></button>
+                                </div>
+                                <div class="p-6 bg-gray-50 rounded-2xl border border-dashed border-gray-300 mb-8 flex flex-wrap gap-3">
+                                    <div id="ftr_yt" class="w-full">
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('yt1', this)" style="--clr:#FF0000"><i class="fa-brands fa-youtube"></i> Subscribe</button>
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('ytl1', this)" style="--clr:#FF0000"><i class="fa-solid fa-thumbs-up"></i> Like</button>
+                                        <button type="button" class="btn_iftr" onclick="toggleInput('ytc1', this)" style="--clr:#FF0000"><i class="fa-solid fa-comment"></i> Comment</button>
+                                        <button type="button" class="btn_iftr btn_add" onclick="addTask('yt')"><i class="fa-solid fa-plus"></i> Custom</button>
+                                    </div>
+                                    <div id="ftr_tg" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tg1', this)" style="--clr:#229ED9"><i class="fa-brands fa-telegram"></i> Join</button><button type="button" class="btn_iftr btn_add" onclick="addTask('tg')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_tk" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('tk1', this)" style="--clr:#000000"><i class="fa-brands fa-tiktok"></i> Follow</button><button type="button" class="btn_iftr btn_add" onclick="addTask('tk')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                    <div id="ftr_fb" class="w-full hidden"><button type="button" class="btn_iftr" onclick="toggleInput('fb1', this)" style="--clr:#1877F2"><i class="fa-brands fa-facebook"></i> Follow</button><button type="button" class="btn_iftr btn_add" onclick="addTask('fb')"><i class="fa-solid fa-plus"></i> Custom</button></div>
+                                </div>
+                                <div id="dynamic_inputs" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div class="grp" id="grp_yt1"><div class="bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-400 transition relative"><input type="text" id="lbl_yt1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Đăng ký kênh YouTube"><input class="pc-input bg-gray-50" id="i_yt1" type="url" placeholder="Channel Link..."></div></div>
+                                    <div class="grp" id="grp_ytl1"><div class="bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-400 transition relative"><input type="text" id="lbl_ytl1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Like Video"><input class="pc-input bg-gray-50" id="i_ytl1" type="url" placeholder="Video Link..."></div></div>
+                                    <div class="grp" id="grp_ytc1"><div class="bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-400 transition relative"><input type="text" id="lbl_ytc1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Comment Video"><input class="pc-input bg-gray-50" id="i_ytc1" type="url" placeholder="Video Link..."></div></div>
+                                    <div class="grp" id="grp_tg1"><div class="bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-400 transition relative"><input type="text" id="lbl_tg1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Join Telegram"><input class="pc-input bg-gray-50" id="i_tg1" type="url" placeholder="Group Link..."></div></div>
+                                    <div class="grp" id="grp_tk1"><div class="bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-400 transition relative"><input type="text" id="lbl_tk1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Tiktok"><input class="pc-input bg-gray-50" id="i_tk1" type="url" placeholder="Profile Link..."></div></div>
+                                    <div class="grp" id="grp_fb1"><div class="bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-400 transition relative"><input type="text" id="lbl_fb1" class="text-xs font-bold text-gray-500 uppercase mb-2 w-full bg-transparent outline-none" value="Follow Facebook"><input class="pc-input bg-gray-50" id="i_fb1" type="url" placeholder="Page Link..."></div></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 glass-nav p-4 rounded-2xl sticky bottom-4 z-20 shadow-xl border border-white/50 backdrop-blur-xl bg-white/90">
+                                <button type="button" onclick="resetForm()" class="pc-btn pc-btn-secondary px-8 py-3.5 rounded-xl font-bold">Reset</button>
+                                <button type="submit" id="btnAction" class="pc-btn flex-1 py-3.5 text-lg shadow-none rounded-xl font-bold">Create Link</button>
+                            </div>
+                            <div id="resultArea" class="hidden mt-8 bg-green-50 border border-green-200 p-8 rounded-3xl text-center shadow-sm">
+                                <h3 class="text-green-700 font-extrabold text-xl mb-3"><i class="fa-solid fa-check-circle mr-2"></i>Success!</h3>
+                                <div class="flex gap-3 max-w-2xl mx-auto"><input id="resultLink" type="text" readonly class="pc-input bg-white text-center font-bold text-blue-600"><button type="button" onclick="copyResult()" class="pc-btn bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/30">Copy</button><a href="#" id="previewLink" target="_blank" class="pc-btn pc-btn-secondary">View</a></div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="tab_manage_links" class="hidden max-w-7xl mx-auto animate-fade-in">
+                        <div class="flex justify-between items-center mb-8">
+                            <div class="relative w-80"><input type="text" placeholder="Search links..." class="pc-input pl-12 shadow-sm border-0"><i class="fa-solid fa-search absolute left-4 top-3.5 text-gray-400"></i></div>
+                            <div class="flex gap-2">
+                                <button onclick="sortLinks('views')" class="pc-btn pc-btn-secondary bg-white"><i class="fa-solid fa-arrow-down-short-wide"></i> Views</button>
+                                <button onclick="fetchLinks()" class="pc-btn pc-btn-secondary bg-white"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    <tr><th class="py-5 px-8">Title / Date</th><th class="py-5 px-8">Visits</th><th class="py-5 px-8">Note</th><th class="py-5 px-8">Type</th><th class="py-5 px-8 text-center">Status</th><th class="py-5 px-8 text-right">Actions</th></tr>
+                                </thead>
+                                <tbody id="links-table-body" class="text-sm text-gray-600 divide-y divide-gray-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-user" class="hidden user-view-container pt-0 px-0 pb-0">
+            <div id="u_error_gate" class="hidden fixed inset-0 z-[60] bg-white/90 backdrop-blur-xl flex items-center justify-center p-6">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl"><i class="fa-solid fa-ban"></i></div>
+                    <h2 class="text-2xl font-bold text-black mb-2" id="u_error_title">Unavailable</h2>
+                    <p class="text-gray-500 font-medium" id="u_error_msg">Link expired or removed.</p>
+                </div>
+            </div>
+
+            <!-- [NEW] Direct View Container (No Tasks Mode) -->
+            <div id="direct-mode-container" class="hidden absolute inset-0 z-50 bg-white flex flex-col items-center justify-center p-6">
+                <!-- 1. Loader for 3s -->
+                <div id="d_loader" class="flex flex-col items-center">
+                    <div class="loader mb-4 border-t-blue-600"></div>
+                    <div class="text-sm font-bold text-gray-400">Please wait...</div>
+                </div>
+
+                <!-- 2. Main Content (Hidden initially) -->
+                <div id="d_main_content" class="hidden w-full max-w-md flex flex-col items-center">
+                    <h1 id="d_title" class="text-2xl font-bold text-slate-800 mb-8 text-center"></h1>
+                    
+                    <!-- INSERTED ADVERTISEMENT BLOCK -->
+                    <div class="w-full px-4 mb-8">
+                        <div class="group relative w-full bg-white rounded-[24px] p-5 shadow-[0_8px_20px_rgba(0,0,0,0.08)] border border-gray-100 cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98]" onclick="window.open('https://muachungchi.com', '_blank')">
+                            <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60 group-hover:bg-blue-100 transition-colors"></div>
+                            <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-purple-50 rounded-full blur-2xl opacity-60 group-hover:bg-purple-100 transition-colors"></div>
+                            
+                            <div class="relative z-10 flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300">
+                                    <i class="fa-solid fa-crown text-2xl"></i>
+                                </div>
+                                
+                                <div class="flex-1 min-w-0 text-left">
+                                    <div class="flex items-center gap-2 mb-0.5">
+                                        <span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded-md">Sponsored</span>
+                                        <span class="text-[10px] text-gray-400 font-medium">QC</span>
+                                    </div>
+                                    <h3 class="font-bold text-[15px] text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">Nâng cấp Chứng Chỉ VIP</h3>
+                                    <p class="text-[12px] text-slate-500 font-medium mt-0.5 truncate">Không Revoke • Bảo hành 1 năm</p>
+                                </div>
+
+                                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
+                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="d_action_area" class="w-full max-w-xs text-center">
+                         <button id="d_btn_unlock" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-xl transform transition hover:scale-105 active:scale-95 flex items-center justify-center gap-3 text-lg">
+                            <i class="fa-solid fa-unlock-keyhole"></i> <span id="d_btn_text">Unlock</span>
+                         </button>
+                    </div>
+                </div>
+
+                <div id="d_result_area" class="hidden w-full max-w-md mt-8 animate-fade-in">
+                    <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
+                        <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Secret Note</span>
+                            <button onclick="copyDirectNote()" class="text-xs font-bold text-blue-600 hover:bg-blue-50 px-2 py-1 rounded">COPY</button>
+                        </div>
+                        <div id="d_note_content" class="p-6 text-sm text-slate-800 overflow-y-auto max-h-[60vh] note-content-rendered leading-relaxed"></div>
+                    </div>
+                    <button onclick="location.reload()" class="mt-6 text-gray-400 hover:text-gray-600 text-sm font-medium mx-auto block">Reload Page</button>
+                </div>
+            </div>
+
+            <!-- Standard User Card (With Tasks) -->
+            <div class="user-card-wrapper" id="user-card-main">
+                <div id="u_header" class="relative pt-12 pb-6 px-6 text-center bg-white border-b border-gray-100">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold mb-4 uppercase tracking-wide">
+                        <i class="fa-brands fa-apple"></i> Secure Link
+                    </div>
+                    <h1 id="u_title" class="text-2xl font-bold text-black mb-2 tracking-tight leading-tight">Loading...</h1>
+                    <p id="u_subtitle" class="text-sm text-gray-500 font-medium max-w-[90%] mx-auto">Complete tasks to unlock</p>
+                    <div id="u_note_area" class="hidden mt-4 bg-yellow-50 border border-yellow-100 p-3 rounded-xl text-xs text-yellow-800 text-left flex gap-3"><i class="fa-solid fa-circle-info mt-0.5 text-yellow-600"></i><span class="font-medium"></span></div>
+                </div>
+
+                <div class="px-5 py-2 mb-2">
+                    <div class="group relative w-full bg-white rounded-[24px] p-5 shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-white/60 cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98]" onclick="window.open('https://muachungchi.com', '_blank')">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60 group-hover:bg-blue-100 transition-colors"></div>
+                        <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-purple-50 rounded-full blur-2xl opacity-60 group-hover:bg-purple-100 transition-colors"></div>
+                        
+                        <div class="relative z-10 flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300">
+                                <i class="fa-solid fa-crown text-2xl"></i>
+                            </div>
+                            
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded-md">Sponsored</span>
+                                    <span class="text-[10px] text-gray-400 font-medium">QC</span>
+                                </div>
+                                <h3 class="font-bold text-[15px] text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">Nâng cấp Chứng Chỉ VIP</h3>
+                                <p class="text-[12px] text-slate-500 font-medium mt-0.5 truncate">Không Revoke • Bảo hành 1 năm</p>
+                            </div>
+
+                            <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto px-4 pb-24 bg-[#F2F2F7]" id="u_tasks_scroll">
+                    <div id="u_tasks_header" class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-4 mt-2">Required Tasks</div>
+                    <div id="u_tasks" class="apple-list"></div>
+                </div>
+
+                <div class="p-6 bg-white/90 border-t border-gray-200 fixed bottom-0 left-0 right-0 backdrop-blur-xl z-50 max-w-[480px] mx-auto rounded-t-3xl">
+                    <div id="progressArea" class="hidden mb-4">
+                        <div class="flex justify-between text-[10px] text-gray-400 font-bold mb-2 uppercase tracking-wider"><span>Progress</span> <span id="progressText">0%</span></div>
+                        <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div id="progressBar" class="h-full bg-blue-500 w-0 transition-all duration-500 ease-out"></div></div>
+                    </div>
+                    
+                    <button id="unlockBtn" onclick="doUnlock()" disabled class="w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all text-[15px]">
+                        <i class="fa-solid fa-lock text-xs"></i> <span>Complete Tasks</span>
+                    </button>
+
+                    <div id="noteResult" class="hidden mt-4 animate-fade-in">
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-1">
+                            <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase">Secret Content</span>
+                                <button onclick="copyNote()" class="text-[10px] text-blue-600 font-bold">COPY</button>
+                            </div>
+                            <div id="noteContentDisplay" class="w-full bg-white p-4 text-sm text-black overflow-y-auto max-h-60 note-content-rendered"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        let firebaseConfig;
+        if (typeof __firebase_config !== 'undefined') firebaseConfig = JSON.parse(__firebase_config);
+        else firebaseConfig = { apiKey: "AIzaSyB8znFxA8oyK1Idl9Lc0CkH_BLwIvbxJfI", authDomain: "link4sub-web.firebaseapp.com", projectId: "link4sub-web", storageBucket: "link4sub-web.firebasestorage.app", messagingSenderId: "897376055886", appId: "1:897376055886:web:0a515c3ac86ced9352c91f" };
+
+        let app, auth, db;
+        try { app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); } catch (e) {}
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'link4sub-pro';
+        let currentUser = null;
+
+        function getLinkId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id') || (window.location.hash.includes('id=') ? new URLSearchParams(window.location.hash.replace('#', '?')).get('id') : null);
+        }
+
+        window.initApp = async () => {
+            const linkId = getLinkId();
+            if (linkId) {
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('view-admin').classList.add('hidden');
+                document.getElementById('view-user').classList.remove('hidden');
+                document.getElementById('global-loader').classList.remove('hidden'); 
+                if (!auth.currentUser) try { await signInAnonymously(auth); } catch (e) {}
+            }
+        };
+
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                const linkId = getLinkId();
+                if (linkId) { switchView('user'); loadUserLink(linkId); document.getElementById('global-loader').classList.add('hidden'); } 
+                else if (user && !user.isAnonymous) { switchView('admin'); fetchLinks(); } 
+                else if(!linkId) switchView('login');
+            });
+        }
+
+        window.db = db; window.collection = collection; window.addDoc = addDoc; window.getDocs = getDocs; window.doc = doc; window.deleteDoc = deleteDoc; window.updateDoc = updateDoc; window.getDoc = getDoc; window.increment = increment;
+        window.appId = appId; window.signInWithEmailAndPassword = signInWithEmailAndPassword; window.auth = auth; window.signOut = signOut; window.currentUser = () => currentUser;
+        initApp();
+    </script>
+
+    <script>
+        // --- [NEW] QUILL INITIALIZATION ---
+        var quill;
+        document.addEventListener('DOMContentLoaded', () => {
+             // Init editor if on admin page (lazy init)
+        });
+
+        function initQuill() {
+            if(document.getElementById('editor-container') && !quill) {
+                quill = new Quill('#editor-container', {
+                    theme: 'snow',
+                    placeholder: 'Type your secret note content here...',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link', 'clean']
+                        ]
+                    }
+                });
+            }
+        }
+
+        // --- SECURITY UTILS ---
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if(e.keyCode == 123) e.preventDefault(); if(e.ctrlKey && e.shiftKey && e.keyCode == 73) e.preventDefault(); if(e.ctrlKey && e.shiftKey && e.keyCode == 74) e.preventDefault(); if(e.ctrlKey && e.keyCode == 85) e.preventDefault();
+        });
+
+        const L4S_SEC = {
+            enc: (str) => { if(!str) return ''; try { return btoa(encodeURIComponent(str)).split('').reverse().join(''); } catch(e) { return str; } },
+            dec: (str) => { if(!str) return ''; try { return decodeURIComponent(atob(str.split('').reverse().join(''))); } catch(e) { return str; } }
+        };
+
+        const trackStat = async (id, field) => {
+            try {
+                let country = "Unknown";
+                try { const res = await fetch('https://ipapi.co/json/'); const json = await res.json(); if(json.country_name) country = json.country_name; } catch(e) {}
+                const ref = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id);
+                let updateData = { [field]: window.increment(1) };
+                if(field === 'views') { updateData[`country_stats.${country}`] = window.increment(1); }
+                await window.updateDoc(ref, updateData); 
+            } catch(e) { console.log("Track err", e); }
+        }
+
+        function switchView(v) {
+            ['view-login','view-admin','view-user'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            const t = document.getElementById(`view-${v}`); t.classList.remove('hidden'); 
+            if(v==='admin') { 
+                t.classList.add('flex'); 
+                document.getElementById('page-title').innerText = "Tạo Liên Kết Mới";
+                setTimeout(initQuill, 500); // Init Quill when switching to admin
+            }
+        }
+        function switchTab(t) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`btn-tab-${t}`).classList.add('active');
+            document.getElementById('tab_create_stu').className = t==='stu'?'block max-w-5xl mx-auto animate-fade-in':'hidden';
+            document.getElementById('tab_manage_links').className = t==='manage'?'block max-w-7xl mx-auto animate-fade-in':'hidden';
+            document.getElementById('tab_dashboard').className = t==='dash'?'block max-w-7xl mx-auto animate-fade-in':'hidden';
+            
+            if(t==='stu') document.getElementById('page-title').innerText = 'Create New Link';
+            if(t==='manage') { document.getElementById('page-title').innerText = 'Manage Links'; fetchLinks(); }
+            if(t==='dash') { document.getElementById('page-title').innerText = 'Dashboard Overview'; renderDashboard(); }
+        }
+        
+        function selectPlatform(pf, btn) {
+            document.querySelectorAll('.stu_b_ftr').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+            ['yt','tg','tk','fb'].forEach(id => document.getElementById(`ftr_${id}`).classList.add('hidden'));
+            document.getElementById(`ftr_${pf}`).classList.remove('hidden');
+        }
+        function toggleInput(id, btn) {
+            const grp = document.getElementById(`grp_${id}`); if(!grp) return;
+            if(btn.classList.contains('active')) { btn.classList.remove('active'); grp.classList.remove('active'); }
+            else { btn.classList.add('active'); grp.classList.add('active'); setTimeout(() => grp.querySelector('.pc-input')?.focus(), 100); }
+        }
+        function toggleDestType() {
+            const type = document.querySelector('input[name="destType"]:checked').value;
+            document.getElementById('dest_container_link').classList.toggle('hidden', type !== 'link');
+            document.getElementById('dest_container_note').classList.toggle('hidden', type === 'link');
+            if(type !== 'link' && !quill) initQuill(); // ensure quill is init
+        }
+
+        // --- FIXED ADDTASK FUNCTION ---
+        function addTask(platform, existingId = null, existingLabel = null, existingUrl = "") {
+            const id = existingId || `${platform}_custom_${Date.now()}`;
+            let label = "New Task", color = "text-gray-600";
+            if(platform === 'yt') { label = "YouTube Task"; color = "text-red-600"; }
+            else if(platform === 'tg') { label = "Telegram Task"; color = "text-blue-500"; }
+            else if(platform === 'tk') { label = "TikTok Task"; color = "text-black"; }
+            else if(platform === 'fb') { label = "Facebook Task"; color = "text-blue-700"; }
+            if(existingLabel) label = existingLabel;
+
+            const div = document.createElement('div'); div.id = `grp_${id}`; div.className = "grp active"; 
+            div.innerHTML = `<div class="bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-400 transition relative"><input type="text" id="lbl_${id}" class="text-xs font-bold ${color} uppercase mb-2 w-full bg-transparent outline-none" value="${label}"><input class="pc-input bg-gray-50" id="i_${id}" type="url" placeholder="Link..."><button type="button" onclick="this.closest('.grp').remove()" class="absolute top-3 right-3 text-gray-300 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button></div>`;
+            document.getElementById('dynamic_inputs').appendChild(div);
+            
+            document.getElementById(`i_${id}`).value = existingUrl;
+            if(!existingId) setTimeout(() => document.getElementById(`i_${id}`).focus(), 100);
+        }
+
+        function resetForm(force = false) {
+            if(!force && !confirm("Clear form?")) return;
+            document.getElementById('fgSTU').reset(); 
+            if(quill) quill.setContents([]); // Clear Rich Text Editor
+            document.getElementById('edit_doc_id').value = "";
+            document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Create Link';
+            document.getElementById('formTitle').innerText = "Basic Info"; 
+            document.getElementById('editModeBadge').classList.add('hidden');
+            
+            // Remove custom tasks
+            document.querySelectorAll('[id^="grp_"][id*="_custom_"]').forEach(e => e.remove());
+            
+            // Deactivate all tasks
+            document.querySelectorAll('.grp').forEach(g => g.classList.remove('active'));
+            document.querySelectorAll('.btn_iftr').forEach(b => b.classList.remove('active'));
+            
+            document.querySelector('input[name="destType"][value="link"]').click();
+            document.getElementById('resultArea').classList.add('hidden');
+        }
+        function copyResult() { document.getElementById('resultLink').select(); document.execCommand('copy'); showToast("Copied!", "success"); }
+        // [NEW] Copy Text from DIV
+        function copyNote() { 
+            const node = document.getElementById('noteContentDisplay');
+            const range = document.createRange();
+            range.selectNode(node);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            showToast("Content Copied!", "success"); 
+        }
+        // [NEW] Copy Direct Note
+        function copyDirectNote() {
+            const node = document.getElementById('d_note_content');
+            const range = document.createRange();
+            range.selectNode(node);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            showToast("Copied Note!", "success");
+        }
+        window.copyToClip = (text) => {
+            if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => showToast("Copied!", "success"));
+            else { let ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px"; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); showToast("Copied!", "success"); } catch (e) { showToast("Error", "error"); } document.body.removeChild(ta); }
+        }
+        function showToast(msg, type) { 
+            if(typeof Toastify === 'function') Toastify({ text: msg, duration: 2000, close: true, gravity: "top", position: "center", backgroundColor: type === "success" ? "#34C759" : "#FF3B30", className: "rounded-xl font-bold shadow-lg" }).showToast();
+            else alert(msg); 
+        }
+
+        window.authLogin = () => {
+            const e = document.getElementById('adminEmail').value, p = document.getElementById('adminPass').value;
+            if(!e || !p) return showToast("Missing fields", "error");
+            document.getElementById('global-loader').classList.remove('hidden');
+            window.signInWithEmailAndPassword(window.auth, e, p).catch(() => { document.getElementById('global-loader').classList.add('hidden'); showToast("Login failed", "error"); });
+        };
+        window.logout = () => window.signOut(window.auth).then(() => window.location.href = window.location.pathname);
+
+        function getTaskStyle(id, lblText) {
+            let icon = 'fa-link', color = 'text-gray-600', bg = 'bg-gray-100';
+            const txt = lblText ? lblText.toLowerCase().trim() : '';
+            if(id.includes('yt')) { icon = 'fa-youtube'; color = 'text-red-600'; bg = 'bg-red-50'; if(id.includes('ytl') || txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(id.includes('ytc') || txt.includes('comment') || txt.includes('bình luận') || txt.includes('cmt')) icon = 'fa-comment'; if(id.includes('yts') || txt.includes('sub') || txt.includes('đăng ký')) icon = 'fa-youtube'; }
+            else if(id.includes('tg')) { icon = 'fa-telegram'; color = 'text-blue-500'; bg = 'bg-blue-50'; }
+            else if(id.includes('tk')) { icon = 'fa-tiktok'; color = 'text-black'; bg = 'bg-gray-200'; if(txt.includes('like') || txt.includes('tim') || txt.includes('heart')) { icon = 'fa-heart'; color = 'text-pink-500'; } if(txt.includes('follow')) icon = 'fa-tiktok'; }
+            else if(id.includes('fb')) { icon = 'fa-facebook'; color = 'text-blue-700'; bg = 'bg-blue-50'; if(txt.includes('like') || txt.includes('thích')) icon = 'fa-thumbs-up'; if(txt.includes('follow') || txt.includes('theo dõi')) icon = 'fa-facebook'; if(txt.includes('share') || txt.includes('chia sẻ')) icon = 'fa-comment'; if(txt.includes('comment') || txt.includes('bình luận')) icon = 'fa-comment'; }
+            return { icon, color, bg };
+        }
+
+        window.handleSubmitCreate = async () => {
+            if (!window.currentUser()) return showToast("Session expired", "error");
+            const docId = document.getElementById('edit_doc_id').value;
+            const title = document.getElementById('i_ttl').value || 'Default Title', subtitle = document.getElementById('i_sttl').value || 'Complete steps...', note = document.getElementById('i_note').value || '', userNote = document.getElementById('i_user_note').value || '', destName = document.getElementById('i_dest_name').value || 'Unlock';
+            const type = document.querySelector('input[name="destType"]:checked').value;
+            let destUrl = "", noteContent = "";
+            
+            if(type === 'link') { 
+                const rawUrl = document.getElementById('i_dest_url').value; 
+                if (!rawUrl) return showToast("Missing URL", "error"); 
+                destUrl = L4S_SEC.enc(rawUrl); 
+            } else { 
+                // [NEW] Get HTML from Quill
+                const rawNote = quill.root.innerHTML; 
+                // Check if empty (Quill leaves <p><br></p> when empty)
+                if (!rawNote || rawNote === '<p><br></p>') return showToast("Missing Content", "error"); 
+                noteContent = L4S_SEC.enc(rawNote); 
+            }
+
+            const tasks = {};
+            document.querySelectorAll('#dynamic_inputs .grp').forEach(grp => {
+                if(!grp.classList.contains('active') && !grp.id.includes('_custom_')) return;
+                const id = grp.id.replace('grp_', ''), inp = grp.querySelector('input[type="url"]'), lbl = grp.querySelector('input[type="text"]');
+                if(inp && inp.value) {
+                    const style = getTaskStyle(id, lbl ? lbl.value : '');
+                    tasks[id] = { url: inp.value, label: lbl ? lbl.value : 'Task', ...style };
+                }
+            });
+            // REMOVED: if (Object.keys(tasks).length === 0) return showToast("Add at least 1 task", "error");
+            // ALLOWS creating link without tasks (Direct Note/Link)
+
+            document.getElementById('global-loader').classList.remove('hidden');
+            try {
+                const payload = { title, subtitle, note, userNote, destName, type, destUrl, noteContent, tasks, active: true, createdAt: new Date().toISOString(), views: 0, clicks: 0, unlocks: 0 };
+                let resultId = docId;
+                if (docId) { 
+                    const { views, clicks, unlocks, createdAt, country_stats, ...updatePayload } = payload; 
+                    await window.updateDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', docId), updatePayload); 
+                    showToast("Updated!", "success"); 
+                } 
+                else { const docRef = await window.addDoc(window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'links'), payload); resultId = docRef.id; showToast("Created!", "success"); }
+                
+                const finalLink = window.location.origin + window.location.pathname + "?id=" + resultId;
+                document.getElementById('resultLink').value = finalLink; document.getElementById('previewLink').href = finalLink;
+                document.getElementById('resultArea').classList.remove('hidden'); document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
+                if(docId) { document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-rocket"></i> Create Link'; document.getElementById('edit_doc_id').value = ""; document.getElementById('formTitle').innerText = "Basic Info"; document.getElementById('editModeBadge').classList.add('hidden'); }
+            } catch (e) { console.log(e); showToast("System Error", "error"); } finally { document.getElementById('global-loader').classList.add('hidden'); }
+        };
+
+        let currentSort = 'date';
+        window.sortLinks = (type) => { currentSort = type; fetchLinks(); };
+
+        window.fetchLinks = async () => {
+            const list = document.getElementById('links-table-body');
+            list.innerHTML = '<tr><td colspan="6" class="py-8 text-center"><div class="loader inline-block border-gray-300 border-t-blue-500"></div></td></tr>';
+            try {
+                const querySnapshot = await window.getDocs(window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'links'));
+                let links = []; querySnapshot.forEach((doc) => links.push({ id: doc.id, ...doc.data() }));
+                
+                if(currentSort === 'date') links.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                if(currentSort === 'views') links.sort((a, b) => (b.views || 0) - (a.views || 0));
+
+                list.innerHTML = '';
+                if(links.length === 0) { list.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-gray-400">No links found</td></tr>'; return; }
+                links.forEach(link => {
+                    const isActive = link.active !== false;
+                    const typeBadge = link.type === 'note' ? '<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold">NOTE</span>' : '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">LINK</span>';
+                    const tr = document.createElement('tr'); tr.className = "hover:bg-gray-50 transition border-b border-gray-100";
+                    tr.innerHTML = `<td class="py-5 px-8"><div class="font-bold text-slate-800 truncate max-w-[200px]">${link.title}</div><div class="text-xs text-gray-400">${new Date(link.createdAt).toLocaleDateString()}</div></td><td class="py-5 px-8"><div class="flex flex-col gap-1"><div class="stat-badge stat-v" title="Views"><i class="fa-solid fa-eye"></i> ${link.views || 0}</div></div></td><td class="py-5 px-8 text-sm text-gray-500">${link.note || '-'}</td><td class="py-5 px-8 text-center">${typeBadge}</td><td class="py-5 px-8 text-center"><label class="ios-switch scale-90"><input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus('${link.id}', this.checked)"><span class="slider"></span></label></td><td class="py-5 px-8 text-right"><button onclick="editLink('${link.id}')" class="text-blue-600 hover:bg-blue-50 p-2.5 rounded-xl transition mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="copyToClip('${window.location.origin + window.location.pathname + "?id=" + link.id}')" class="text-gray-500 hover:bg-gray-100 p-2.5 rounded-xl transition mr-1"><i class="fa-regular fa-copy"></i></button><button onclick="deleteLink('${link.id}')" class="text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition"><i class="fa-solid fa-trash"></i></button></td>`;
+                    list.appendChild(tr);
+                });
+            } catch (e) { list.innerHTML = '<tr><td colspan="6" class="text-red-500 text-center py-4">Error loading data</td></tr>'; }
+        };
+
+        window.renderDashboard = async () => {
+            try {
+                const querySnapshot = await window.getDocs(window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'links'));
+                let totalViews = 0, activeLinks = 0, countryData = {};
+                let links = [];
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data(); links.push(data); totalViews += (data.views || 0);
+                    if(data.active !== false) activeLinks++;
+                    if(data.country_stats) for (const [c, count] of Object.entries(data.country_stats)) countryData[c] = (countryData[c] || 0) + count;
+                });
+
+                document.getElementById('dash_today_views').innerText = totalViews.toLocaleString(); 
+                document.getElementById('dash_active_links').innerText = activeLinks;
+
+                links.sort((a, b) => (b.views || 0) - (a.views || 0));
+                document.getElementById('dash_top_links_list').innerHTML = links.slice(0, 5).map((l, i) => `<div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl mb-2"><div class="flex items-center gap-3"><div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">#${i+1}</div><div class="font-bold text-sm text-gray-700 truncate max-w-[150px]">${l.title}</div></div><div class="font-bold text-gray-500 text-sm">${l.views || 0} views</div></div>`).join('') || '<div class="text-gray-400 text-sm">No data</div>';
+
+                const sortedCountries = Object.entries(countryData).sort((a, b) => b[1] - a[1]);
+                if(sortedCountries.length > 0) document.getElementById('dash_top_country').innerText = sortedCountries[0][0];
+                document.getElementById('dash_country_list').innerHTML = sortedCountries.slice(0, 5).map(([country, count]) => `<div class="country-row"><div class="w-24 text-sm font-bold text-gray-700 truncate">${country}</div><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${Math.round((count / totalViews) * 100)}%"></div></div><div class="text-xs font-bold text-gray-500">${count}</div></div>`).join('') || '<div class="text-gray-400 text-sm">No data</div>';
+            } catch(e) { console.log(e); }
+        };
+
+        window.toggleStatus = async (id, status) => { try { await window.updateDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id), { active: status }); } catch (e) {} };
+        window.deleteLink = async (id) => { if(confirm("Delete forever?")) { await window.deleteDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id)); showToast("Deleted", "success"); fetchLinks(); } };
+
+        // --- FIXED EDITLINK FUNCTION ---
+        window.editLink = async (id) => {
+            document.getElementById('global-loader').classList.remove('hidden');
+            try {
+                // 1. Switch Tab & Force Reset
+                switchTab('stu');
+                resetForm(true); // true = force reset
+
+                // 2. Fetch Data
+                const docSnap = await window.getDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id));
+                
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // 3. Fill Basic Info
+                    document.getElementById('edit_doc_id').value = id; 
+                    document.getElementById('formTitle').innerText = "Editing Link"; 
+                    document.getElementById('editModeBadge').classList.remove('hidden'); 
+                    document.getElementById('btnAction').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes';
+                    
+                    document.getElementById('i_ttl').value = data.title || ''; 
+                    document.getElementById('i_sttl').value = data.subtitle || ''; 
+                    document.getElementById('i_note').value = data.note || ''; 
+                    document.getElementById('i_user_note').value = data.userNote || ''; 
+                    document.getElementById('i_dest_name').value = data.destName || 'Unlock';
+                    
+                    // 4. Fill Destination
+                    const type = data.type || 'link';
+                    const radio = document.querySelector(`input[name="destType"][value="${type}"]`);
+                    if(radio) { radio.checked = true; toggleDestType(); }
+                    
+                    document.getElementById('i_dest_url').value = L4S_SEC.dec(data.destUrl) || ''; 
+                    // [NEW] Set Quill Content
+                    if(quill) {
+                        const decodedNote = L4S_SEC.dec(data.noteContent);
+                        quill.root.innerHTML = decodedNote || '';
+                    }
+
+                    // 5. Fill Tasks
+                    if(data.tasks) {
+                        for (const [key, taskData] of Object.entries(data.tasks)) {
+                            const platform = key.substring(0, 2); 
+                            const label = typeof taskData === 'string' ? 'Task' : taskData.label;
+                            const url = typeof taskData === 'string' ? taskData : taskData.url;
+
+                            const existingGrp = document.getElementById(`grp_${key}`);
+                            
+                            if (existingGrp) {
+                                // Task có sẵn
+                                const btn = document.querySelector(`button[onclick*="'${key}'"]`);
+                                if(btn) btn.classList.add('active');
+                                existingGrp.classList.add('active');
+                                document.getElementById(`i_${key}`).value = url;
+                                const lblInput = document.getElementById(`lbl_${key}`);
+                                if(lblInput) lblInput.value = label;
+                            } else {
+                                // Task Custom
+                                addTask(platform, key, label, url);
+                            }
+                        }
+                    }
+                } else {
+                    showToast("Link not found!", "error");
+                }
+            } catch(e) { 
+                console.error(e); 
+                showToast("Error loading link", "error"); 
+            } finally { 
+                document.getElementById('global-loader').classList.add('hidden'); 
+            }
+        };
+
+        // USER VIEW LOGIC
+        let done=0, req=0, finalData=null, tasksList=[], currentLinkId = null;
+        window.loadUserLink = async (id) => {
+            currentLinkId = id;
+            try {
+                const docSnap = await window.getDoc(window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'links', id));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if(data.active === false) { showError("Unavailable", "This link is currently inactive."); return; }
+                    finalData = data;
+                    trackStat(id, 'views');
+                    renderUserView(data);
+                } else { showError("Not Found", "Link does not exist."); }
+            } catch (e) { showError("Connection Error", "Check internet."); }
+        };
+
+        function showError(title, msg) {
+            document.getElementById('u_error_gate').classList.remove('hidden');
+            document.getElementById('u_error_title').innerText = title;
+            document.getElementById('u_error_msg').innerText = msg;
+        }
+
+        function renderUserView(data) {
+            document.getElementById('u_title').innerText = data.title; document.getElementById('u_subtitle').innerText = data.subtitle;
+            const noteArea = document.getElementById('u_note_area');
+            if(data.userNote) { noteArea.innerHTML = `<i class="fa-solid fa-circle-info mt-0.5 text-yellow-600"></i><span class="font-medium">${data.userNote}</span>`; noteArea.classList.remove('hidden'); } else noteArea.classList.add('hidden');
+
+            const list = document.getElementById('u_tasks'); list.innerHTML = ''; done = 0; req = 0; tasksList = [];
+            const header = document.getElementById('u_tasks_header');
+            
+            // Check if tasks exist
+            if(data.tasks && Object.keys(data.tasks).length > 0) {
+                document.getElementById('u_tasks_scroll').classList.remove('hidden'); 
+                header.classList.remove('hidden'); // Show header if tasks exist
+                document.getElementById('user-card-main').classList.remove('hidden');
+                document.getElementById('direct-mode-container').classList.add('hidden');
+                
+                const entries = Object.entries(data.tasks); req = entries.length;
+                const isCompact = entries.length > 4;
+
+                entries.forEach(([key, taskData], idx) => {
+                    const label = taskData.label || "Task", url = taskData.url;
+                    let { icon, color, bg } = taskData;
+                    if(!icon) { const style = getTaskStyle(key, label); icon = style.icon; color = style.color; bg = style.bg; }
+
+                    if(bg === 'bg-slate-100') bg = 'bg-gray-100'; 
+                    if(bg === 'bg-blue-50') bg = 'bg-blue-50';
+
+                    const isDisabled = idx !== 0, div = document.createElement('div');
+                    div.id = `task-card-${idx}`; 
+                    div.className = `task-card ${isDisabled ? 'disabled' : 'cursor-pointer'} ${isCompact ? 'compact' : ''}`;
+                    
+                    let iconClass = icon; if (!iconClass.includes('fa-')) iconClass = `fa-${iconClass}`; 
+                    let prefix = 'fa-brands';
+                    if (['thumbs-up', 'comment', 'share', 'heart', 'link', 'lock', 'check', 'pen', 'trash', 'circle-info', 'user', 'key', 'clock'].some(x => iconClass.includes(x))) { prefix = 'fa-solid'; }
+
+                    div.innerHTML = `
+                        <div class="verify-bar"></div>
+                        <div class="task-icon-wrapper ${bg} ${color}">
+                            <i class="${prefix} ${iconClass} ${icon.includes('fa-solid')?'fa-solid':''}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0 z-10">
+                            <h4 class="font-bold text-slate-900 text-base leading-tight mb-0.5 truncate">${label}</h4>
+                            <p class="text-[11px] text-gray-500 font-bold uppercase tracking-wider status-text">${isDisabled ? 'Locked' : 'Tap to open'}</p>
+                        </div>
+                        <div id="status-${idx}" class="text-gray-300 pr-2 z-10 task-status-icon">
+                            ${isDisabled ? '<i class="fa-solid fa-lock text-sm"></i>' : '<i class="fa-solid fa-chevron-right text-lg"></i>'}
+                        </div>
+                        <div class="mini-loader z-10 mr-2"></div>
+                    `;
+                    div.onclick = () => doTask(idx, url); list.appendChild(div); tasksList.push({ id: idx, url: url, done: false });
+                });
+                resetLockBtn(data.destName);
+                checkUnlock();
+
+            } else {
+                // NO TASKS MODE
+                req = 0;
+                document.getElementById('user-card-main').classList.add('hidden'); // Hide Normal Card
+                const directContainer = document.getElementById('direct-mode-container');
+                directContainer.classList.remove('hidden'); // Show Container
+                
+                // [NEW LOGIC] Fake Loading 3s
+                const dLoader = document.getElementById('d_loader');
+                const dMainContent = document.getElementById('d_main_content');
+                
+                // Reset state
+                dLoader.classList.remove('hidden');
+                dMainContent.classList.add('hidden');
+                document.getElementById('d_result_area').classList.add('hidden');
+
+                // Set content
+                document.getElementById('d_title').innerText = data.title || 'Unlock Content';
+                document.getElementById('d_btn_text').innerText = data.destName || 'Unlock Now';
+                
+                // 3s Timer
+                setTimeout(() => {
+                    dLoader.classList.add('hidden');
+                    dMainContent.classList.remove('hidden');
+                    dMainContent.classList.add('animate-fade-in');
+                }, 3000);
+                
+                // Attach Event
+                const btn = document.getElementById('d_btn_unlock');
+                btn.onclick = () => doUnlockDirect();
+            }
+        }
+
+        // [NEW] Function for Direct Unlock Mode
+        function doUnlockDirect() {
+             if(!finalData) return;
+             if(currentLinkId) trackStat(currentLinkId, 'unlocks');
+             
+             if(finalData.type === 'note') {
+                 // Hide Main Button Area
+                 document.getElementById('d_main_content').classList.add('hidden');
+                 
+                 document.getElementById('d_result_area').classList.remove('hidden');
+                 document.getElementById('d_note_content').innerHTML = L4S_SEC.dec(finalData.noteContent);
+                 
+                 // Fireworks
+                 var duration = 2 * 1000;
+                 var animationEnd = Date.now() + duration;
+                 var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+                 function random(min, max) { return Math.random() * (max - min) + min; }
+                 var interval = setInterval(function() {
+                    var timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) { return clearInterval(interval); }
+                    var particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.1, 0.3), y: Math.random() - 0.2 } }));
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.7, 0.9), y: Math.random() - 0.2 } }));
+                 }, 250);
+
+             } else if(finalData.destUrl) {
+                 const realUrl = L4S_SEC.dec(finalData.destUrl);
+                 if(realUrl) window.location.replace(realUrl);
+             }
+        }
+
+        function doTask(idx, url) {
+            const card = document.getElementById(`task-card-${idx}`);
+            if(tasksList[idx].done || card.classList.contains('disabled') || card.classList.contains('verifying')) return;
+            
+            if(currentLinkId) trackStat(currentLinkId, 'clicks');
+            window.open(url, '_blank');
+            
+            card.classList.add('verifying');
+            const statusText = card.querySelector('.status-text');
+            statusText.innerText = "Verifying...";
+            statusText.className = "text-[11px] font-bold uppercase tracking-wide status-text text-blue-600";
+
+            setTimeout(() => {
+                tasksList[idx].done = true; done++;
+                card.classList.remove('verifying');
+                
+                card.style.background = "rgba(52, 199, 89, 0.1)"; // Green tint
+                card.style.borderColor = "rgba(52, 199, 89, 0.3)";
+                
+                const iconDiv = card.querySelector('.task-status-icon');
+                iconDiv.style.display = 'block';
+                iconDiv.innerHTML = '<i class="fa-solid fa-circle-check text-green-500 text-xl"></i>';
+                
+                statusText.innerText = "Completed";
+                statusText.className = "text-[11px] text-green-600 font-bold uppercase tracking-wide status-text";
+                
+                if (idx + 1 < tasksList.length) {
+                    const nextCard = document.getElementById(`task-card-${idx+1}`);
+                    nextCard.classList.remove('disabled');
+                    const nextStatus = nextCard.querySelector('.status-text');
+                    if(nextStatus) nextStatus.innerText = "Tap to open";
+                }
+                checkUnlock();
+            }, 3000); // 3 seconds fake wait
+        }
+
+        function resetLockBtn(name) {
+            const btn = document.getElementById('unlockBtn');
+            btn.disabled = true; btn.className = "w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all text-[15px]";
+            btn.innerHTML = `<i class="fa-solid fa-lock text-xs"></i><span>${name || 'Unlock'}</span>`;
+            document.getElementById('progressArea').classList.add('hidden'); document.getElementById('noteResult').classList.add('hidden');
+        }
+
+        function checkUnlock() {
+            if(req === 0) return; // Handled in renderUserView for 0 tasks
+            
+            const pct = req===0?100:Math.round((done/req)*100);
+            document.getElementById('progressArea').classList.remove('hidden'); document.getElementById('progressBar').style.width = `${pct}%`; document.getElementById('progressText').innerText = `${pct}%`;
+            if(done >= req) {
+                const btn = document.getElementById('unlockBtn');
+                btn.disabled = false; btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 animate-bounce cursor-pointer transform transition-transform uppercase tracking-wide text-[15px]";
+                btn.innerHTML = `<i class="fa-solid fa-unlock-keyhole"></i><span>Unlock Now</span>`;
+                if(navigator.vibrate) navigator.vibrate(200);
+                
+                // Fireworks Effect
+                var duration = 3 * 1000;
+                var animationEnd = Date.now() + duration;
+                var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+                function random(min, max) { return Math.random() * (max - min) + min; }
+
+                var interval = setInterval(function() {
+                    var timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) { return clearInterval(interval); }
+                    var particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.1, 0.3), y: Math.random() - 0.2 } }));
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.7, 0.9), y: Math.random() - 0.2 } }));
+                }, 250);
+            }
+        }
+
+        window.doUnlock = () => {
+            if(!finalData) return;
+            if(currentLinkId) trackStat(currentLinkId, 'unlocks');
+            const btn = document.getElementById('unlockBtn'); btn.classList.remove('animate-bounce');
+            if(finalData.type === 'note') {
+                const noteArea = document.getElementById('noteResult'); 
+                // [NEW] Display HTML Content
+                document.getElementById('noteContentDisplay').innerHTML = L4S_SEC.dec(finalData.noteContent);
+                noteArea.classList.remove('hidden'); noteArea.scrollIntoView({ behavior: 'smooth' });
+                btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Opened</span>`; btn.disabled = true; btn.className = "w-full bg-slate-800 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 cursor-default shadow-none";
+            } else if(finalData.destUrl) { const realUrl = L4S_SEC.dec(finalData.destUrl); if(realUrl) window.location.replace(realUrl); }
+        }
+        window.goToDest = window.doUnlock;
+    </script>
+</body>
+</html>

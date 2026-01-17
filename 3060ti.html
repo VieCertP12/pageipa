@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ThaiSonCert Pro</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://cdnjs.cloudflare.com https://fonts.gstatic.com;">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Outfit"', 'sans-serif'] }, animation: { 'slide-in': 'slideIn 0.3s ease-out forwards' }, keyframes: { slideIn: { '0%': { transform: 'translateX(100%)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } } } } } }
+    </script>
+    <style> 
+        .hidden { display: none !important; } 
+        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        
+        /* --- CSS TỐI ƯU KÉO THẢ (FIX LAG) --- */
+        .draggable-item { 
+            cursor: grab; 
+            touch-action: none; /* Tối ưu cho cảm ứng */
+        }
+        .draggable-item:active { cursor: grabbing; }
+        
+        /* Khi đang kéo: Tắt transition để không bị giật, làm mờ, chặn sự kiện con */
+        .draggable-item.dragging { 
+            opacity: 0.5; 
+            border: 2px dashed #6366f1; 
+            background: #eef2ff; 
+            transition: none !important; 
+            box-shadow: none !important;
+        }
+        .draggable-item.dragging * { pointer-events: none; } /* Quan trọng: Chặn sự kiện chuột vào con */
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .icon-preview-box svg { width: 100%; height: 100%; fill: currentColor; }
+        .icon-preview-box img { width: 100%; height: 100%; object-fit: cover; }
+        .icon-preview-box i { font-size: 1.25rem; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800">
+
+    <div id="toast-container" class="fixed top-20 right-5 z-[100] flex flex-col gap-3 pointer-events-none"></div>
+
+    <div id="login-box" class="fixed inset-0 z-50 flex items-center justify-center bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80');">
+        <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-md"></div>
+        <div class="relative w-full max-w-md p-8 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Admin<span class="text-indigo-600">Portal</span></h2>
+            </div>
+            <div class="space-y-5">
+                <input type="email" id="adm-email" placeholder="Email" class="w-full p-4 rounded-xl border border-slate-200 outline-none">
+                <input type="password" id="adm-pass" placeholder="Password" class="w-full p-4 rounded-xl border border-slate-200 outline-none">
+                <button id="btn-login" class="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl shadow-xl">ĐĂNG NHẬP</button>
+            </div>
+            <p id="err-msg" class="text-red-500 text-center mt-6 text-sm font-bold hidden"></p>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden min-h-screen pb-20">
+        <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-xl tracking-tight text-slate-800">ThaiSon<span class="text-indigo-600">Admin</span></span>
+                </div>
+                <button id="btn-logout" class="text-sm font-bold text-slate-500 hover:text-red-500"><i class="fas fa-power-off"></i> Thoát</button>
+            </div>
+        </nav>
+
+        <div class="max-w-6xl mx-auto px-4 mt-8 space-y-8">
+            
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center justify-between cursor-pointer" onclick="document.getElementById('config-body').classList.toggle('hidden');">
+                    <h3 class="font-bold text-slate-700"><i class="fas fa-palette text-indigo-500"></i> Cấu Hình Giao Diện & Màu Sắc</h3>
+                    <i class="fas fa-chevron-down text-slate-400"></i>
+                </div>
+                <div id="config-body" class="p-6 hidden space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Tiêu đề chính (H1)</label>
+                            <div class="flex gap-2">
+                                <input id="cfg-title" type="text" class="flex-1 p-3 border rounded-xl" placeholder="Tiêu đề...">
+                                <input id="cfg-title-color" type="color" class="w-12 h-12 p-1 border rounded-xl cursor-pointer bg-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Mô tả phụ (Subtitle)</label>
+                            <div class="flex gap-2">
+                                <textarea id="cfg-subtitle" rows="1" class="flex-1 p-3 border rounded-xl resize-none" placeholder="Mô tả..."></textarea>
+                                <input id="cfg-subtitle-color" type="color" class="w-12 h-12 p-1 border rounded-xl cursor-pointer bg-white">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-slate-100 pt-4">
+                        <h4 class="font-bold text-sm text-slate-600 mb-4 uppercase">Cấu hình 3 Nút Chức Năng (Text - Màu - Icon)</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nút 1 (Trái)</div>
+                                    <div id="btn1-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
+                                </div>
+                                <input id="btn1-text" class="w-full p-2 rounded border text-sm" placeholder="Tên nút...">
+                                <input id="btn1-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://...">
+                                <input id="btn1-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-home)" oninput="previewHeroIcon(1, this.value)">
+                                <div class="grid grid-cols-3 gap-2 mt-1">
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label><input type="color" id="btn1-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#0f172a"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label><input type="color" id="btn1-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn1-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nút 2 (Giữa)</div>
+                                    <div id="btn2-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
+                                </div>
+                                <input id="btn2-text" class="w-full p-2 rounded border text-sm" placeholder="Tên nút...">
+                                <input id="btn2-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://...">
+                                <input id="btn2-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-download)" oninput="previewHeroIcon(2, this.value)">
+                                <div class="grid grid-cols-3 gap-2 mt-1">
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label><input type="color" id="btn2-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label><input type="color" id="btn2-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#334155"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn2-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#6366f1"></div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nút 3 (Phải)</div>
+                                    <div id="btn3-preview" class="icon-preview-box w-6 h-6 text-slate-400"></div>
+                                </div>
+                                <input id="btn3-text" class="w-full p-2 rounded border text-sm" placeholder="Tên nút...">
+                                <input id="btn3-url" class="w-full p-2 rounded border text-sm font-mono text-xs text-blue-600" placeholder="https://...">
+                                <input id="btn3-icon" class="w-full p-2 rounded border text-sm" placeholder="Icon (fas fa-star)" oninput="previewHeroIcon(3, this.value)">
+                                <div class="grid grid-cols-3 gap-2 mt-1">
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">NỀN</label><input type="color" id="btn3-bg-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#ffffff"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">CHỮ</label><input type="color" id="btn3-text-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#334155"></div>
+                                    <div class="text-center"><label class="text-[10px] text-slate-400 font-bold block mb-1">ICON</label><input type="color" id="btn3-icon-color" class="w-full h-8 p-0.5 border rounded cursor-pointer bg-white" value="#6366f1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button onclick="saveConfig()" id="btn-save-cfg" class="bg-slate-800 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-900 transition"><i class="fas fa-save"></i> Lưu Cấu Hình</button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-center mb-8">
+                    <div class="bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200 inline-flex gap-1">
+                        <button class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all" data-tab="esign" onclick="switchTab('esign')">ESign</button>
+                        <button class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all" data-tab="cert" onclick="switchTab('cert')">Cert</button>
+                        <button class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all" data-tab="mods" onclick="switchTab('mods')">Mods</button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mb-6 gap-4">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-2xl font-black text-slate-800">Quản Lý</h2>
+                        <span id="count-badge" class="text-xs bg-indigo-100 text-indigo-700 font-bold px-2.5 py-1 rounded-lg">0 App</span>
+                    </div>
+                    <div class="flex gap-3">
+                        <input type="text" id="search-app" placeholder="Tìm kiếm..." class="pl-4 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm outline-none w-48 focus:w-64 transition-all">
+                        <button onclick="openModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap"><i class="fas fa-plus"></i> Thêm</button>
+                    </div>
+                </div>
+
+                <div class="mb-2 text-xs text-slate-400 italic text-right">* Kéo thả các thẻ bên dưới để sắp xếp vị trí hiển thị (App mới sẽ tự động lên đầu)</div>
+                <div id="list-data" class="grid gap-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="relative bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
+                <div class="bg-slate-50 px-6 py-4 flex justify-between items-center border-b border-slate-100">
+                    <h3 class="font-bold text-slate-800" id="modal-title"></h3>
+                    <button onclick="closeModal()"><i class="fas fa-times text-slate-400"></i></button>
+                </div>
+                <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                    <input type="hidden" id="edit-id">
+                    
+                    <input id="inp-name" type="text" class="w-full p-3 border rounded-xl" placeholder="Tên App">
+                    
+                    <input id="inp-desc" type="text" class="w-full p-3 border rounded-xl" placeholder="Mô tả">
+                    
+                    <input id="inp-url" type="text" class="w-full p-3 border rounded-xl" placeholder="Link Tải">
+
+                    <div class="relative">
+                        <label class="absolute -top-2 left-3 bg-white px-1 text-xs font-bold text-indigo-600">Lượt Tải (Fake)</label>
+                        <input id="inp-downloads" type="number" class="w-full p-3 border rounded-xl border-indigo-200" placeholder="0">
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <input id="inp-icon" type="text" class="flex-1 p-3 border rounded-xl" placeholder="Link Icon / SVG / Class" oninput="previewIcon(this.value)">
+                        <div id="icon-preview" class="icon-preview-box w-12 h-12 rounded-lg border bg-slate-100 overflow-hidden flex items-center justify-center"></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <select id="inp-badge" class="w-full p-3 border rounded-xl">
+                            <option value="">Không Badge</option>
+                            <option value="HOT">HOT</option>
+                            <option value="NEW">NEW</option>
+                        </select>
+                        <select id="inp-status" class="w-full p-3 border rounded-xl">
+                            <option value="active">Hiện</option>
+                            <option value="hidden">Ẩn</option>
+                        </select>
+                    </div>
+                    
+                    <div id="div-tag" class="hidden p-3 bg-orange-50 rounded-xl border border-orange-100">
+                        <div class="text-xs font-bold text-orange-600 mb-2">Icon Tag (Mods only)</div>
+                        <div class="flex gap-4">
+                            <label><input type="radio" name="tag_icon" value="fire" checked> <i class="fas fa-fire text-orange-500"></i></label>
+                            <label><input type="radio" name="tag_icon" value="bolt"> <i class="fas fa-bolt text-yellow-500"></i></label>
+                            <label><input type="radio" name="tag_icon" value="star"> <i class="fas fa-star text-purple-500"></i></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 px-6 py-4 flex justify-end gap-3 border-t border-slate-100">
+                    <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-slate-500 font-bold">Hủy</button>
+                    <button id="btn-save" class="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, query, writeBatch } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // --- TIỆN ÍCH ---
+        window.showToast = (msg, type = 'success') => {
+            const container = document.getElementById('toast-container');
+            const div = document.createElement('div');
+            const color = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            div.className = `${color} text-white px-6 py-3 rounded-xl shadow-xl font-bold text-sm flex items-center gap-3 animation-slide-in transform transition-all`;
+            div.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+            container.appendChild(div);
+            setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 3000);
+        }
+
+        window.smartParseIcon = (s) => {
+            if (!s) return ''; s = s.trim();
+            if (s.startsWith('<svg') || s.startsWith('<i ') || s.startsWith('<img') || s.startsWith('<wa-icon')) return s;
+            if (s.startsWith('http')) return `<img src="${s}" alt="icon">`;
+            const matchName = s.match(/\[['"]([^'"]+)['"]\]/);
+            if (matchName && matchName[1]) {
+                const matchPrefix = s.match(/byPrefixAndName\.([a-z]+)/);
+                return `<i class="${matchPrefix ? matchPrefix[1] : 'fas'} fa-${matchName[1]}"></i>`;
+            }
+            const matchWa = s.match(/name=["']([^"']+)['"]'/);
+            if (matchWa && matchWa[1]) return `<i class="fas fa-${matchWa[1]}"></i>`;
+            return `<i class="${s}"></i>`;
+        }
+        
+        // --- AUTH ---
+        onAuthStateChanged(auth, async (u) => {
+            if(u) {
+                document.getElementById('login-box').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadConfig(); load(); switchTab('esign');
+            } else {
+                document.getElementById('login-box').classList.remove('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
+            }
+        });
+        document.getElementById('btn-login').addEventListener('click', () => {
+            signInWithEmailAndPassword(auth, document.getElementById('adm-email').value, document.getElementById('adm-pass').value)
+                .catch((e) => { document.getElementById('err-msg').innerText = "Sai tài khoản hoặc mật khẩu!"; document.getElementById('err-msg').classList.remove('hidden'); });
+        });
+        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+
+        // --- CONFIG LOGIC ---
+        async function loadConfig() {
+            try {
+                const s = await getDoc(doc(db, "settings", "general"));
+                if(s.exists()) {
+                    const d = s.data();
+                    document.getElementById('cfg-title').value = d.title || "";
+                    document.getElementById('cfg-title-color').value = d.titleColor || "#000000";
+                    document.getElementById('cfg-subtitle').value = d.subtitle || "";
+                    document.getElementById('cfg-subtitle-color').value = d.subtitleColor || "#64748b";
+                    
+                    const btns = d.heroButtons || [{}, {}, {}];
+                    for(let i=0; i<3; i++) {
+                        const idx = i+1;
+                        document.getElementById(`btn${idx}-text`).value = btns[i]?.text || "";
+                        document.getElementById(`btn${idx}-url`).value = btns[i]?.url || "";
+                        const iconVal = btns[i]?.icon || "";
+                        document.getElementById(`btn${idx}-icon`).value = iconVal;
+                        document.getElementById(`btn${idx}-bg-color`).value = btns[i]?.bgColor || (i===0 ? '#0f172a' : '#ffffff');
+                        document.getElementById(`btn${idx}-text-color`).value = btns[i]?.textColor || (i===0 ? '#ffffff' : '#334155');
+                        document.getElementById(`btn${idx}-icon-color`).value = btns[i]?.iconColor || (i===0 ? '#ffffff' : '#6366f1');
+                        window.previewHeroIcon(idx, iconVal);
+                    }
+                }
+            } catch(e) {}
+        }
+        
+        window.saveConfig = async () => {
+            const btn = document.getElementById('btn-save-cfg');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+            try {
+                const heroButtons = [];
+                for(let i=1; i<=3; i++) {
+                    heroButtons.push({
+                        text: document.getElementById(`btn${i}-text`).value,
+                        url: document.getElementById(`btn${i}-url`).value,
+                        icon: document.getElementById(`btn${i}-icon`).value,
+                        bgColor: document.getElementById(`btn${i}-bg-color`).value,
+                        textColor: document.getElementById(`btn${i}-text-color`).value,
+                        iconColor: document.getElementById(`btn${i}-icon-color`).value
+                    });
+                }
+                await setDoc(doc(db, "settings", "general"), {
+                    title: document.getElementById('cfg-title').value,
+                    titleColor: document.getElementById('cfg-title-color').value,
+                    subtitle: document.getElementById('cfg-subtitle').value,
+                    subtitleColor: document.getElementById('cfg-subtitle-color').value,
+                    heroButtons: heroButtons
+                }, { merge: true });
+                showToast("Đã lưu cấu hình giao diện!");
+            } catch(e) { alert(e.message); }
+            btn.innerHTML = '<i class="fas fa-save"></i> Lưu Cấu Hình';
+        }
+
+        window.previewHeroIcon = (idx, val) => { document.getElementById(`btn${idx}-preview`).innerHTML = window.smartParseIcon(val); }
+
+        // --- APP LOGIC ---
+        let curType = 'esign'; 
+        window.allData = []; 
+        
+        async function load() {
+            try {
+                const q = query(collection(db, "apps")); 
+                const s = await getDocs(q);
+                window.allData = []; 
+                s.forEach(d => window.allData.push({id: d.id, ...d.data()}));
+                
+                // Sort theo Order: Số bé lên đầu (mới thêm sẽ có số âm)
+                window.allData.sort((a, b) => {
+                    const orderA = (a.order !== undefined && a.order !== null) ? a.order : 999999;
+                    const orderB = (b.order !== undefined && b.order !== null) ? b.order : 999999;
+                    return orderA - orderB; 
+                });
+
+                render();
+            } catch(e) {
+                console.error("Lỗi lấy dữ liệu:", e);
+            }
+        }
+        
+        function render() {
+            const term = document.getElementById('search-app').value.toLowerCase();
+            const list = window.allData.filter(i => i.type === curType && (i.name.toLowerCase().includes(term)));
+            
+            document.getElementById('count-badge').innerText = `${list.length} App`;
+            
+            // Xóa transition-all để tránh xung đột khi drag
+            document.getElementById('list-data').innerHTML = list.map((i, idx) => `
+                <div draggable="true" class="draggable-item bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-4 group hover:shadow-md select-none" data-id="${i.id}">
+                    <div class="text-slate-300 px-2 cursor-grab active:cursor-grabbing"><i class="fas fa-grip-vertical"></i></div>
+                    <div class="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border icon-preview-box">
+                        ${window.smartParseIcon(i.icon) || '<img src="https://placehold.co/100">'}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h4 class="font-bold text-slate-800 truncate">${i.name}</h4>
+                            ${i.status==='hidden' ? '<span class="text-[10px] bg-slate-200 px-1 rounded">ẨN</span>' : ''}
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">${i.desc || ''} - <span class="text-indigo-600 font-bold"><i class="fas fa-download"></i> ${i.downloads || 0}</span></p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="window.edit('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition"><i class="fas fa-pen text-xs"></i></button>
+                        <button onclick="window.del('${i.id}')" class="w-8 h-8 rounded bg-slate-50 text-red-500 hover:bg-red-500 hover:text-white transition"><i class="fas fa-trash text-xs"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            addDragEvents();
+        }
+        
+        // --- LOGIC KÉO THẢ TỐI ƯU (KHÔNG LAG) ---
+        function addDragEvents() {
+            const container = document.getElementById('list-data');
+            const draggables = document.querySelectorAll('.draggable-item');
+            
+            draggables.forEach(d => {
+                d.addEventListener('dragstart', () => {
+                    d.classList.add('dragging');
+                    container.classList.add('cursor-grabbing');
+                });
+                
+                d.addEventListener('dragend', async () => {
+                    d.classList.remove('dragging');
+                    container.classList.remove('cursor-grabbing');
+                    await saveOrder();
+                });
+            });
+            
+            container.addEventListener('dragover', e => {
+                e.preventDefault();
+                
+                const dragging = document.querySelector('.dragging');
+                if(!dragging) return;
+
+                // Tối ưu: Chỉ tính toán khi cần thiết
+                const afterElement = getDragAfterElement(container, e.clientY);
+                const currentNext = dragging.nextElementSibling;
+                
+                // Chỉ DOM manipulation khi vị trí thực sự thay đổi -> Mượt hơn
+                if (afterElement !== currentNext) {
+                    if (afterElement == null) {
+                        container.appendChild(dragging);
+                    } else {
+                        container.insertBefore(dragging, afterElement);
+                    }
+                }
+            });
+        }
+        
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        async function saveOrder() {
+            const batch = writeBatch(db);
+            let hasChanges = false;
+            const items = document.querySelectorAll('.draggable-item');
+            
+            // Cập nhật lại order theo vị trí DOM
+            items.forEach((item, index) => {
+                const id = item.dataset.id;
+                const newOrder = index; 
+                
+                batch.update(doc(db, "apps", id), { order: newOrder });
+                
+                const d = window.allData.find(x => x.id === id); 
+                if(d) {
+                    if(d.order !== newOrder) hasChanges = true;
+                    d.order = newOrder;
+                }
+            });
+            
+            try { 
+                await batch.commit(); 
+                window.allData.sort((a,b) => (a.order || 0) - (b.order || 0));
+                if(hasChanges) showToast("Đã cập nhật vị trí!", "success");
+            } catch(e){
+                console.error(e);
+                showToast("Lỗi khi lưu vị trí", "error");
+            }
+        }
+        
+        document.getElementById('search-app').addEventListener('input', render);
+        
+        window.switchTab = (t) => {
+            curType = t;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = (btn.dataset.tab === t) 
+                    ? "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 text-white shadow-lg transition-all" 
+                    : "tab-btn px-6 py-2.5 rounded-xl text-sm font-bold bg-white text-slate-500 hover:bg-slate-50 transition-all";
+            });
+            document.getElementById('div-tag').classList.toggle('hidden', t !== 'mods'); 
+            render();
+        }
+        
+        window.previewIcon = (val) => { document.getElementById('icon-preview').innerHTML = window.smartParseIcon(val); }
+        
+        window.openModal = () => {
+            document.getElementById('edit-id').value = ''; 
+            document.getElementById('inp-name').value = ''; 
+            document.getElementById('inp-desc').value = ''; 
+            document.getElementById('inp-url').value = ''; 
+            document.getElementById('inp-icon').value = ''; 
+            document.getElementById('inp-downloads').value = '0'; 
+            document.getElementById('icon-preview').innerHTML = ''; 
+            document.getElementById('modal-title').innerText = `Thêm Mới ${curType.toUpperCase()}`; 
+            document.getElementById('modal').classList.remove('hidden');
+        };
+        
+        window.closeModal = () => document.getElementById('modal').classList.add('hidden');
+        
+        window.edit = (id) => {
+            const item = window.allData.find(x => x.id === id); if(!item) return;
+            document.getElementById('edit-id').value = id; 
+            document.getElementById('inp-name').value = item.name; 
+            document.getElementById('inp-desc').value = item.desc; 
+            document.getElementById('inp-url').value = item.url; 
+            document.getElementById('inp-icon').value = item.icon; 
+            document.getElementById('inp-downloads').value = item.downloads || 0;
+            document.getElementById('icon-preview').innerHTML = window.smartParseIcon(item.icon);
+            document.getElementById('inp-badge').value = item.badge || ''; 
+            document.getElementById('inp-status').value = item.status || 'active'; 
+            document.getElementById('modal-title').innerText = `Chỉnh Sửa App`; 
+            document.getElementById('modal').classList.remove('hidden');
+        };
+        
+        window.del = async (id) => { 
+            if(confirm("Xóa nhé?")) { 
+                try {
+                    await deleteDoc(doc(db, "apps", id)); 
+                    window.allData = window.allData.filter(x => x.id !== id);
+                    render();
+                    showToast("Đã xóa ứng dụng!");
+                } catch(e) { alert(e.message); }
+            } 
+        };
+        
+        document.getElementById('btn-save').addEventListener('click', async () => {
+            const id = document.getElementById('edit-id').value; 
+            const name = document.getElementById('inp-name').value;
+            if(!name) return alert("Nhập tên đi!");
+            
+            const btn = document.getElementById('btn-save'); 
+            btn.innerHTML = 'Lưu...'; btn.disabled = true;
+            
+            // LOGIC MỚI: Thêm App -> Tự động tìm order nhỏ nhất và -1 để lên đầu
+            let newOrder = 0;
+            if (!id) {
+                const currentMin = window.allData.length > 0 
+                    ? Math.min(...window.allData.map(p => (p.order !== undefined ? p.order : 0)))
+                    : 0;
+                newOrder = currentMin - 1;
+            }
+
+            const data = { 
+                type: curType, 
+                name: name, 
+                desc: document.getElementById('inp-desc').value, 
+                url: document.getElementById('inp-url').value, 
+                icon: document.getElementById('inp-icon').value, 
+                badge: document.getElementById('inp-badge').value, 
+                status: document.getElementById('inp-status').value, 
+                downloads: Number(document.getElementById('inp-downloads').value) || 0,
+                tag: document.querySelector('input[name="tag_icon"]:checked')?.value || 'fire', 
+                updatedAt: new Date().toISOString() 
+            };
+            
+            if(!id) { 
+                data.order = newOrder; 
+            }
+            
+            try { 
+                const docRef = doc(db, "apps", id || (curType[0] + Date.now()));
+                await setDoc(docRef, data, { merge: true }); 
+                
+                if(id) {
+                    const idx = window.allData.findIndex(x => x.id === id);
+                    if(idx > -1) window.allData[idx] = { ...window.allData[idx], ...data };
+                } else {
+                    window.allData.push({ id: docRef.id, ...data });
+                }
+                
+                // Sort lại ngay để App mới nhảy lên đầu
+                window.allData.sort((a,b) => (a.order || 0) - (b.order || 0));
+
+                closeModal(); 
+                render(); 
+                showToast("Đã lưu thành công!");
+            } catch(e) { alert(e.message); }
+            
+            btn.innerHTML = 'Lưu'; btn.disabled = false;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esign iPa Miễn Phí</title>
+    <link rel="icon" href="https://i.imgur.com/L6HpZa6.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Outfit"', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#6366f1',
+                            secondary: '#a855f7',
+                            gold: '#f59e0b',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 10px rgba(245, 158, 11, 0.2)' },
+                            '50%': { boxShadow: '0 0 20px rgba(245, 158, 11, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #1e293b;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            position: relative;
+            background-image: 
+                linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+                linear-gradient(to bottom, #f0f0f0 1px, transparent 1px),
+                radial-gradient(circle 600px at 0% 0%, #d5c5ff, transparent),
+                radial-gradient(circle 600px at 100% 0%, #d5c5ff, transparent);
+            background-size: 20px 20px, 20px 20px, 100% 100%, 100% 100%;
+            background-attachment: fixed;
+            background-position: center top;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn.active {
+            background-color: #ffffff;
+            color: #4f46e5;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-btn:not(.active) { color: #64748b; }
+        .tab-btn:not(.active):hover { color: #1e293b; }
+
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <nav class="fixed top-0 w-full z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <i class="fa-brands fa-apple text-white"></i>
+                    </div>
+                    <span class="font-bold text-lg tracking-tight text-slate-800">ThaiSon<span class="text-indigo-600">Cert</span></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="javascript:void(0)" onclick="window.open('https://t.me/ias_xxx', '_blank')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-white flex items-center justify-center transition-all border border-slate-200 shadow-sm text-indigo-500 hover:text-indigo-600">
+                        <i class="fa-brands fa-telegram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 pt-32 pb-12 px-4 sm:px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-16 animate-fade-in relative">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-[100px] -z-10"></div>
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-indigo-100 text-indigo-600 text-xs font-bold mb-8 shadow-sm hover:shadow-md transition-all cursor-default select-none">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                </span>
+                Anti-Revoke Protected
+            </div>
+            
+            <h1 id="site-title" class="text-5xl md:text-8xl font-black mb-6 tracking-tighter text-slate-900 leading-[1.1]">
+                <span class="text-indigo-600">SHARE CERTIFICATE</span>
+            </h1>
+            
+            <p id="site-subtitle" class="text-slate-500 max-w-2xl mx-auto text-base md:text-lg leading-relaxed mb-10 font-medium">
+                Kho tàng chứng chỉ ESign & IPA Mods miễn phí tốt nhất Việt Nam.
+            </p>
+            
+            <div id="hero-buttons" class="flex flex-wrap justify-center gap-4">
+                <div class="animate-pulse flex gap-2">
+                    <div class="h-10 w-32 bg-slate-200 rounded-full"></div>
+                    <div class="h-10 w-32 bg-slate-200 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center mb-10">
+            <div class="p-1.5 bg-slate-100/80 border border-slate-200 rounded-2xl backdrop-blur-xl inline-flex relative shadow-inner">
+                <div id="tab-indicator" class="absolute h-[calc(100%-12px)] top-1.5 rounded-xl bg-white shadow-md transition-all duration-300 ease-out z-0" style="width: 33%; left: 6px;"></div>
+                <button class="tab-btn relative z-10 px-6 py-2.5 text-sm font-bold rounded-xl transition-all w-28 md:w-32 active" data-tab="esign">ESign</button>
+                <button class="tab-btn relative z-10 px-6 py-2.5 text-sm font-bold rounded-xl transition-all w-28 md:w-32" data-tab="cert">Cert</button>
+                <button class="tab-btn relative z-10 px-6 py-2.5 text-sm font-bold rounded-xl transition-all w-28 md:w-32" data-tab="mods">Mods</button>
+            </div>
+        </div>
+
+        <div id="search-container" class="hidden mb-10 max-w-md mx-auto animate-fade-in">
+            <div class="relative group">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur-sm"></div>
+                <div class="relative flex items-center bg-white rounded-xl border border-slate-200 shadow-sm">
+                    <i class="fas fa-search absolute left-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                    <input type="text" id="mods-search" class="w-full bg-transparent py-3.5 pl-11 pr-4 text-sm text-slate-800 placeholder-slate-400 focus:outline-none font-medium" placeholder="Tìm kiếm ứng dụng...">
+                </div>
+            </div>
+        </div>
+
+        <div id="main-loader" class="text-center"><div class="loader"></div></div>
+        <div class="min-h-[400px]">
+            <div id="esign-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in hidden"></div>
+            <div id="cert-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden animate-fade-in"></div>
+            <div id="mods-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden animate-fade-in">
+                <div id="no-results" class="hidden col-span-full py-12 text-center text-slate-400">
+                    <i class="fas fa-search mb-2 text-2xl opacity-50"></i>
+                    <p>Không tìm thấy ứng dụng</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-16 pt-8 border-t border-slate-200 text-center select-none">
+            <p class="text-slate-400 text-xs font-medium cursor-pointer" id="admin-trigger">Copyright © 2025 SHARECHUNGCHI. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <div id="esign-popup" class="fixed inset-0 z-[9999] hidden">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" id="popup-overlay"></div>
+            <div class="relative bg-white rounded-[2rem] p-6 max-w-[380px] w-full animate-fade-in scale-95 shadow-2xl overflow-hidden">
+                
+                <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors z-10" id="close-popup">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+
+                <div class="flex gap-4 mb-5">
+                    <div class="w-[5.5rem] h-[5.5rem] flex-shrink-0 rounded-[1.25rem] border border-slate-100 shadow-sm overflow-hidden">
+                        <img src="https://i.imgur.com/hPj8ui8.png" alt="ESign" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-between py-1 min-w-0">
+                        <div>
+                            <h3 class="font-bold text-xl text-slate-900 leading-tight truncate" id="popup-cert-name">ESign</h3>
+                            <p class="text-xs text-slate-500 mt-1 line-clamp-2">Công cụ ký & quản lý IPA tốt nhất cho iOS</p>
+                        </div>
+                        <div class="flex items-center gap-3 mt-auto">
+                            <a id="popup-install-btn" href="#" target="_blank" class="px-6 py-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold uppercase tracking-wide transition-all active:scale-95 shadow-blue-500/30 shadow-lg">
+                                NHẬN
+                            </a>
+                            <div class="flex flex-col items-start justify-center leading-none gap-0.5">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa-brands fa-apple text-slate-400 text-xs"></i>
+                                    <span class="text-[10px] text-slate-400 font-medium">Developer ID</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 py-4 border-t border-slate-100 mb-2 select-none">
+                    <div class="flex flex-col items-center border-r border-slate-100/80">
+                        <span class="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mb-1">XẾP HẠNG</span>
+                        <div class="text-2xl font-bold text-slate-600 font-sans tracking-tight">4.8</div>
+                        <div class="flex items-center gap-0.5 mt-0.5">
+                             <i class="fas fa-star text-[10px] text-slate-400"></i>
+                             <i class="fas fa-star text-[10px] text-slate-400"></i>
+                             <i class="fas fa-star text-[10px] text-slate-400"></i>
+                             <i class="fas fa-star text-[10px] text-slate-400"></i>
+                             <i class="fas fa-star-half-alt text-[10px] text-slate-400"></i>
+                        </div>
+                        <div class="text-[9px] text-slate-300 mt-0.5 font-medium">99K+ Đánh giá</div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center border-r border-slate-100/80">
+                        <span class="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mb-1">TUỔI</span>
+                        <div class="text-2xl font-bold text-slate-600 font-sans tracking-tight">17+</div>
+                        <span class="text-[10px] text-slate-400 font-medium mt-0.5">Năm Tuổi</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <span class="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mb-1">DEVELOPER</span>
+                        <div class="h-8 flex items-center justify-center">
+                             <i class="fas fa-user-shield text-xl text-slate-600"></i>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-medium mt-0.5">ThaiSon</span>
+                    </div>
+                </div>
+
+                <div class="mb-5 p-5 rounded-[1.5rem] bg-gradient-to-br from-[#EEF2FF] to-[#F3E8FF] border border-indigo-100 shadow-sm relative overflow-hidden group">
+                    <div class="relative z-10 text-center">
+                        <p class="text-sm font-bold text-slate-700 leading-relaxed mb-4">
+                            <i class="fas fa-exclamation-triangle text-orange-500 mr-1"></i> 
+                            Cài lỗi hoặc bị thu hồi? Khuyên dùng <span class="text-indigo-700">Chứng chỉ cá nhân</span> <br>
+                            <span class="text-indigo-700">Lấy Ngay Unban</span> chỉ <span class="text-indigo-700 bg-indigo-50 px-1 rounded">150.000vnđ/năm</span>:
+                        </p>
+                        <a href="javascript:void(0)" onclick="window.open('https://muachungchi.com', '_blank')" class="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 font-extrabold text-sm px-8 py-2.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 border border-indigo-50 min-w-[160px]">
+                            <i class="fas fa-crown text-yellow-400 text-lg"></i>
+                            <span>Mua Ngay</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-4 mt-4 px-1">
+                    <div class="flex gap-4 items-start">
+                        <div class="w-12 h-12 flex-shrink-0 rounded-[1rem] bg-blue-50 flex items-center justify-center">
+                            <svg width="28" height="28" viewBox="-0.219 -0.125 1.5 1.5" fill="#007aff" xmlns="http://www.w3.org/2000/svg"><path d="M.851.664C.849.506.98.43.986.426A.3.3 0 0 0 .757.302C.66.292.567.359.518.359S.392.303.312.305a.3.3 0 0 0-.258.157c-.11.191-.028.475.079.63.052.076.115.161.197.158.079-.003.109-.051.205-.051s.123.051.206.05c.085-.002.139-.077.191-.154.06-.088.085-.173.087-.178C1.017.916.853.853.851.664M.694.199a.27.27 0 0 0 .065-.2.3.3 0 0 0-.184.096.26.26 0 0 0-.066.193A.23.23 0 0 0 .694.2"></path></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-base leading-tight mb-1">Chính hãng</h4>
+                            <p class="text-xs text-slate-500 leading-snug">Chứng chỉ Apple chính hãng, an toàn & tin cậy.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <div class="w-12 h-12 flex-shrink-0 rounded-[1rem] bg-blue-50 flex items-center justify-center">
+                            <svg width="28" height="28" viewBox="0 0 1.5 1.5" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M1.5 0v1.5H0V0zM.787 1.454H.786l-.004.002H.78l-.004-.002H.774v.001l-.001.027v.001l.001.001.006.005h.002l.006-.005.001-.001v-.001l-.001-.027zm.017-.007H.803l-.012.006-.001.001v.001l.001.027v.001h.001l.013.006.002-.001v-.001l-.002-.038zm-.045 0a.001.001 0 0 0-.002 0v.001l-.002.038.001.002h.001l.013-.006.001-.001V1.48l.001-.027v-.001l-.001-.001z"></path><path d="M.662.131A.125.125 0 0 1 .831.124l.008.007.118.119h.168a.125.125 0 0 1 .125.116v.177l.119.119a.125.125 0 0 1 .007.169l-.007.008-.119.119v.167a.125.125 0 0 1-.116.125H.957l-.119.119a.125.125 0 0 1-.169.007l-.008-.007-.119-.119H.375a.125.125 0 0 1-.125-.116V.957L.131.838A.125.125 0 0 1 .124.669L.131.661.25.542V.375A.125.125 0 0 1 .366.25h.177zM.75.22.631.339a.13.13 0 0 1-.077.036H.375v.168a.13.13 0 0 1-.029.08L.339.631.22.75l.119.119a.13.13 0 0 1 .036.077l.001.011v.168h.168a.13.13 0 0 1 .08.029l.008.007.119.119.119-.119a.13.13 0 0 1 .077-.036l.011-.001h.167V.956a.13.13 0 0 1 .029-.08l.007-.008.119-.119L1.161.63a.13.13 0 0 1-.036-.077V.375H.957a.13.13 0 0 1-.08-.029L.869.339zm.193.342a.063.063 0 0 1 .094.083l-.005.006-.305.305a.07.07 0 0 1-.091.005L.63.956.48.806A.063.063 0 0 1 .563.712l.006.005.111.111z" fill="#007aff"></path></g></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-base leading-tight mb-1">Uy tín</h4>
+                            <p class="text-xs text-slate-500 leading-snug">Hệ thống tự động, uy tín với hàng ngàn khách hàng.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <div class="w-12 h-12 flex-shrink-0 rounded-[1rem] bg-blue-50 flex items-center justify-center">
+                            <svg fill="#007aff" width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m8.809 14.92 6.11-11.037c.084-.152.168-.302.244-.459.069-.142.127-.285.165-.44.08-.326.058-.666-.066-.977a1.5 1.5 0 0 0-.62-.735 1.42 1.42 0 0 0-.922-.193c-.32.043-.613.194-.844.43-.11.11-.2.235-.283.368-.092.146-.175.298-.259.45l-.386.697-.387-.698c-.084-.151-.167-.303-.259-.449a2.2 2.2 0 0 0-.283-.369 1.45 1.45 0 0 0-.844-.429 1.42 1.42 0 0 0-.921.193 1.5 1.5 0 0 0-.62.735 1.6 1.6 0 0 0-.066.977c.038.155.096.298.164.44.076.157.16.307.244.459l1.248 2.254-4.862 8.782H2.03c-.168 0-.336 0-.503.01-.152.009-.3.028-.448.071-.31.09-.582.28-.778.548A1.58 1.58 0 0 0 .3 17.404c.197.268.468.457.779.548.148.043.296.062.448.071.167.01.335.01.503.01h13.097a2 2 0 0 0 .1-.27c.415-1.416-.616-2.844-2.035-2.844zm-5.696 3.622-.792 1.5c-.082.156-.165.31-.239.471a2.4 2.4 0 0 0-.16.452 1.7 1.7 0 0 0 .064 1.003c.121.318.334.583.607.755s.589.242.901.197c.314-.044.6-.198.826-.44.108-.115.196-.242.278-.378.09-.15.171-.306.253-.462L6 19.464c-.09-.15-.947-1.47-2.887-.922m20.586-3.006a1.47 1.47 0 0 0-.779-.54 2 2 0 0 0-.448-.071c-.168-.01-.335-.01-.503-.01h-3.321L14.258 7.1a4.06 4.06 0 0 0-1.076 2.198 4.64 4.64 0 0 0 .546 3l5.274 9.393c.084.15.167.3.259.444.084.13.174.253.283.364.231.232.524.38.845.423s.643-.024.922-.19a1.5 1.5 0 0 0 .621-.726c.125-.307.146-.642.066-.964a2.2 2.2 0 0 0-.165-.434c-.075-.155-.16-.303-.244-.453l-1.216-2.166h1.596c.168 0 .335 0 .503-.009.152-.009.3-.028.448-.07a1.47 1.47 0 0 0 .78-.541 1.54 1.54 0 0 0 .3-.916 1.54 1.54 0 0 0-.3-.916"></path></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-base leading-tight mb-1">Cài ứng dụng bên ngoài</h4>
+                            <p class="text-xs text-slate-500 leading-snug">Cài App/Game ngoài App Store không cần Jailbreak.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <p class="text-[9px] text-slate-400 font-medium">
+                        Tự động đóng sau <span id="countdown" class="font-bold text-slate-500">30</span>s
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment, query } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyCgSBKuu7hdpbMj5B6EKuHkAI1EmmvJxVc", authDomain: "sharechungchi.firebaseapp.com", projectId: "sharechungchi", storageBucket: "sharechungchi.firebasestorage.app", messagingSenderId: "39399207872", appId: "1:39399207872:web:087afb400ef0be078b0e25" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        const escapeHtml = (unsafe) => { if (typeof unsafe !== 'string') return unsafe; return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+
+        // --- FETCH SETTINGS ---
+        async function fetchSettings() {
+            try {
+                const docSnap = await getDoc(doc(db, "settings", "general"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    const titleEl = document.getElementById('site-title');
+                    if(data.title) titleEl.innerHTML = data.title;
+                    if(data.titleColor) titleEl.style.color = data.titleColor;
+
+                    const subEl = document.getElementById('site-subtitle');
+                    if(data.subtitle) subEl.innerText = data.subtitle;
+                    if(data.subtitleColor) subEl.style.color = data.subtitleColor;
+
+                    const btnContainer = document.getElementById('hero-buttons');
+                    const btns = data.heroButtons || [];
+                    
+                    if(btns.length > 0) {
+                        btnContainer.innerHTML = btns.map((btn, index) => {
+                            if(!btn.text) return ''; 
+                            
+                            const bgColor = btn.bgColor || (index === 0 ? '#0f172a' : '#ffffff');
+                            const txtColor = btn.textColor || (index === 0 ? '#ffffff' : '#334155');
+                            const iconColor = btn.iconColor || (index === 0 ? '#ffffff' : '#6366f1');
+                            
+                            return `
+                                <a href="javascript:void(0)" 
+                                   onclick="window.open('${escapeHtml(btn.url)}', '_blank')" 
+                                   class="group relative px-6 py-3 rounded-full font-bold text-sm overflow-hidden transition-all flex items-center gap-2 shadow-md hover:shadow-lg hover:opacity-90 active:scale-95"
+                                   style="background-color: ${bgColor}; color: ${txtColor}; border: 1px solid ${bgColor === '#ffffff' ? '#e2e8f0' : bgColor}">
+                                   
+                                   ${btn.icon ? `<i class="${escapeHtml(btn.icon)} transition-transform group-hover:scale-110" style="color: ${iconColor}"></i>` : ''}
+                                   
+                                   <span>${escapeHtml(btn.text)}</span>
+                                </a>
+                            `;
+                        }).join('');
+                    } else {
+                        btnContainer.innerHTML = `<span class="text-slate-400 text-sm">Đang cập nhật...</span>`;
+                    }
+                }
+            } catch (e) { console.log(e); }
+        }
+
+        async function fetchApps() {
+            try {
+                const q = query(collection(db, "apps"));
+                const snapshot = await getDocs(q);
+                
+                const apps = [];
+                snapshot.forEach(doc => { 
+                    const d = doc.data();
+                    if(d.status !== 'hidden') {
+                        apps.push({ id: doc.id, ...d });
+                    }
+                });
+                
+                // --- SẮP XẾP ---
+                // Sắp xếp theo ORDER tăng dần (Nhỏ nhất lên đầu)
+                apps.sort((a, b) => {
+                    const orderA = (a.order !== undefined && a.order !== null) ? a.order : 999999;
+                    const orderB = (b.order !== undefined && b.order !== null) ? b.order : 999999;
+                    return orderA - orderB; 
+                });
+
+                renderUI(apps);
+            } catch (e) { 
+                console.error("LỖI LẤY DỮ LIỆU:", e);
+            }
+        }
+
+        function renderUI(apps) {
+            document.getElementById('main-loader').classList.add('hidden');
+
+            const defaultEsignIcon = "https://i.imgur.com/hPj8ui8.png";
+
+            const esign = apps.filter(a => a.type === 'esign');
+            document.getElementById('esign-list').innerHTML = esign.map(item => `
+                <div class="glass-card rounded-2xl p-4 flex items-center gap-4 group">
+                    <div class="relative w-16 h-16 rounded-xl border border-slate-200 group-hover:border-indigo-300 transition-colors shadow-sm bg-white">
+                        
+                        <img src="${item.icon ? escapeHtml(item.icon) : defaultEsignIcon}" 
+                             class="w-full h-full object-cover rounded-xl" 
+                             onerror="this.src='${defaultEsignIcon}'">
+
+                        ${item.badge ? `<span class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-md">${escapeHtml(item.badge)}</span>` : ''}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-base truncate pr-2 text-slate-800 group-hover:text-indigo-600 transition-colors">${escapeHtml(item.name)}</h3>
+                        <p class="text-xs text-slate-500 mt-1 truncate font-medium">${escapeHtml(item.desc)}</p>
+                        <div class="flex items-center gap-3 mt-3"><span class="text-[10px] text-slate-500 flex items-center gap-1 font-semibold bg-slate-100 px-2 py-0.5 rounded-md"><i class="fas fa-download text-indigo-500"></i><span>${item.downloads || 0}</span></span></div>
+                    </div>
+                    <button class="esign-download-btn w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-all border border-indigo-100 hover:shadow-lg hover:shadow-indigo-500/30 hover:scale-110" 
+                            data-name="${escapeHtml(item.name)}" 
+                            data-url="${escapeHtml(item.url)}" 
+                            data-id="${item.id}">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+            `).join('');
+            document.getElementById('esign-list').classList.remove('hidden');
+
+            // Render Cert
+            const cert = apps.filter(a => a.type === 'cert');
+            document.getElementById('cert-list').innerHTML = cert.map(item => `
+                <div class="glass-card rounded-2xl p-4 flex items-center gap-4 group">
+                    <div class="relative w-16 h-16 rounded-xl border border-purple-100 group-hover:border-purple-300 transition-colors shadow-sm bg-white">
+                        <img src="${escapeHtml(item.icon)}" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/100'">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-base truncate text-slate-800">${escapeHtml(item.name)}</h3>
+                        <p class="text-xs text-slate-500 mt-1 truncate font-medium">${escapeHtml(item.desc)}</p>
+                        <div class="flex items-center gap-3 mt-3"><span class="text-[10px] text-slate-500 flex items-center gap-1 font-semibold bg-slate-100 px-2 py-0.5 rounded-md"><i class="fas fa-cloud-download-alt text-purple-500"></i><span>${item.downloads || 0}</span></span></div>
+                    </div>
+                    <a href="${escapeHtml(item.url)}" target="_blank" class="download-counter px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-600 text-purple-600 hover:text-white text-xs font-bold transition-all border border-purple-200" data-id="${item.id}">Tải Về</a>
+                </div>
+            `).join('');
+
+            // Render Mods
+            const mods = apps.filter(a => a.type === 'mods');
+            const modsHtml = mods.map(item => `
+                <div class="glass-card rounded-2xl p-4 flex items-center gap-4 group app-card-mod">
+                    <div class="relative w-16 h-16 rounded-xl overflow-hidden border border-slate-200 group-hover:border-indigo-300 transition-colors shadow-sm">
+                        <img src="${escapeHtml(item.icon)}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/100'">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-base truncate text-slate-800 app-title">${escapeHtml(item.name)}</h3>
+                        <p class="text-xs text-indigo-600 mt-1 truncate font-medium">${escapeHtml(item.desc)}</p>
+                        <div class="flex items-center gap-3 mt-3"><span class="text-[10px] text-slate-500 flex items-center gap-1 font-semibold bg-slate-100 px-2 py-0.5 rounded-md"><i class="fas fa-${escapeHtml(item.tag) || 'fire'} text-orange-500"></i><span>${item.downloads || 0}</span></span></div>
+                    </div>
+                    <a href="${escapeHtml(item.url)}" target="_blank" class="download-counter w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all" data-id="${item.id}"><i class="fas fa-download text-xs"></i></a>
+                </div>
+            `).join('');
+            document.getElementById('mods-list').innerHTML += modsHtml;
+
+            attachEvents();
+        }
+
+        function attachEvents() {
+            document.querySelectorAll('.esign-download-btn, .download-counter').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    incrementDownload(btn.dataset.id);
+                    if(btn.classList.contains('esign-download-btn')) {
+                        e.preventDefault();
+                        openESignPopup(btn.dataset.name, btn.dataset.url);
+                    }
+                });
+            });
+        }
+
+        async function incrementDownload(id) { try { await updateDoc(doc(db, "apps", id), { downloads: increment(1) }); } catch(e){} }
+
+        // Popup logic
+        const popup = document.getElementById('esign-popup');
+        const countdownEl = document.getElementById('countdown');
+        let countdownTimer;
+
+        function openESignPopup(nameKey, url) {
+            if (nameKey.toLowerCase().includes('esign')) {
+                document.getElementById('popup-cert-name').textContent = nameKey;
+            } else {
+                document.getElementById('popup-cert-name').textContent = `ESign ${nameKey}`;
+            }
+
+            document.getElementById('popup-install-btn').href = url;
+            popup.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
+            
+            let time = 30; 
+            countdownEl.textContent = time; 
+            clearInterval(countdownTimer);
+            countdownTimer = setInterval(() => { 
+                time--; 
+                countdownEl.textContent = time; 
+                if (time <= 0) closeESignPopup(); 
+            }, 1000);
+        }
+        
+        function closeESignPopup() { 
+            popup.classList.add('hidden'); 
+            document.body.style.overflow = ''; 
+            clearInterval(countdownTimer); 
+        }
+        
+        document.getElementById('close-popup').addEventListener('click', closeESignPopup);
+        document.getElementById('popup-overlay').addEventListener('click', closeESignPopup);
+        document.getElementById('popup-install-btn').addEventListener('click', closeESignPopup);
+
+        window.addEventListener("load", () => { fetchSettings(); fetchApps(); });
+
+        // Tab Logic
+        document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.classList.add('text-slate-400'); });
+                btn.classList.add('active'); btn.classList.remove('text-slate-400');
+                const tab = btn.dataset.tab;
+                
+                document.getElementById('tab-indicator').style.left = (window.innerWidth >= 768) ? `${(index * 132) + 6}px` : (index===0 ? '6px' : `${index * 33.33}%`);
+                
+                ['esign', 'cert', 'mods'].forEach(t => document.getElementById(`${t}-list`).classList.add('hidden'));
+                document.getElementById(`${tab}-list`).classList.remove('hidden');
+                
+                const searchCont = document.getElementById('search-container');
+                if (tab === 'mods') searchCont.classList.remove('hidden'); else searchCont.classList.add('hidden');
+            });
+        });
+
+        // Search Logic
+        document.getElementById('mods-search').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('#mods-list .app-card-mod');
+            let hasResult = false;
+            items.forEach(item => {
+                if(item.querySelector('.app-title').innerText.toLowerCase().includes(term)) { item.style.display = 'flex'; hasResult = true; } else item.style.display = 'none';
+            });
+            const noRes = document.getElementById('no-results');
+            if(noRes) { if(!hasResult) noRes.classList.remove('hidden'); else noRes.classList.add('hidden'); }
+        });
+
+        // Admin Trigger
+        let count = 0;
+        document.getElementById('admin-trigger')?.addEventListener('click', () => {
+            count++; if(count === 5) window.location.href = 'admin.html'; setTimeout(() => count = 0, 2000);
+        });
+    </script>
+</body>
+</html>
